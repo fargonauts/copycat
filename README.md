@@ -1,7 +1,7 @@
 co.py.cat
 =========
 
-An implementation of the [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s [copycat](https://en.wikipedia.org/wiki/Copycat_%28software%29) algorithm
+An implementation of the [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s [copycat](https://en.wikipedia.org/wiki/Copycat_%28software%29) [algorithm](http://www.al-got-rhythm.net)
 
 This implementation is a copycat of Scott Boland's [Java implementation](http://itee.uq.edu.au/~scottb/_Copycat/), but re-written into Python. It's not a direct translation - but based on his code. I did not carry over the GUI, as this version can more usefully be run from command line, or imported for use by other Python scripts.
 
