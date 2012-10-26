@@ -1,4 +1,3 @@
-import sys
 import logging
 logging.basicConfig(
 		level=logging.INFO,
@@ -7,6 +6,7 @@ logging.basicConfig(
 		filename='./copycat.log',
 		filemode='w'
 )
+
 
 from workspace import workspace
 from workspaceFormulas import workspaceFormulas
@@ -22,6 +22,7 @@ def updateEverything():
 	workspaceFormulas.updateTemperature()
 	coderackPressures.calculatePressures()
 
+
 def mainLoop(lastUpdate):
 	temperature.tryUnclamp()
 	result = lastUpdate
@@ -31,6 +32,7 @@ def mainLoop(lastUpdate):
 	logging.debug('Number of codelets: %d' % len(coderack.codelets))
 	coderack.chooseAndRunCodelet()
 	return result
+
 
 def runTrial():
 	"""Run a trial of the copycat algorithm"""
@@ -45,24 +47,12 @@ def runTrial():
 		answer = workspace.rule.finalAnswer
 	else:
 		answer = None
-	print '%d: %s' % (coderack.codeletsRun,answer)
-	answers[answer] = answers.get(answer,0) + 1
+	print '%d: %s' % (coderack.codeletsRun, answer)
+	answers[answer] = answers.get(answer, 0) + 1
 	logging.debug('codelets used:')
-	for answer,count in answers.iteritems():
-		print '%s:%d' % (answer,count)
+	for answer, count in answers.iteritems():
+		print '%s:%d' % (answer, count)
 
-def main():
-	#slipnet.setConceptualDepths(50.0)
-	"""Run the program"""
-	argc = len(sys.argv)
-	if argc == 4:
-		workspace.setStrings(initial=sys.argv[1].lower(),modified=sys.argv[2].lower(),target=sys.argv[3].lower())
-	elif argc == 1:
-		workspace.setStrings(initial='abc',modified='abd',target='ijk')
-	else:
-		print >> sys.stderr, 'Usage: %s [initial modified target]' % sys.argv[0]
-		return
+def run(initial, modified, target):
+	workspace.setStrings(initial, modified, target)
 	runTrial()
-
-if __name__ == '__main__':
-	main()
