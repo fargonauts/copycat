@@ -1,0 +1,2 @@
+from exceptions import NotImplementedError
+raise NotImplementedError
