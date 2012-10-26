@@ -16,9 +16,7 @@ class ConceptMapping(object):
 		return '<ConceptMapping: %s from %s to %s>' % (self.__str__(), self.initialDescriptor, self.targetDescriptor)
 
 	def __str__(self):
-		if self.label:
-			return self.label.name
-		return 'anonymous'
+		return self.label and self.label.name or 'anonymous'
 
 	def slipability(self):
 		association = self.__degreeOfAssociation()
@@ -51,9 +49,7 @@ class ConceptMapping(object):
 			return False
 		if not self.initialObject.distinguishingDescriptor(self.initialDescriptor):
 			return False
-		if not self.targetObject.distinguishingDescriptor(self.targetDescriptor):
-			return False
-		return True
+		return self.targetObject.distinguishingDescriptor(self.targetDescriptor)
 
 	def sameInitialType(self, other):
 		return self.initialDescriptionType == other.initialDescriptionType
@@ -80,16 +76,10 @@ class ConceptMapping(object):
 		return self.sameTypes(other) and self.sameInitialDescriptor(other)
 
 	def isContainedBy(self, mappings):
-		for mapping in mappings:
-			if self.sameKind(mapping):
-				return True
-		return False
+		return any([self.sameKind(mapping) for mapping in mappings])
 
 	def isNearlyContainedBy(self, mappings):
-		for mapping in mappings:
-			if self.nearlySameKind(mapping):
-				return True
-		return False
+		return any([self.nearlySameKind(mapping) for mapping in mappings])
 
 	def related(self, other):
 		if self.initialDescriptor.related(other.initialDescriptor):
@@ -108,9 +98,7 @@ class ConceptMapping(object):
 			return False
 		if not self.label or not other.label:
 			return False
-		if self.label != other.label:
-			return True
-		return False
+		return self.label != other.label
 
 	def supports(self, other):
 		# Concept-mappings (a -> b) and (c -> d) support each other if a is related
@@ -130,9 +118,7 @@ class ConceptMapping(object):
 			return False
 		if not self.label or not other.label:
 			return False
-		if self.label == other.label:
-			return True
-		return False
+		return self.label == other.label
 
 	def relevant(self):
 		return self.initialDescriptionType.fully_active() and self.targetDescriptionType.fully_active()
