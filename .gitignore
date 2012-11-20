@@ -19,3 +19,10 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+
+# Other filesystems
+.svn
+.DS_Store
+
+# Editors
+.*.swp
