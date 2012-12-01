@@ -129,15 +129,15 @@ class Correspondence(WorkspaceStructure):
     def updateExternalStrength(self):
         self.externalStrength = self.support()
 
-        def internallyCoherent(self):
-            """Whether any pair of relevant distinguishing mappings support each other"""
-            mappings = self.relevantDistinguishingConceptMappings()
-            for i in range(0, len(mappings)):
-                for j in range(0, len(mappings)):
-                    if i != j:
-                        if mappings[i].supports(mappings[j]):
-                            return True
-            return False
+    def internallyCoherent(self):
+        """Whether any pair of relevant distinguishing mappings support each other"""
+        mappings = self.relevantDistinguishingConceptMappings()
+        for i in range(0, len(mappings)):
+            for j in range(0, len(mappings)):
+                if i != j:
+                    if mappings[i].supports(mappings[j]):
+                        return True
+        return False
 
     def slippages(self):
         mappings = [m for m in self.conceptMappings if m.slippage()]
