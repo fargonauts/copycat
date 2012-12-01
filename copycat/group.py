@@ -1,13 +1,15 @@
-import utils, logging
+import utils
+import logging
 
 from workspace import workspace
 from workspaceObject import WorkspaceObject
 from slipnet import slipnet
 import formulas
 
+
 class Group(WorkspaceObject):
-    def __init__(self,string,groupCategory,directionCategory,facet,objectList,bondList):
-        WorkspaceObject.__init__(self,string)
+    def __init__(self, string, groupCategory, directionCategory, facet, objectList, bondList):
+        WorkspaceObject.__init__(self, string)
         self.groupCategory = groupCategory
         self.directionCategory = directionCategory
         self.facet = facet
@@ -35,7 +37,6 @@ class Group(WorkspaceObject):
         self.newAnswerLetter = False
         self.clampSalience = False
         self.name = ''
-
 
         from description import Description
         if self.bondList and len(self.bondList):
@@ -71,18 +72,18 @@ class Group(WorkspaceObject):
         s = self.string.__str__()
         l = self.leftStringPosition - 1
         r = self.rightStringPosition
-        return 'group[%d:%d] == %s' % ( l, r - 1, s[l: r ])
+        return 'group[%d:%d] == %s' % (l, r - 1, s[l:r])
 
     def getIncompatibleGroups(self):
         result = []
         for objekt in self.objectList:
             while objekt.group:
-                result += [ objekt.group ]
+                result += [objekt.group]
                 objekt = objekt.group
         return result
 
-    def addBondDescription(self,description):
-        self.bondDescriptions += [ description ]
+    def addBondDescription(self, description):
+        self.bondDescriptions += [description]
 
     def singleLetterGroupProbability(self):
         numberOfSupporters = self.numberOfLocalSupportingGroups()
@@ -100,15 +101,15 @@ class Group(WorkspaceObject):
         return formulas.temperatureAdjustedProbability(supportedActivation)
 
     def flippedVersion(self):
-        flippedBonds = [ b.flippedversion() for b in self.bondList ]
+        flippedBonds = [b.flippedversion() for b in self.bondList]
         flippedGroup = self.groupCategory.getRelatedNode(slipnet.flipped)
         flippedDirection = self.directionCategory.getRelatedNode(slipnet.flipped)
         return Group(self.string, flippedGroup, flippedDirection, self.facet, self.objectList, flippedBonds)
 
     def buildGroup(self):
-        workspace.objects += [ self ]
-        workspace.structures += [ self ]
-        self.string.objects += [ self ]
+        workspace.objects += [self]
+        workspace.structures += [self]
+        self.string.objects += [self]
         for objekt in self.objectList:
             objekt.group = self
         workspace.buildDescriptions(self)
@@ -128,7 +129,7 @@ class Group(WorkspaceObject):
         probability = 0.5 ** fred
         value = formulas.temperatureAdjustedProbability(probability)
         if value < 0.06:
-            value = 0.0 # otherwise 1/20 chance always
+            value = 0.0  # otherwise 1/20 chance always
         return value
 
     def break_the_structure(self):
@@ -168,7 +169,7 @@ class Group(WorkspaceObject):
         else:
             lengthFactor = 90.0
         lengthWeight = 100.0 - bondWeight
-        weightList = ( (relatedBondAssociation, bondWeight), (lengthFactor, lengthWeight) )
+        weightList = ((relatedBondAssociation, bondWeight), (lengthFactor, lengthWeight))
         self.internalStrength = formulas.weightedAverage(weightList)
 
     def updateExternalStrength(self):
@@ -181,14 +182,14 @@ class Group(WorkspaceObject):
         numberOfSupporters = self.numberOfLocalSupportingGroups()
         if numberOfSupporters == 0.0:
             return 0.0
-        supportFactor = min(1.0,0.6 ** (1 / (numberOfSupporters ** 3 )))
+        supportFactor = min(1.0, 0.6 ** (1 / (numberOfSupporters ** 3)))
         densityFactor = 100.0 * ((self.localDensity() / 100.0) ** 0.5)
         return densityFactor * supportFactor
 
     def numberOfLocalSupportingGroups(self):
         count = 0
         for objekt in self.string.objects:
-            if isinstance(objekt,Group):
+            if isinstance(objekt, Group):
                 if objekt.rightStringPosition < self.leftStringPosition or objekt.leftStringPosition > self.rightStringPosition:
                     if objekt.groupCategory == self.groupCategory and objekt.directionCategory == self.directionCategory:
                         count += 1
@@ -199,7 +200,7 @@ class Group(WorkspaceObject):
         halfLength = len(self.string) / 2.0
         return 100.0 * numberOfSupporters / halfLength
 
-    def sameGroup(self,other):
+    def sameGroup(self, other):
         if self.leftStringPosition != other.leftStringPosition:
             return False
         if self.rightStringPosition != other.rightStringPosition:
@@ -212,26 +213,24 @@ class Group(WorkspaceObject):
             return False
         return True
 
-    def morePossibleDescriptions(self,node):
+    def morePossibleDescriptions(self, node):
         result = []
         i = 1
         for number in slipnet.numbers:
             if node == number and len(self.objects) == i:
-                result += [ node ]
+                result += [node]
             i += 1
         return result
 
-    def distinguishingDescriptor(self,descriptor):
+    def distinguishingDescriptor(self, descriptor):
         """Whether no other object of the same type (group) has the same descriptor"""
-        if not WorkspaceObject.distinguishingDescriptor(self,descriptor):
+        if not WorkspaceObject.distinguishingDescriptor(self, descriptor):
             return False
         for objekt in self.string.objects:
             # check to see if they are of the same type
-            if isinstance(objekt,Group) and objekt != self:
+            if isinstance(objekt, Group) and objekt != self:
                 # check all descriptions for the descriptor
                 for description in objekt.descriptions:
                     if description.descriptor == descriptor:
                         return False
         return True
-
-

@@ -1,4 +1,3 @@
-
 def any(things):
     """Return True if any of the things are True.
 
@@ -57,6 +56,7 @@ def any(things):
             return True
     return False
 
+
 def all(things):
     """Return True if all of the things are True.
 
@@ -114,6 +114,8 @@ import logging
 seed = 999.0
 count = 0
 testably_random = True
+
+
 def random():
     global testably_random
     if testably_random:
@@ -130,6 +132,7 @@ def random():
     #   sys.exit(1)
     return seed / 2000.0
 
+
 def choice(aList):
     i = int(random() * len(aList))
     return aList[i]
@@ -137,4 +140,3 @@ def choice(aList):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-

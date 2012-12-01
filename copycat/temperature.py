@@ -1,5 +1,6 @@
 import logging
 
+
 class Temperature(object):
     def __init__(self):
         self.value = 100.0

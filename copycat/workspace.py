@@ -4,6 +4,7 @@ from workspaceString import WorkspaceString
 
 unknownAnswer = '?'
 
+
 class Workspace(object):
     def __init__(self):
         #logging.debug('workspace.__init__()')
@@ -155,4 +156,3 @@ class Workspace(object):
 
 
 workspace = Workspace()
-

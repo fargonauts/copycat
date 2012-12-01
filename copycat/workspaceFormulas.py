@@ -5,6 +5,7 @@ from temperature import temperature
 from slipnet import slipnet
 import formulas
 
+
 class WorkspaceFormulas(object):
     def __init__(self):
         self.clampTemperature = False
@@ -16,7 +17,7 @@ class WorkspaceFormulas(object):
         if workspace.rule:
             workspace.rule.updateStrength()
             ruleWeakness = 100.0 - workspace.rule.totalStrength
-        values = ( (workspace.totalUnhappiness, 0.8), (ruleWeakness, 0.2), )
+        values = ((workspace.totalUnhappiness, 0.8), (ruleWeakness, 0.2))
         slightly_above_actual_temperature = formulas.actualTemperature + 0.001
         logging.info('actualTemperature: %f' % slightly_above_actual_temperature)
         formulas.actualTemperature = formulas.weightedAverage(values)
@@ -32,14 +33,17 @@ class WorkspaceFormulas(object):
 
 workspaceFormulas = WorkspaceFormulas()
 
+
 def numberOfObjects():
     return len(workspace.objects)
 
-def chooseUnmodifiedObject(attribute,inObjects):
-    objects = [ o for o in inObjects if o.string != workspace.modified ]
+
+def chooseUnmodifiedObject(attribute, inObjects):
+    objects = [o for o in inObjects if o.string != workspace.modified]
     if not len(objects):
         print 'no objects available in initial or target strings'
-    return formulas.chooseObjectFromList(objects,attribute)
+    return formulas.chooseObjectFromList(objects, attribute)
+
 
 def chooseNeighbour(source):
     objects = []
@@ -47,50 +51,56 @@ def chooseNeighbour(source):
         if objekt.string != source.string:
             continue
         if objekt.leftStringPosition == source.rightStringPosition + 1:
-            objects += [ objekt ]
+            objects += [objekt]
         elif source.leftStringPosition == objekt.rightStringPosition + 1:
-            objects += [ objekt ]
-    return formulas.chooseObjectFromList(objects,"intraStringSalience")
+            objects += [objekt]
+    return formulas.chooseObjectFromList(objects, "intraStringSalience")
 
-def chooseDirectedNeighbor(source,direction):
+
+def chooseDirectedNeighbor(source, direction):
     if direction == slipnet.left:
         logging.info('Left')
         return __chooseLeftNeighbor(source)
     logging.info('Right')
     return __chooseRightNeighbor(source)
 
+
 def __chooseLeftNeighbor(source):
     objects = []
     for o in workspace.objects:
-        if o.string == source.string :
+        if o.string == source.string:
             if source.leftStringPosition == o.rightStringPosition + 1:
-                logging.info('%s is on left of %s' % (o,source))
-                objects += [ o ]
+                logging.info('%s is on left of %s' % (o, source))
+                objects += [o]
             else:
-                logging.info('%s is not on left of %s' % (o,source))
+                logging.info('%s is not on left of %s' % (o, source))
     logging.info('Number of left objects: %s' % len(objects))
-    return formulas.chooseObjectFromList(objects,'intraStringSalience')
+    return formulas.chooseObjectFromList(objects, 'intraStringSalience')
+
 
 def __chooseRightNeighbor(source):
-    objects = [ o for o in workspace.objects if
+    objects = [o for o in workspace.objects if
         o.string == source.string and
         o.leftStringPosition == source.rightStringPosition + 1
     ]
-    return formulas.chooseObjectFromList(objects,'intraStringSalience')
+    return formulas.chooseObjectFromList(objects, 'intraStringSalience')
+
 
 def chooseBondFacet(source, destination):
-    sourceFacets = [ d.descriptionType for d in source.descriptions if d.descriptionType in slipnet.bondFacets ]
-    bondFacets = [ d.descriptionType for d in destination.descriptions if d.descriptionType in sourceFacets ]
+    sourceFacets = [d.descriptionType for d in source.descriptions if d.descriptionType in slipnet.bondFacets]
+    bondFacets = [d.descriptionType for d in destination.descriptions if d.descriptionType in sourceFacets]
     if not bondFacets:
         return None
-    supports = [ __supportForDescriptionType(f,source.string) for f in bondFacets ]
+    supports = [__supportForDescriptionType(f, source.string) for f in bondFacets]
     i = formulas.selectListPosition(supports)
-    return bondFacets[ i ]
+    return bondFacets[i]
 
-def __supportForDescriptionType(descriptionType,string):
-    return ( descriptionType.activation + __descriptionTypeSupport(descriptionType,string) ) / 2
 
-def __descriptionTypeSupport(descriptionType,string):
+def __supportForDescriptionType(descriptionType, string):
+    return (descriptionType.activation + __descriptionTypeSupport(descriptionType, string)) / 2
+
+
+def __descriptionTypeSupport(descriptionType, string):
     """The proportion of objects in the string that have a description with this descriptionType"""
     numberOfObjects = totalNumberOfObjects = 0.0
     for objekt in workspace.objects:
@@ -101,11 +111,12 @@ def __descriptionTypeSupport(descriptionType,string):
                     numberOfObjects += 1.0
     return numberOfObjects / totalNumberOfObjects
 
+
 def probabilityOfPosting(codeletName):
     if codeletName == 'breaker':
         return 1.0
     if 'description' in codeletName:
-        result = ( formulas.Temperature / 100.0 ) ** 2
+        result = (formulas.Temperature / 100.0) ** 2
     else:
         result = workspace.intraStringUnhappiness / 100.0
     if 'correspondence' in codeletName:
@@ -125,6 +136,7 @@ def probabilityOfPosting(codeletName):
         assert 0
         return 1.0
     return result
+
 
 def howManyToPost(codeletName):
     if codeletName == 'breaker':
@@ -156,5 +168,3 @@ def howManyToPost(codeletName):
     if number < formulas.blur(4.0):
         return 2
     return 3
-
-

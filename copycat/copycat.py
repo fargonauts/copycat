@@ -15,6 +15,7 @@ from temperature import temperature
 from coderack import coderack
 from coderackPressure import coderackPressures
 
+
 def updateEverything():
     workspace.updateEverything()
     coderack.updateCodelets()
@@ -52,6 +53,7 @@ def runTrial():
     logging.debug('codelets used:')
     for answer, count in answers.iteritems():
         print '%s:%d' % (answer, count)
+
 
 def run(initial, modified, target):
     workspace.setStrings(initial, modified, target)

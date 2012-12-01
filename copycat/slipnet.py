@@ -3,6 +3,7 @@ import logging
 from slipnode import Slipnode
 from sliplink import Sliplink
 
+
 class SlipNet(object):
     def __init__(self):
         logging.debug("SlipNet.__init__()")
@@ -242,7 +243,7 @@ class SlipNet(object):
         self.slipnodes += [slipnode]
         return slipnode
 
-    def __link_items_to_their_neighbours(self,items):
+    def __link_items_to_their_neighbours(self, items):
         previous = items[0]
         for item in items[1:]:
             self.__addNonSlipLink(previous, item, label=self.successor)

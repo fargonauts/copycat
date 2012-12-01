@@ -2,6 +2,7 @@ import logging
 from letter import Letter
 from slipnet import slipnet
 
+
 class WorkspaceString(object):
     def __init__(self, s):
         self.string = s
@@ -60,7 +61,7 @@ class WorkspaceString(object):
         else:
             for o in self.objects:
                 logging.info('object: %s, relative: %d = raw: %d / total: %d' % (
-                o, o.relativeImportance * 1000, o.rawImportance, total ))
+                o, o.relativeImportance * 1000, o.rawImportance, total))
                 o.relativeImportance = o.rawImportance / total
 
     def updateIntraStringUnhappiness(self):

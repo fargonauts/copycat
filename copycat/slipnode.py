@@ -2,11 +2,14 @@ import math
 import utils
 import logging
 
+
 def full_activation():
     return 100
 
+
 def jump_threshold():
     return 55.0
+
 
 class Slipnode(object):
     def __init__(self, name, depth, length=0.0):
@@ -57,7 +60,7 @@ class Slipnode(object):
 
     def fully_active(self):
         """Whether this node has full activation"""
-        return self.activation > full_activation() - 0.00001 # allow a little leeway for floats
+        return self.activation > full_activation() - 0.00001  # allow a little leeway for floats
 
     def activate_fully(self):
         """Make this node fully active"""
@@ -79,7 +82,7 @@ class Slipnode(object):
     def update(self):
         act = self.activation
         self.oldActivation = act
-        self.buffer -= self.activation * ( 100.0 - self.conceptual_depth) / 100.0
+        self.buffer -= self.activation * (100.0 - self.conceptual_depth) / 100.0
 
     def linked(self, other):
         """Whether the other is among the outgoing links"""
@@ -141,7 +144,7 @@ class Slipnode(object):
 
     def spread_activation(self):
         if self.fully_active():
-            [ link.spread_activation() for link in self.outgoingLinks ]
+            [link.spread_activation() for link in self.outgoingLinks]
 
     def addBuffer(self):
         if not self.clamped:

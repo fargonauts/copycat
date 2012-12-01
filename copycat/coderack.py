@@ -1,4 +1,7 @@
-import re, inspect, math, logging
+import re
+import inspect
+import math
+import logging
 
 import utils
 import formulas
@@ -12,6 +15,7 @@ MAX_NUMBER_OF_CODELETS = 100
 
 codeletsUsed = {}
 
+
 class CodeRack(object):
     def __init__(self):
         #logging.debug('coderack.__init__()')
@@ -21,7 +25,7 @@ class CodeRack(object):
         self.pressures = CoderackPressures()
         self.pressures.initialisePressures()
         self.reset()
-        self.initialCodeletNames = ( 'bottom-up-bond-scout', 'replacement-finder', 'bottom-up-correspondence-scout' )
+        self.initialCodeletNames = ('bottom-up-bond-scout', 'replacement-finder', 'bottom-up-correspondence-scout')
         self.codeletMethodsDir = None
         self.runCodelets = {}
         self.postings = {}
@@ -166,7 +170,7 @@ class CodeRack(object):
     def proposeSingleLetterGroup(self, source, codelet):
         self.proposeGroup([source], [], slipnet.samenessGroup, None, slipnet.letterCategory, codelet)
 
-    def proposeGroup(self, objects, bondList, groupCategory, directionCategory, bondFacet, oldCodelet ):
+    def proposeGroup(self, objects, bondList, groupCategory, directionCategory, bondFacet, oldCodelet):
         from group import Group
 
         bondCategory = groupCategory.getRelatedNode(slipnet.bondCategory)
@@ -177,7 +181,7 @@ class CodeRack(object):
         urgency = bondCategory.bondDegreeOfAssociation()
         self.newCodelet('group-strength-tester', oldCodelet, urgency, group)
 
-    def proposeBond(self, source, destination, bondCategory, bondFacet, sourceDescriptor, destinationDescriptor, oldCodelet ):
+    def proposeBond(self, source, destination, bondCategory, bondFacet, sourceDescriptor, destinationDescriptor, oldCodelet):
         from bond import Bond
 
         bondFacet.buffer = 100.0
@@ -255,7 +259,7 @@ class CodeRack(object):
         for codeletName in knownCodeletNames:
             methodName = re.sub('[ -]', '_', codeletName)
             if methodName not in self.codeletMethodsDir:
-                raise NotImplementedError, 'Cannot find %s in codeletMethods' % methodName
+                raise NotImplementedError('Cannot find %s in codeletMethods' % methodName)
             method = getattr(codeletMethods, methodName)
             self.methods[methodName] = method
 
@@ -270,7 +274,7 @@ class CodeRack(object):
         if not self.codelets:
             return None
         temp = formulas.Temperature
-        scale = ( 100.0 - temp + 10.0 ) / 15.0
+        scale = (100.0 - temp + 10.0) / 15.0
         #       threshold = sum( [ c.urgency ** scale for c in self.codelets ] ) * utils.random()
         urgsum = 0.0
         for codelet in self.codelets:
@@ -321,9 +325,9 @@ class CodeRack(object):
         #if not self.codeletMethodsDir:
         method = self.methods[methodName]
         if not method:
-            raise ValueError, 'Found %s in codeletMethods, but cannot get it' % methodName
+            raise ValueError('Found %s in codeletMethods, but cannot get it' % methodName)
         if not callable(method):
-            raise RuntimeError, 'Cannot call %s()' % methodName
+            raise RuntimeError('Cannot call %s()' % methodName)
         args, varargs, varkw, defaults = inspect.getargspec(method)
         #global codeletsUsed
         #codeletsUsed[methodName] = codeletsUsed.get(methodName,0) + 1

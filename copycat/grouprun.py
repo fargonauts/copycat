@@ -1,5 +1,6 @@
 from workspace import workspace
 
+
 class GroupRun(object):
     def __init__(self):
         self.name = 'xxx'

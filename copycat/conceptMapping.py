@@ -1,6 +1,7 @@
 import logging
 from slipnet import slipnet
 
+
 class ConceptMapping(object):
     def __init__(self, initialDescriptionType, targetDescriptionType, initialDescriptor, targetDescriptor, initialObject, targetObject):
         logging.info('make a map: %s-%s' % (initialDescriptionType.get_name(), targetDescriptionType.get_name()))
@@ -23,7 +24,7 @@ class ConceptMapping(object):
         if association == 100.0:
             return 100.0
         depth = self.__conceptualDepth() / 100.0
-        return association * ( 1 - depth * depth )
+        return association * (1 - depth * depth)
 
     def __degreeOfAssociation(self):
         #assumes the 2 descriptors are connected in the slipnet by at most 1 link
@@ -39,10 +40,10 @@ class ConceptMapping(object):
         if association == 100.0:
             return 100.0
         depth = self.__conceptualDepth() / 100.0
-        return association * ( 1 + depth * depth )
+        return association * (1 + depth * depth)
 
     def __conceptualDepth(self):
-        return (self.initialDescriptor.conceptualDepth + self.targetDescriptor.conceptualDepth ) / 2.0
+        return (self.initialDescriptor.conceptualDepth + self.targetDescriptor.conceptualDepth) / 2.0
 
     def distinguishing(self):
         if self.initialDescriptor == slipnet.whole and self.targetDescriptor == slipnet.whole:

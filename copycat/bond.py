@@ -2,8 +2,9 @@ from workspaceStructure import WorkspaceStructure
 from slipnet import slipnet
 from workspace import workspace
 
+
 class Bond(WorkspaceStructure):
-    def __init__(self,source, destination, bondCategory, bondFacet, sourceDescriptor, destinationDescriptor):
+    def __init__(self, source, destination, bondCategory, bondFacet, sourceDescriptor, destinationDescriptor):
         WorkspaceStructure.__init__(self)
         self.source = source
         self.string = self.source.string
@@ -38,18 +39,18 @@ class Bond(WorkspaceStructure):
         return '<Bond: %s>' % self.__str__()
 
     def __str__(self):
-        return '%s bond between %s and %s' % ( self.category.name, self.leftObject, self.rightObject)
+        return '%s bond between %s and %s' % (self.category.name, self.leftObject, self.rightObject)
 
     def buildBond(self):
-        workspace.structures += [ self ]
-        self.string.bonds += [ self ]
+        workspace.structures += [self]
+        self.string.bonds += [self]
         self.category.buffer = 100.0
         if self.directionCategory:
                 self.directionCategory.buffer = 100.0
         self.leftObject.rightBond = self
         self.rightObject.leftBond = self
-        self.leftObject.bonds += [ self ]
-        self.rightObject.bonds += [ self ]
+        self.leftObject.bonds += [self]
+        self.rightObject.bonds += [self]
 
     def break_the_structure(self):
         self.breakBond()
@@ -78,7 +79,7 @@ class Bond(WorkspaceStructure):
                 objekt = self.leftObject.correspondence.objectFromInitial
             if objekt.leftmost and objekt.rightBond:
                 if objekt.rightBond.directionCategory and objekt.rightBond.directionCategory != self.directionCategory:
-                    incompatibles += [ correspondence ]
+                    incompatibles += [correspondence]
         if self.rightObject.rightmost and self.rightObject.correspondence:
             correspondence = self.rightObject.correspondence
             if self.string == workspace.initial:
@@ -87,7 +88,7 @@ class Bond(WorkspaceStructure):
                 objekt = self.rightObject.correspondence.objectFromInitial
             if objekt.rightmost and objekt.leftBond:
                 if objekt.leftBond.directionCategory and objekt.leftBond.directionCategory != self.directionCategory:
-                    incompatibles += [ correspondence ]
+                    incompatibles += [correspondence]
         return incompatibles
 
     def updateInternalStrength(self):
@@ -104,7 +105,7 @@ class Bond(WorkspaceStructure):
             facetFactor = 1.0
         else:
             facetFactor = 0.7
-        strength = min(100.0,memberCompatibility * facetFactor * self.category.bondDegreeOfAssociation())
+        strength = min(100.0, memberCompatibility * facetFactor * self.category.bondDegreeOfAssociation())
         self.internalStrength = strength
 
     def updateExternalStrength(self):
@@ -114,21 +115,21 @@ class Bond(WorkspaceStructure):
             density = self.localDensity() / 100.0
             density = density ** 0.5 * 100.0
             supportFactor = 0.6 ** (1.0 / supporters ** 3)
-            supportFactor = max(1.0,supportFactor)
+            supportFactor = max(1.0, supportFactor)
             strength = supportFactor * density
             self.externalStrength = strength
 
     def numberOfLocalSupportingBonds(self):
-        return len([ b for b in self.string.bonds if b.string == self.get_source().string and
+        return len([b for b in self.string.bonds if b.string == self.get_source().string and
             self.leftObject.letterDistance(b.leftObject) != 0 and
             self.rightObject.letterDistance(b.rightObject) != 0 and
             self.category == b.category and
-            self.directionCategory == b.directionCategory ])
+            self.directionCategory == b.directionCategory])
 
-    def sameCategories(self,other):
+    def sameCategories(self, other):
         return self.category == other.category and self.directionCategory == other.directionCategory
 
-    def myEnds(self,object1,object2):
+    def myEnds(self, object1, object2):
         if self.get_source() == object1 and self.destination == object2:
             return True
         return self.get_source() == object2 and self.destination == object1
@@ -144,19 +145,19 @@ class Bond(WorkspaceStructure):
                     if object1.beside(object2):
                         slotSum += 1.0
                         for bond in self.string.bonds:
-                            if bond != self and self.sameCategories(bond) and self.myEnds(object1,object2):
+                            if bond != self and self.sameCategories(bond) and self.myEnds(object1, object2):
                                     supportSum += 1.0
         if slotSum == 0.0:
                 return 0.0
         return 100.0 * supportSum / slotSum
 
-    def sameNeighbours(self,other):
+    def sameNeighbours(self, other):
         if self.leftObject == other.leftObject:
             return True
         return self.rightObject == other.rightObject
 
     def getIncompatibleBonds(self):
-        return [ b for b in self.string.bonds if self.sameNeighbours(b) ]
+        return [b for b in self.string.bonds if self.sameNeighbours(b)]
 
     def get_source(self):
         return self.source
@@ -164,19 +165,20 @@ class Bond(WorkspaceStructure):
     def set_source(self, value):
         self.source = value
 
+
 def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
     result = []
     for bond in bonds:
         if bond.category == bondCategory and bond.directionCategory == directionCategory:
-            result += [ bond ]
+            result += [bond]
         else:
             # a modified bond might be made
             if bondCategory == slipnet.sameness:
-                return None # a different bond cannot be made here
+                return None  # a different bond cannot be made here
             if bond.category == bondCategory or bond.directionCategory == directionCategory:
-                return None # a different bond cannot be made here
+                return None  # a different bond cannot be made here
             if bond.category == slipnet.sameness:
                 return None
             bond = Bond(bond.destination, bond.get_source(), bondCategory, bondFacet, bond.destinationDescriptor, bond.sourceDescriptor)
-            result += [ bond ]
+            result += [bond]
     return result

@@ -2,6 +2,7 @@ import logging
 from formulas import Temperature
 from slipnet import slipnet
 
+
 class CoderackPressure(object):
     def __init__(self, name):
         self.name = name
@@ -10,6 +11,7 @@ class CoderackPressure(object):
         self.unmodifedValues = []
         self.values = []
         self.codelets = []
+
 
 class CoderackPressures(object):
     def __init__(self):
@@ -41,7 +43,7 @@ class CoderackPressures(object):
 
     def calculatePressures(self):
         #logging.debug('coderackPressures.calculatePressures()')
-        scale = ( 100.0 - Temperature + 10.0 ) / 15.0
+        scale = (100.0 - Temperature + 10.0) / 15.0
         values = []
         for pressure in self.pressures:
             value = sum([c.urgency ** scale for c in pressure.codelets])
@@ -117,7 +119,7 @@ class CoderackPressures(object):
         if i >= 0:
             self.pressures[i].codelets += [codelet]
         if codelet.pressure:
-            codelet.pressure.codelets += [codelet] # XXX why do this
+            codelet.pressure.codelets += [codelet]  # XXX why do this
         if i >= 0:
             codelet.pressure = self.pressures[i]     # when following with this ?
         logging.info('Add %s: %d' % (codelet.name, i))
