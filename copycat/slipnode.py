@@ -13,7 +13,7 @@ def jump_threshold():
 class Slipnode(object):
     def __init__(self, name, depth, length=0.0):
     #       logging.info('depth to %s for %s' % (depth,name))
-        self.conceptual_depth = depth
+        self.conceptualDepth = depth
         self.usualConceptualDepth = depth
         self.name = name
         self.intrinsicLinkLength = length
@@ -49,7 +49,7 @@ class Slipnode(object):
 
     def setConceptualDepth(self, depth):
         logging.info('set depth to %s for %s' % (depth, self.name))
-        self.conceptual_depth = depth
+        self.conceptualDepth = depth
 
     def category(self):
         if not len(self.categoryLinks):
@@ -81,7 +81,7 @@ class Slipnode(object):
     def update(self):
         act = self.activation
         self.oldActivation = act
-        self.buffer -= self.activation * (100.0 - self.conceptual_depth) / 100.0
+        self.buffer -= self.activation * (100.0 - self.conceptualDepth) / 100.0
 
     def linked(self, other):
         """Whether the other is among the outgoing links"""

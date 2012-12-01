@@ -75,7 +75,7 @@ class CodeRack(object):
                             codelet = Codelet(codeletName, urgency, self.codeletsRun)
                             codelet.arguments += [node]
                             logging.info('Post top down: %s, with urgency: %d' % (codelet.name, urgency))
-                            #logging.info("From slipnode %s, activation: %s, depth: %s" %(node.get_name(),node.activation,node.conceptual_depth) )
+                            #logging.info("From slipnode %s, activation: %s, depth: %s" %(node.get_name(),node.activation,node.conceptualDepth) )
                             self.post(codelet)
 
     def postBottomUpCodelets(self):
