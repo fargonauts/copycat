@@ -1,7 +1,6 @@
-import math  # , random
+import math
 import logging
-
-import utils
+import random
 
 from temperature import temperature
 
@@ -11,7 +10,7 @@ actualTemperature = Temperature = 100.0
 def selectListPosition(probabilities):
     total = sum(probabilities)
     #logging.info('total: %s' % total)
-    r = utils.random()
+    r = random.random()
     stopPosition = total * r
     #logging.info('stopPosition: %s' % stopPosition)
     total = 0
@@ -57,7 +56,7 @@ def temperatureAdjustedProbability(value):
 
 
 def coinFlip(chance=0.5):
-    return utils.random() < chance
+    return random.random() < chance
 
 
 def blur(value):

@@ -1,5 +1,4 @@
 import math
-import utils
 import logging
 
 
@@ -155,7 +154,7 @@ class Slipnode(object):
     def jump(self):
         value = (self.activation / 100.0) ** 3
         #logging.info('jumping for %s at activation %s' % (self.name,self.activation))
-        if self.activation > jump_threshold() and utils.random() < value and not self.clamped:
+        if self.activation > jump_threshold() and random.random() < value and not self.clamped:
             self.activate_fully()
 
     def get_name(self):

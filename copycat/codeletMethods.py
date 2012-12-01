@@ -1,4 +1,4 @@
-#import utils
+import random
 
 from coderack import coderack
 from workspaceObject import WorkspaceObject
@@ -31,7 +31,7 @@ def __getScoutSource(slipnode, relevanceMethod, typeName):
     logging.info('initial : relevance = %d, unhappiness=%d' % (initialRelevance, int(initialUnhappiness)))
     logging.info('target : relevance = %d, unhappiness=%d' % (targetRelevance, int(targetUnhappiness)))
     string = workspace.initial
-    if utils.random() * (initialRelevance + initialUnhappiness + targetRelevance + targetUnhappiness) > (initialRelevance + initialUnhappiness):
+    if random.random() * (initialRelevance + initialUnhappiness + targetRelevance + targetUnhappiness) > (initialRelevance + initialUnhappiness):
         string = workspace.target
         logging.info('target string selected: %s for %s' % (workspace.target, typeName))
     else:
@@ -62,7 +62,7 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
     structure2.updateStrength()
     weightedStrength1 = temperatureAdjustedValue(structure1.totalStrength * weight1)
     weightedStrength2 = temperatureAdjustedValue(structure2.totalStrength * weight2)
-    rhs = (weightedStrength1 + weightedStrength2) * utils.random()
+    rhs = (weightedStrength1 + weightedStrength2) * random.random()
     logging.info('%d > %d' % (weightedStrength1, rhs))
     return weightedStrength1 > rhs
 
@@ -108,7 +108,7 @@ def breaker():
                             isinstance(s, Bond) or
                             isinstance(s, Correspondence)]
     assert len(structures)
-    structure = utils.choice(structures)
+    structure = random.choice(structures)
     __showWhichStringObjectIsFrom(structure)
     breakObjects = [structure]
     if isinstance(structure, Bond):
@@ -251,14 +251,14 @@ def rule_strength_tester(codelet):
     rule = codelet.arguments[0]
     rule.updateStrength()
     probability = temperatureAdjustedProbability(rule.totalStrength / 100.0)
-    assert utils.random() <= probability
+    assert random.random() <= probability
     coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
 
 def replacement_finder():
     # choose random letter in initial string
     letters = [o for o in workspace.initial.objects if isinstance(o, Letter)]
-    letterOfInitialString = utils.choice(letters)
+    letterOfInitialString = random.choice(letters)
     logging.info('selected letter in initial string = %s' % letterOfInitialString)
     if letterOfInitialString.replacement:
         logging.info("Replacement already found for %s, so fizzling" % letterOfInitialString)
@@ -406,7 +406,7 @@ def top_down_group_scout__category(codelet):
             if category == slipnet.sameness and isinstance(source, Letter):
                 group = Group(source.string, slipnet.samenessGroup, None, slipnet.letterCategory, [source], [])
                 probability = group.singleLetterGroupProbability()
-                assert utils.random() >= probability
+                assert random.random() >= probability
                 coderack.proposeSingleLetterGroup(source, codelet)
         return
     direction = firstBond.directionCategory
@@ -528,7 +528,7 @@ def top_down_group_scout__direction(codelet):
 #noinspection PyStringFormat
 def group_scout__whole_string(codelet):
     string = workspace.initial
-    if utils.random() > 0.5:
+    if random.random() > 0.5:
         string = workspace.target
         logging.info('target string selected: %s' % workspace.target)
     else:
@@ -553,7 +553,7 @@ def group_scout__whole_string(codelet):
         objects += [leftmost]
     assert leftmost.rightmost
     # choose a random bond from list
-    chosenBond = utils.choice(bonds)
+    chosenBond = random.choice(bonds)
     category = chosenBond.category
     directionCategory = chosenBond.directionCategory
     bondFacet = chosenBond.facet
@@ -570,7 +570,7 @@ def group_strength_tester(codelet):
     group.updateStrength()
     strength = group.totalStrength
     probability = temperatureAdjustedProbability(strength / 100.0)
-    assert utils.random() <= probability
+    assert random.random() <= probability
     # it is strong enough - post builder  & activate nodes
     group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
     if group.directionCategory:
@@ -670,7 +670,7 @@ def __getCutOff(density):
         distribution = [1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0]
     else:
         distribution = [1.0, 1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0]
-    stop = sum(distribution) * utils.random()
+    stop = sum(distribution) * random.random()
     total = 0.0
     for i in range(0, len(distribution)):
         total += distribution[i]
@@ -766,7 +766,7 @@ def correspondence_strength_tester(codelet):
     correspondence.updateStrength()
     strength = correspondence.totalStrength
     probability = temperatureAdjustedProbability(strength / 100.0)
-    assert utils.random() <= probability
+    assert random.random() <= probability
     # activate some concepts
     for mapping in correspondence.conceptMappings:
         mapping.initialDescriptionType.buffer = 100.0

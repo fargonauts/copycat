@@ -1,4 +1,3 @@
-import utils
 import logging
 
 from workspace import workspace
@@ -63,7 +62,7 @@ class Group(WorkspaceObject):
 
         #check whether or not to add length description category
         probability = self.lengthDescriptionProbability()
-        if utils.random() < probability:
+        if random.random() < probability:
             length = len(self.objectList)
             if length < 6:
                 self.addDescription(slipnet.length, slipnet.numbers[length - 1])

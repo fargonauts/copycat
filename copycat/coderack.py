@@ -2,8 +2,8 @@ import re
 import inspect
 import math
 import logging
+import random
 
-import utils
 import formulas
 import workspaceFormulas
 from slipnet import slipnet
@@ -70,7 +70,7 @@ class CodeRack(object):
                     howMany = workspaceFormulas.howManyToPost(codeletName)
                     #print '%s:%d' % (codeletName,howMany)
                     for unused in range(0, howMany):
-                        if utils.random() < probability:
+                        if random.random() < probability:
                             urgency = self.getUrgencyBin(node.activation * node.conceptualDepth / 100.0)
                             codelet = Codelet(codeletName, urgency, self.codeletsRun)
                             codelet.arguments += [node]
@@ -105,7 +105,7 @@ class CodeRack(object):
         if formulas.Temperature < 25.0 and 'translator' in codeletName:
             urgency = 5
         for unused in range(0, howMany):
-            if utils.random() < probability:
+            if random.random() < probability:
                 codelet = Codelet(codeletName, urgency, self.codeletsRun)
                 self.post(codelet)
 
@@ -200,7 +200,7 @@ class CodeRack(object):
         for codelet in self.codelets:
             urgency = (coderack.codeletsRun - codelet.timeStamp) * (7.5 - codelet.urgency)
             urgencies += [urgency]
-        threshold = utils.random() * sum(urgencies)
+        threshold = random.random() * sum(urgencies)
         sumOfUrgencies = 0.0
         for i in range(0, len(self.codelets)):
             sumOfUrgencies += urgencies[i]
@@ -275,12 +275,12 @@ class CodeRack(object):
             return None
         temp = formulas.Temperature
         scale = (100.0 - temp + 10.0) / 15.0
-        #       threshold = sum( [ c.urgency ** scale for c in self.codelets ] ) * utils.random()
+        #       threshold = sum( [ c.urgency ** scale for c in self.codelets ] ) * random.random()
         urgsum = 0.0
         for codelet in self.codelets:
             urg = codelet.urgency ** scale
             urgsum += urg
-        r = utils.random()
+        r = random.random()
         threshold = r * urgsum
         chosen = None
         urgencySum = 0.0
