@@ -28,6 +28,7 @@ The script takes three arguments.
     The third is a triplet which the script should try to change analogously
 
 For example the following invocation will probably display "ijl"
+
     ```shell
     $ python main.py abc abd ijk
     ```
