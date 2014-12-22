@@ -14,7 +14,7 @@ Installation
 
 There are no particular installation instructions, just clone and run, e.g.
 
-    ```shell
+    ```sh
     $ git clone https://github.com/jalanb/co.py.cat.git
     $ cd co.py.cat/copycat
     $ python main.py abc abd ijk
@@ -29,6 +29,6 @@ The script takes three arguments.
 
 For example the following invocation will probably display "ijl"
 
-    ```shell
+    ```sh
     $ python main.py abc abd ijk
     ```
