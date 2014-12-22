@@ -14,11 +14,11 @@ Installation
 
 There are no particular installation instructions, just clone and run, e.g.
 
-    ```sh
-    $ git clone https://github.com/jalanb/co.py.cat.git
-    $ cd co.py.cat/copycat
-    $ python main.py abc abd ijk
-    ```
+```sh
+$ git clone https://github.com/jalanb/co.py.cat.git
+$ cd co.py.cat/copycat
+$ python main.py abc abd ijk
+```
 
 Running
 -------
@@ -29,6 +29,6 @@ The script takes three arguments.
 
 For example the following invocation will probably display "ijl"
 
-    ```sh
-    $ python main.py abc abd ijk
-    ```
+```sh
+$ python main.py abc abd ijk
+```
