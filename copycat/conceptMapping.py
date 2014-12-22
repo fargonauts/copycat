@@ -3,8 +3,11 @@ from slipnet import slipnet
 
 
 class ConceptMapping(object):
-    def __init__(self, initialDescriptionType, targetDescriptionType, initialDescriptor, targetDescriptor, initialObject, targetObject):
-        logging.info('make a map: %s-%s' % (initialDescriptionType.get_name(), targetDescriptionType.get_name()))
+    def __init__(self, initialDescriptionType, targetDescriptionType,
+                 initialDescriptor, targetDescriptor,
+                 initialObject, targetObject):
+        logging.info('make a map: %s-%s' % (initialDescriptionType.get_name(),
+                                            targetDescriptionType.get_name()))
         self.initialDescriptionType = initialDescriptionType
         self.targetDescriptionType = targetDescriptionType
         self.initialDescriptor = initialDescriptor
@@ -14,7 +17,8 @@ class ConceptMapping(object):
         self.label = initialDescriptor.getBondCategory(targetDescriptor)
 
     def __repr__(self):
-        return '<ConceptMapping: %s from %s to %s>' % (self.__str__(), self.initialDescriptor, self.targetDescriptor)
+        return '<ConceptMapping: %s from %s to %s>' % (
+            self.__str__(), self.initialDescriptor, self.targetDescriptor)
 
     def __str__(self):
         return self.label and self.label.name or 'anonymous'
@@ -27,7 +31,7 @@ class ConceptMapping(object):
         return association * (1 - depth * depth)
 
     def __degreeOfAssociation(self):
-        #assumes the 2 descriptors are connected in the slipnet by at most 1 link
+        # Assumes the 2 descriptors are connected in the slipnet by <= 1 link
         if self.initialDescriptor == self.targetDescriptor:
             return 100.0
         for link in self.initialDescriptor.lateralSlipLinks:
@@ -43,14 +47,18 @@ class ConceptMapping(object):
         return association * (1 + depth * depth)
 
     def __conceptualDepth(self):
-        return (self.initialDescriptor.conceptualDepth + self.targetDescriptor.conceptualDepth) / 2.0
+        return (self.initialDescriptor.conceptualDepth +
+                self.targetDescriptor.conceptualDepth) / 2.0
 
     def distinguishing(self):
-        if self.initialDescriptor == slipnet.whole and self.targetDescriptor == slipnet.whole:
+        if self.initialDescriptor == slipnet.whole:
+            if self.targetDescriptor == slipnet.whole:
+                return False
+        if not self.initialObject.distinguishingDescriptor(
+                self.initialDescriptor):
             return False
-        if not self.initialObject.distinguishingDescriptor(self.initialDescriptor):
-            return False
-        return self.targetObject.distinguishingDescriptor(self.targetDescriptor)
+        return self.targetObject.distinguishingDescriptor(
+            self.targetDescriptor)
 
     def sameInitialType(self, other):
         return self.initialDescriptionType == other.initialDescriptionType
@@ -68,7 +76,8 @@ class ConceptMapping(object):
         return self.targetDescriptor == other.targetDescriptor
 
     def sameDescriptors(self, other):
-        return self.sameInitialDescriptor(other) and self.sameTargetDescriptor(other)
+        if self.sameInitialDescriptor(other):
+            return self.sameTargetDescriptor(other)
 
     def sameKind(self, other):
         return self.sameTypes(other) and self.sameDescriptors(other)
@@ -92,9 +101,9 @@ class ConceptMapping(object):
         # related to c or if b is related to d, and the a -> b relationship is
         # different from the c -> d relationship. E.g., rightmost -> leftmost
         # is incompatible with right -> right, since rightmost is linked
-        # to right, but the relationships (opposite and identity) are different.
-        # Notice that slipnet distances are not looked at, only slipnet links. This
-        # should be changed eventually.
+        # to right, but the relationships (opposite and identity) are different
+        # Notice that slipnet distances are not looked at, only slipnet links.
+        # This should be changed eventually.
         if not self.related(other):
             return False
         if not self.label or not other.label:
@@ -102,18 +111,20 @@ class ConceptMapping(object):
         return self.label != other.label
 
     def supports(self, other):
-        # Concept-mappings (a -> b) and (c -> d) support each other if a is related
-        # to c and if b is related to d and the a -> b relationship is the same as the
-        # c -> d relationship.  E.g., rightmost -> rightmost supports right -> right
-        # and leftmost -> leftmost.  Notice that slipnet distances are not looked
-        # at, only slipnet links.  This should be changed eventually.
+        # Concept-mappings (a -> b) and (c -> d) support each other if a is
+        # related to c and if b is related to d and the a -> b relationship is
+        # the same as the c -> d relationship.  E.g., rightmost -> rightmost
+        # supports right -> right and leftmost -> leftmost.
+        # Notice that slipnet distances are not looked at, only slipnet links.
+        # This should be changed eventually.
 
         # If the two concept-mappings are the same, then return t.  This
         # means that letter->group supports letter->group, even though these
         # concept-mappings have no label.
 
-        if self.initialDescriptor == other.initialDescriptor and self.targetDescriptor == other.targetDescriptor:
-            return True
+        if self.initialDescriptor == other.initialDescriptor:
+            if self.targetDescriptor == other.targetDescriptor:
+                return True
         # if the descriptors are not related return false
         if not self.related(other):
             return False
@@ -122,15 +133,18 @@ class ConceptMapping(object):
         return self.label == other.label
 
     def relevant(self):
-        return self.initialDescriptionType.fully_active() and self.targetDescriptionType.fully_active()
+        if self.initialDescriptionType.fully_active():
+            return self.targetDescriptionType.fully_active()
 
     def slippage(self):
-        return self.label != slipnet.sameness and self.label != slipnet.identity
+        if self.label != slipnet.sameness:
+            return self.label != slipnet.identity
 
     def symmetricVersion(self):
         if not self.slippage():
             return self
-        if self.targetDescriptor.getBondCategory(self.initialDescriptor) == self.label:
+        bond = self.targetDescriptor.getBondCategory(self.initialDescriptor)
+        if bond == self.label:
             return self
         return ConceptMapping(
             self.targetDescriptionType,
@@ -140,4 +154,3 @@ class ConceptMapping(object):
             self.initialObject,
             self.targetObject
         )
-

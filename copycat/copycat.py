@@ -1,11 +1,6 @@
 import logging
-logging.basicConfig(
-        level=logging.INFO,
-        #format='%(asctime)s %(filename)s:%(lineno)d %(message)s',
-        format='%(message)s',
-        filename='./copycat.log',
-        filemode='w'
-)
+logging.basicConfig(level=logging.INFO, format='%(message)s',
+                    filename='./copycat.log', filemode='w')
 
 
 from workspace import workspace
@@ -27,10 +22,13 @@ def updateEverything():
 def mainLoop(lastUpdate):
     temperature.tryUnclamp()
     result = lastUpdate
-    if coderack.codeletsRun - lastUpdate >= slipnet.timeStepLength or not coderack.codeletsRun:
+    if not coderack.codeletsRun:
         updateEverything()
         result = coderack.codeletsRun
-    logging.debug('Number of codelets: %d' % len(coderack.codelets))
+    elif coderack.codeletsRun - lastUpdate >= slipnet.timeStepLength:
+        updateEverything()
+        result = coderack.codeletsRun
+    logging.debug('Number of codelets: %d', len(coderack.codelets))
     coderack.chooseAndRunCodelet()
     return result
 

@@ -21,7 +21,8 @@ class WorkspaceString(object):
             letter = Letter(self, position + 1, self.length)
             letter.workspaceString = self
             letter.addDescription(slipnet.objectCategory, slipnet.letter)
-            letter.addDescription(slipnet.letterCategory, slipnet.letters[value])
+            letter.addDescription(slipnet.letterCategory,
+                                  slipnet.letters[value])
             letter.describe(position + 1, self.length)
             workspace.buildDescriptions(letter)
             self.letters += [letter]
@@ -31,7 +32,8 @@ class WorkspaceString(object):
         return '<WorkspaceString: %s>' % self.string
 
     def __str__(self):
-        return '%s with %d letters, %d objects, %d bonds' % (self.string, len(self.letters), len(self.objects), len(self.bonds))
+        return '%s with %d letters, %d objects, %d bonds' % (
+            self.string, len(self.letters), len(self.objects), len(self.bonds))
 
     def log(self, heading):
         s = '%s: %s - ' % (heading, self)
@@ -60,8 +62,9 @@ class WorkspaceString(object):
                 o.relativeImportance = 0.0
         else:
             for o in self.objects:
-                logging.info('object: %s, relative: %d = raw: %d / total: %d' % (
-                o, o.relativeImportance * 1000, o.rawImportance, total))
+                logging.info('object: %s, relative: %d = raw: %d / total: %d',
+                             o, o.relativeImportance * 1000, o.rawImportance,
+                             total)
                 o.relativeImportance = o.rawImportance / total
 
     def updateIntraStringUnhappiness(self):

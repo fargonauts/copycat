@@ -4,7 +4,8 @@ from workspace import workspace
 
 
 class Bond(WorkspaceStructure):
-    def __init__(self, source, destination, bondCategory, bondFacet, sourceDescriptor, destinationDescriptor):
+    def __init__(self, source, destination, bondCategory, bondFacet,
+                 sourceDescriptor, destinationDescriptor):
         WorkspaceStructure.__init__(self)
         self.source = source
         self.string = self.source.string
@@ -12,7 +13,7 @@ class Bond(WorkspaceStructure):
         self.leftObject = self.source
         self.rightObject = self.destination
         self.directionCategory = slipnet.right
-        if self.source.leftStringPosition > self.destination.rightStringPosition:
+        if self.source.leftIndex > self.destination.rightIndex:
             self.leftObject = self.destination
             self.rightObject = self.source
             self.directionCategory = slipnet.left
@@ -94,8 +95,8 @@ class Bond(WorkspaceStructure):
     def updateInternalStrength(self):
         # bonds between objects of same type(ie. letter or group) are
         # stronger than bonds between different types
-        sourceGap = self.get_source().leftStringPosition != self.get_source().rightStringPosition
-        destinationGap = self.destination.leftStringPosition != self.destination.rightStringPosition
+        sourceGap = self.get_source().leftIndex != self.get_source().rightIndex
+        destinationGap = self.destination.leftIndex != self.destination.rightIndex
         if sourceGap == destinationGap:
             memberCompatibility = 1.0
         else:

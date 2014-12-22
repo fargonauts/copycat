@@ -26,25 +26,27 @@ class Description(WorkspaceStructure):
         self.internalStrength = self.descriptor.conceptualDepth
 
     def updateExternalStrength(self):
-        self.externalStrength = (self.localSupport() + self.descriptionType.activation) / 2
+        self.externalStrength = (self.localSupport() +
+                                 self.descriptionType.activation) / 2
 
     def localSupport(self):
         from workspace import workspace
-        supporters = 0  # number of objects in the string with a descriptionType like self
+        described_like_self = 0
         for other in workspace.otherObjects(self.object):
-            if not (self.object.isWithin(other) or other.isWithin(self.object)):
-                for description in other.descriptions:
-                    if description.descriptionType == self.descriptionType:
-                        supporters += 1
+            if self.object.isWithin(other) or other.isWithin(self.object):
+                continue
+            for description in other.descriptions:
+                if description.descriptionType == self.descriptionType:
+                    described_like_self += 1
         results = {0: 0.0, 1: 20.0, 2: 60.0, 3: 90.0}
-        if supporters in results:
-            return results[supporters]
+        if described_like_self in results:
+            return results[described_like_self]
         return 100.0
 
     def build(self):
         self.descriptionType.buffer = 100.0
         self.descriptor.buffer = 100.0
-        if not self.object.hasDescription(self.descriptor):
+        if not self.object.described(self.descriptor):
             logging.info('Add %s to descriptions' % self)
             self.object.descriptions += [self]
 

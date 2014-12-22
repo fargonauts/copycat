@@ -1,6 +1,6 @@
 import math
 import logging
-import random
+from random import random
 
 
 def full_activation():
@@ -48,6 +48,9 @@ class Slipnode(object):
     def unclamp(self):
         self.clamped = False
 
+    def unclamped(self):
+        return not self.clamped
+
     def setConceptualDepth(self, depth):
         logging.info('set depth to %s for %s' % (depth, self.name))
         self.conceptualDepth = depth
@@ -60,7 +63,8 @@ class Slipnode(object):
 
     def fully_active(self):
         """Whether this node has full activation"""
-        return self.activation > full_activation() - 0.00001  # allow a little leeway for floats
+        float_margin = 0.00001
+        return self.activation > full_activation() - float_margin
 
     def activate_fully(self):
         """Make this node fully active"""
@@ -115,7 +119,8 @@ class Slipnode(object):
 
         if relation == slipnet.identity:
             return self
-        destinations = [l.destination for l in self.outgoingLinks if l.label == relation]
+        destinations = [l.destination
+                        for l in self.outgoingLinks if l.label == relation]
         if destinations:
             return destinations[0]
         node = None
@@ -147,15 +152,21 @@ class Slipnode(object):
             [link.spread_activation() for link in self.outgoingLinks]
 
     def addBuffer(self):
-        if not self.clamped:
+        if self.unclamped():
             self.activation += self.buffer
         self.activation = min(self.activation, 100)
         self.activation = max(self.activation, 0)
 
-    def jump(self):
+    def can_jump():
+        if self.activation <= jump_threshold():
+            return False
+        if self.clamped:
+            return False
         value = (self.activation / 100.0) ** 3
-        #logging.info('jumping for %s at activation %s' % (self.name,self.activation))
-        if self.activation > jump_threshold() and random.random() < value and not self.clamped:
+        return random() < value
+
+    def jump(self):
+        if self.can_jump():
             self.activate_fully()
 
     def get_name(self):

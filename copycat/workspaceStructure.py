@@ -1,6 +1,11 @@
 import formulas
 
 
+def abstract_call(objekt, name):
+    raise NotImplementedError('call of abstract method: %s.%s()' %
+                              (objekt.__class__.__name__, name))
+
+
 class WorkspaceStructure(object):
     def __init__(self):
         self.string = None
@@ -14,8 +19,9 @@ class WorkspaceStructure(object):
         self.updateTotalStrength()
 
     def updateTotalStrength(self):
-        """Recalculate the total strength based on internal and external strengths"""
-        weights = ((self.internalStrength, self.internalStrength), (self.externalStrength, 100 - self.internalStrength))
+        """Recalculate the strength from internal and external strengths"""
+        weights = ((self.internalStrength, self.internalStrength),
+                   (self.externalStrength, 100 - self.internalStrength))
         strength = formulas.weightedAverage(weights)
         self.totalStrength = strength
 
@@ -25,14 +31,14 @@ class WorkspaceStructure(object):
 
     def updateInternalStrength(self):
         """How internally cohesive the structure is"""
-        raise NotImplementedError('call of abstract method: WorkspaceStructure.updateInternalStrength()')
+        abstract_call(self, 'updateInternalStrength')
 
     def updateExternalStrength(self):
-        raise NotImplementedError('call of abstract method: WorkspaceStructure.updateExternalStrength()')
+        abstract_call(self, 'updateExternalStrength')
 
     def break_the_structure(self):
         """Break this workspace structure
 
         Exactly what is broken depends on sub-class
         """
-        raise NotImplementedError('call of abstract method: WorkspaceStructure.break_the_structure()')
+        abstract_call(self, 'break_the_structure')

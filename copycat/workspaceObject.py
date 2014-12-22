@@ -26,8 +26,8 @@ class WorkspaceObject(WorkspaceStructure):
         self.newAnswerLetter = False
         self.name = ''
         self.replacement = None
-        self.rightStringPosition = 0
-        self.leftStringPosition = 0
+        self.rightIndex = 0
+        self.leftIndex = 0
         self.leftmost = False
         self.rightmost = False
         self.intraStringSalience = 0.0
@@ -49,19 +49,14 @@ class WorkspaceObject(WorkspaceStructure):
         self.descriptions += [description]
 
     def addDescriptions(self, descriptions):
-        #print 'addDescriptions 1'
-        #print 'add %d to %d of %s' % (len(descriptions),len(self.descriptions), self.string.string)
-        copy = descriptions[:]  # in case we add to our own descriptions, which turns the loop infinite
+        copy = descriptions[:]  # in case we add to our own descriptions
         for description in copy:
-            #print '%d addDescriptions 2 %s ' % (len(descriptions),description)
             logging.info('might add: %s' % description)
             if not self.containsDescription(description):
-                #print '%d addDescriptions 3 %s ' % (len(descriptions),description)
-                self.addDescription(description.descriptionType, description.descriptor)
-                #print '%d addDescriptions 4 %s ' % (len(descriptions),description)
+                self.addDescription(description.descriptionType,
+                                    description.descriptor)
             else:
                 logging.info("Won't add it")
-        #print '%d added, have %d ' % (len(descriptions),len(self.descriptions))
         from workspace import workspace
         workspace.buildDescriptions(self)
 
@@ -113,17 +108,25 @@ class WorkspaceObject(WorkspaceStructure):
             self.interStringSalience = 100.0
         else:
             from formulas import weightedAverage
-            self.intraStringSalience = weightedAverage(((self.relativeImportance, 0.2), (self.intraStringUnhappiness, 0.8)))
-            self.interStringSalience = weightedAverage(((self.relativeImportance, 0.8), (self.interStringUnhappiness, 0.2)))
-        self.totalSalience = (self.intraStringSalience + self.interStringSalience) / 2.0
+            self.intraStringSalience = weightedAverage((
+                (self.relativeImportance, 0.2),
+                (self.intraStringUnhappiness, 0.8)))
+            self.interStringSalience = weightedAverage((
+                (self.relativeImportance, 0.8),
+                (self.interStringUnhappiness, 0.2)))
+        self.totalSalience = (self.intraStringSalience +
+                              self.interStringSalience) / 2.0
         logging.info('Set salience of %s to %f = (%f + %f)/2' % (
-            self.__str__(), self.totalSalience, self.intraStringSalience, self.interStringSalience))
+            self.__str__(), self.totalSalience,
+            self.intraStringSalience, self.interStringSalience))
 
     def isWithin(self, other):
-        return self.leftStringPosition >= other.leftStringPosition and self.rightStringPosition <= other.rightStringPosition
+        return (self.leftIndex >= other.leftIndex and
+                self.rightIndex <= other.rightIndex)
 
     def relevantDescriptions(self):
-        return [d for d in self.descriptions if d.descriptionType.fully_active()]
+        return [d for d in self.descriptions
+                if d.descriptionType.fully_active()]
 
     def morePossibleDescriptions(self, node):
         return []
@@ -134,14 +137,15 @@ class WorkspaceObject(WorkspaceStructure):
         from group import Group
         for link in descriptionType.instanceLinks:
             node = link.destination
-            if node == slipnet.first and self.hasDescription(slipnet.letters[0]):
+            if node == slipnet.first and self.described(slipnet.letters[0]):
                 descriptions += [node]
-            if node == slipnet.last and self.hasDescription(slipnet.letters[-1]):
+            if node == slipnet.last and self.described(slipnet.letters[-1]):
                 descriptions += [node]
             i = 1
             for number in slipnet.numbers:
-                if node == number and isinstance(self, Group) and len(self.objectList) == i:
-                    descriptions += [node]
+                if node == number and isinstance(self, Group):
+                    if len(self.objectList) == i:
+                        descriptions += [node]
                 i += 1
             if node == slipnet.middle and self.middleObject():
                 descriptions += [node]
@@ -155,26 +159,27 @@ class WorkspaceObject(WorkspaceStructure):
         soughtType = sought.descriptionType
         soughtDescriptor = sought.descriptor
         for d in self.descriptions:
-            if soughtType == d.descriptionType and soughtDescriptor == d.descriptor:
-                return True
+            if soughtType == d.descriptionType:
+                if soughtDescriptor == d.descriptor:
+                    return True
         return False
 
-    def hasDescription(self, slipnode):
-        return [d for d in self.descriptions if d.descriptor == slipnode] and True or False
+    def described(self, slipnode):
+        return bool([d for d in self.descriptions if d.descriptor == slipnode])
 
     def middleObject(self):
         # XXX only works if string is 3 chars long
         # as we have access to the string, why not just " == len / 2" ?
         objectOnMyRightIsRightmost = objectOnMyLeftIsLeftmost = False
         for objekt in self.string.objects:
-            if objekt.leftmost and objekt.rightStringPosition == self.leftStringPosition - 1:
+            if objekt.leftmost and objekt.rightIndex == self.leftIndex - 1:
                 objectOnMyLeftIsLeftmost = True
-            if objekt.rightmost and objekt.leftStringPosition == self.rightStringPosition + 1:
+            if objekt.rightmost and objekt.leftIndex == self.rightIndex + 1:
                 objectOnMyRightIsRightmost = True
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
 
     def distinguishingDescriptor(self, descriptor):
-        """Whether no other object of the same type (ie. letter or group) has the same descriptor"""
+        """Whether no other object of the same type has the same descriptor"""
         if descriptor == slipnet.letter:
             return False
         if descriptor == slipnet.group:
@@ -185,12 +190,15 @@ class WorkspaceObject(WorkspaceStructure):
         return True
 
     def relevantDistinguishingDescriptors(self):
-        return [d.descriptor for d in self.relevantDescriptions() if self.distinguishingDescriptor(d.descriptor)]
+        return [d.descriptor
+                for d in self.relevantDescriptions()
+                if self.distinguishingDescriptor(d.descriptor)]
 
     def getDescriptor(self, descriptionType):
-        """The description attached to this object of the specified description type."""
+        """The description attached to this object of the description type."""
         descriptor = None
-        logging.info("\nIn %s, trying for type: %s" % (self, descriptionType.get_name()))
+        logging.info("\nIn %s, trying for type: %s" % (
+            self, descriptionType.get_name()))
         for description in self.descriptions:
             logging.info("Trying description: %s" % description)
             if description.descriptionType == descriptionType:
@@ -198,7 +206,7 @@ class WorkspaceObject(WorkspaceStructure):
         return descriptor
 
     def getDescriptionType(self, sought_description):
-        """The description_type attached to this object of the specified description"""
+        """The description_type attached to this object of that description"""
         for description in self.descriptions:
             if description.descriptor == sought_description:
                 return description.descriptionType
@@ -206,21 +214,22 @@ class WorkspaceObject(WorkspaceStructure):
         return description
 
     def getCommonGroups(self, other):
-        return [o for o in self.string.objects if self.isWithin(o) and other.isWithin(o)]
+        return [o for o in self.string.objects
+                if self.isWithin(o) and other.isWithin(o)]
 
     def letterDistance(self, other):
-        if other.leftStringPosition > self.rightStringPosition:
-            return other.leftStringPosition - self.rightStringPosition
-        if self.leftStringPosition > other.rightStringPosition:
-            return self.leftStringPosition - other.rightStringPosition
+        if other.leftIndex > self.rightIndex:
+            return other.leftIndex - self.rightIndex
+        if self.leftIndex > other.rightIndex:
+            return self.leftIndex - other.rightIndex
         return 0
 
     def letterSpan(self):
-        return self.rightStringPosition - self.leftStringPosition + 1
+        return self.rightIndex - self.leftIndex + 1
 
     def beside(self, other):
         if self.string != other.string:
             return False
-        if self.leftStringPosition == other.rightStringPosition + 1:
+        if self.leftIndex == other.rightIndex + 1:
             return True
-        return other.leftStringPosition == self.rightStringPosition + 1
+        return other.leftIndex == self.rightIndex + 1

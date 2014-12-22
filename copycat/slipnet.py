@@ -38,8 +38,6 @@ class SlipNet(object):
         if self.numberOfUpdates == 50:
             [node.unclamp() for node in self.initiallyClampedSlipnodes]
         [node.update() for node in self.slipnodes]
-        # Note - spreadActivation() affects more than one node, so the following
-        #   cannot go in a general "for node" loop with the other node actions
         for node in self.slipnodes:
             node.spread_activation()
         for node in self.slipnodes:
@@ -103,10 +101,13 @@ class SlipNet(object):
 
         # categories
         self.letterCategory = self.__addNode('letterCategory', 30.0)
-        self.stringPositionCategory = self.__addNode('stringPositionCategory', 70.0)
+        self.stringPositionCategory = self.__addNode(
+            'stringPositionCategory', 70.0)
         self.stringPositionCategory.codelets += ['top-down-description-scout']
-        self.alphabeticPositionCategory = self.__addNode('alphabeticPositionCategory', 80.0)
-        self.alphabeticPositionCategory.codelets += ['top-down-description-scout']
+        self.alphabeticPositionCategory = self.__addNode(
+            'alphabeticPositionCategory', 80.0)
+        self.alphabeticPositionCategory.codelets += [
+            'top-down-description-scout']
         self.directionCategory = self.__addNode('directionCategory', 70.0)
         self.bondCategory = self.__addNode('bondCategory', 80.0)
         self.groupCategory = self.__addNode('groupCategory', 80.0)
@@ -151,14 +152,18 @@ class SlipNet(object):
         self.__addInstanceLink(self.objectCategory, self.letter, 100.0)
         self.__addInstanceLink(self.objectCategory, self.group, 100.0)
         # string positions
-        self.__addInstanceLink(self.stringPositionCategory, self.leftmost, 100.0)
-        self.__addInstanceLink(self.stringPositionCategory, self.rightmost, 100.0)
+        self.__addInstanceLink(
+            self.stringPositionCategory, self.leftmost, 100.0)
+        self.__addInstanceLink(
+            self.stringPositionCategory, self.rightmost, 100.0)
         self.__addInstanceLink(self.stringPositionCategory, self.middle, 100.0)
         self.__addInstanceLink(self.stringPositionCategory, self.single, 100.0)
         self.__addInstanceLink(self.stringPositionCategory, self.whole, 100.0)
         # alphabetic positions
-        self.__addInstanceLink(self.alphabeticPositionCategory, self.first, 100.0)
-        self.__addInstanceLink(self.alphabeticPositionCategory, self.last, 100.0)
+        self.__addInstanceLink(
+            self.alphabeticPositionCategory, self.first, 100.0)
+        self.__addInstanceLink(
+            self.alphabeticPositionCategory, self.last, 100.0)
         # direction categories
         self.__addInstanceLink(self.directionCategory, self.left, 100.0)
         self.__addInstanceLink(self.directionCategory, self.right, 100.0)
@@ -167,17 +172,25 @@ class SlipNet(object):
         self.__addInstanceLink(self.bondCategory, self.successor, 100.0)
         self.__addInstanceLink(self.bondCategory, self.sameness, 100.0)
         # group categories
-        self.__addInstanceLink(self.groupCategory, self.predecessorGroup, 100.0)
+        self.__addInstanceLink(
+            self.groupCategory, self.predecessorGroup, 100.0)
         self.__addInstanceLink(self.groupCategory, self.successorGroup, 100.0)
         self.__addInstanceLink(self.groupCategory, self.samenessGroup, 100.0)
         # link bonds to their groups
-        self.__addNonSlipLink(self.sameness, self.samenessGroup, label=self.groupCategory, length=30.0)
-        self.__addNonSlipLink(self.successor, self.successorGroup, label=self.groupCategory, length=60.0)
-        self.__addNonSlipLink(self.predecessor, self.predecessorGroup, label=self.groupCategory, length=60.0)
+        self.__addNonSlipLink(
+            self.sameness, self.samenessGroup, label=self.groupCategory,
+            length=30.0)
+        self.__addNonSlipLink(self.successor, self.successorGroup,
+                              label=self.groupCategory, length=60.0)
+        self.__addNonSlipLink(self.predecessor, self.predecessorGroup,
+                              label=self.groupCategory, length=60.0)
         # link bond groups to their bonds
-        self.__addNonSlipLink(self.samenessGroup, self.sameness, label=self.bondCategory, length=90.0)
-        self.__addNonSlipLink(self.successorGroup, self.successor, label=self.bondCategory, length=90.0)
-        self.__addNonSlipLink(self.predecessorGroup, self.predecessor, label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.samenessGroup, self.sameness,
+                              label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.successorGroup, self.successor,
+                              label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.predecessorGroup, self.predecessor,
+                              label=self.bondCategory, length=90.0)
         # bond facets
         self.__addInstanceLink(self.bondFacet, self.letterCategory, 100.0)
         self.__addInstanceLink(self.bondFacet, self.length, 100.0)

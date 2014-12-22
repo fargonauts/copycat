@@ -4,7 +4,8 @@ from formulas import getMappings
 
 
 class Correspondence(WorkspaceStructure):
-    def __init__(self, objectFromInitial, objectFromTarget, conceptMappings, flipTargetObject):
+    def __init__(self, objectFromInitial, objectFromTarget,
+                 conceptMappings, flipTargetObject):
         WorkspaceStructure.__init__(self)
         self.objectFromInitial = objectFromInitial
         self.objectFromTarget = objectFromTarget
@@ -16,13 +17,15 @@ class Correspondence(WorkspaceStructure):
         return '<%s>' % self.__str__()
 
     def __str__(self):
-        return 'Correspondence between %s and %s' % (self.objectFromInitial, self.objectFromTarget)
+        return 'Correspondence between %s and %s' % (
+            self.objectFromInitial, self.objectFromTarget)
 
     def distinguishingConceptMappings(self):
         return [m for m in self.conceptMappings if m.distinguishing()]
 
     def relevantDistinguishingConceptMappings(self):
-        return [m for m in self.conceptMappings if m.distinguishing() and m.relevant()]
+        return [m for m in self.conceptMappings
+                if m.distinguishing() and m.relevant()]
 
     def extract_target_bond(self):
         targetBond = False
@@ -64,7 +67,8 @@ class Correspondence(WorkspaceStructure):
         return None
 
     def getIncompatibleCorrespondences(self):
-        return [o.correspondence for o in workspace.initial.objects if o and self.incompatible(o.correspondence)]
+        return [o.correspondence for o in workspace.initial.objects
+                if o and self.incompatible(o.correspondence)]
 
     def incompatible(self, other):
         if not other:
@@ -96,22 +100,27 @@ class Correspondence(WorkspaceStructure):
 
     def support(self):
         from letter import Letter
-        if isinstance(self.objectFromInitial, Letter) and self.objectFromInitial.spansString():
-            return 100.0
-        if isinstance(self.objectFromTarget, Letter) and self.objectFromTarget.spansString():
-            return 100.0
-        total = sum([c.totalStrength for c in workspace.correspondences() if self.supporting(c)])
+        if isinstance(self.objectFromInitial, Letter):
+            if self.objectFromInitial.spansString():
+                return 100.0
+        if isinstance(self.objectFromTarget, Letter):
+            if self.objectFromTarget.spansString():
+                return 100.0
+        total = sum([c.totalStrength for c in workspace.correspondences()
+                     if self.supporting(c)])
         total = min(total, 100.0)
         return total
 
     def updateInternalStrength(self):
-        """A function of how many conceptMappings there are, their strength and how well they cohere"""
-        relevantDistinguishingMappings = self.relevantDistinguishingConceptMappings()
-        numberOfConceptMappings = len(relevantDistinguishingMappings)
+        """A function of how many concept mappings there are
+
+        Also considered: their strength and how well they cohere"""
+        distinguishingMappings = self.relevantDistinguishingConceptMappings()
+        numberOfConceptMappings = len(distinguishingMappings)
         if numberOfConceptMappings < 1:
             self.internalStrength = 0.0
             return
-        totalStrength = sum([m.strength() for m in relevantDistinguishingMappings])
+        totalStrength = sum([m.strength() for m in distinguishingMappings])
         averageStrength = totalStrength / numberOfConceptMappings
         if numberOfConceptMappings == 1.0:
             numberOfConceptMappingsFactor = 0.8
@@ -123,14 +132,15 @@ class Correspondence(WorkspaceStructure):
             internalCoherenceFactor = 2.5
         else:
             internalCoherenceFactor = 1.0
-        internalStrength = averageStrength * internalCoherenceFactor * numberOfConceptMappingsFactor
+        internalStrength = (averageStrength * internalCoherenceFactor *
+                            numberOfConceptMappingsFactor)
         self.internalStrength = min(internalStrength, 100.0)
 
     def updateExternalStrength(self):
         self.externalStrength = self.support()
 
     def internallyCoherent(self):
-        """Whether any pair of relevant distinguishing mappings support each other"""
+        """Whether any pair of distinguishing mappings support each other"""
         mappings = self.relevantDistinguishingConceptMappings()
         for i in range(0, len(mappings)):
             for j in range(0, len(mappings)):
@@ -145,9 +155,10 @@ class Correspondence(WorkspaceStructure):
         return mappings
 
     def reflexive(self):
-        if not self.objectFromInitial.correspondence:
+        initial = self.objectFromInitial
+        if not initial.correspondence:
             return False
-        if self.objectFromInitial.correspondence.objectFromTarget == self.objectFromTarget:
+        if initial.correspondence.objectFromTarget == self.objectFromTarget:
             return True
         return False
 
@@ -165,17 +176,19 @@ class Correspondence(WorkspaceStructure):
             if mapping.slippage():
                 self.accessoryConceptMappings += [mapping.symmetricVersion()]
         from group import Group
-        if isinstance(self.objectFromInitial, Group) and isinstance(self.objectFromTarget, Group):
-            bondMappings = getMappings(
-                self.objectFromInitial,
-                self.objectFromTarget,
-                self.objectFromInitial.bondDescriptions,
-                self.objectFromTarget.bondDescriptions
-            )
-            for mapping in bondMappings:
-                self.accessoryConceptMappings += [mapping]
-                if mapping.slippage():
-                    self.accessoryConceptMappings += [mapping.symmetricVersion()]
+        if isinstance(self.objectFromInitial, Group):
+            if isinstance(self.objectFromTarget, Group):
+                bondMappings = getMappings(
+                    self.objectFromInitial,
+                    self.objectFromTarget,
+                    self.objectFromInitial.bondDescriptions,
+                    self.objectFromTarget.bondDescriptions
+                )
+                for mapping in bondMappings:
+                    self.accessoryConceptMappings += [mapping]
+                    if mapping.slippage():
+                        self.accessoryConceptMappings += [
+                            mapping.symmetricVersion()]
         for mapping in self.conceptMappings:
             if mapping.label:
                 mapping.label.activation = 100.0

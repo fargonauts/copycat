@@ -15,7 +15,9 @@ class Rule(WorkspaceStructure):
     def __str__(self):
         if not self.facet:
             return 'Empty rule'
-        return 'replace %s of %s %s by %s' % (self.facet.name, self.descriptor.name, self.category.name, self.relation.name)
+        return 'replace %s of %s %s by %s' % (
+            self.facet.name, self.descriptor.name,
+            self.category.name, self.relation.name)
 
     def updateExternalStrength(self):
         self.externalStrength = self.internalStrength
@@ -24,7 +26,8 @@ class Rule(WorkspaceStructure):
         if not (self.descriptor and self.relation):
             self.internalStrength = 0.0
             return
-        averageDepth = (self.descriptor.conceptualDepth + self.relation.conceptualDepth) / 2.0
+        averageDepth = (self.descriptor.conceptualDepth +
+                        self.relation.conceptualDepth) / 2.0
         averageDepth **= 1.1
         # see if the object corresponds to an object
         # if so, see if the descriptor is present (modulo slippages) in the
@@ -36,13 +39,17 @@ class Rule(WorkspaceStructure):
             targetObject = changed.correspondence.objectFromTarget
             slippages = workspace.slippages()
             slipnode = self.descriptor.applySlippages(slippages)
-            if not targetObject.hasDescription(slipnode):
+            if not targetObject.described(slipnode):
                 self.internalStrength = 0.0
                 return
             sharedDescriptorTerm = 100.0
-        sharedDescriptorWeight = ((100.0 - self.descriptor.conceptualDepth) / 10.0) ** 1.4
-        depthDifference = 100.0 - abs(self.descriptor.conceptualDepth - self.relation.conceptualDepth)
-        weights = ((depthDifference, 12), (averageDepth, 18), (sharedDescriptorTerm, sharedDescriptorWeight))
+        conceptual_height = (100.0 - self.descriptor.conceptualDepth) / 10.0
+        sharedDescriptorWeight = conceptual_height ** 1.4
+        depthDifference = 100.0 - abs(self.descriptor.conceptualDepth -
+                                      self.relation.conceptualDepth)
+        weights = ((depthDifference, 12),
+                   (averageDepth, 18),
+                   (sharedDescriptorTerm, sharedDescriptorWeight))
         self.internalStrength = weightedAverage(weights)
         if self.internalStrength > 100.0:
             self.internalStrength = 100.0
@@ -81,9 +88,8 @@ class Rule(WorkspaceStructure):
         if correspondence.objectFromInitial != changed:
             return False
         # it is incompatible if the rule descriptor is not in the mapping list
-        if len([m for m in correspondence.conceptMappings if m.initialDescriptor == self.descriptor]):
-            return False
-        return True
+        return bool([m for m in correspondence.conceptMappings
+                     if m.initialDescriptor == self.descriptor])
 
     def __changeString(self, string):
         # applies the changes to self string ie. successor
@@ -114,17 +120,18 @@ class Rule(WorkspaceStructure):
         # generate the final string
         self.finalAnswer = workspace.targetString
         changeds = [o for o in workspace.target.objects if
-            o.hasDescription(self.descriptor) and
-            o.hasDescription(self.category)]
+                    o.described(self.descriptor) and
+                    o.described(self.category)]
         changed = changeds and changeds[0] or None
         logging.debug('changed object = %s' % changed)
         if changed:
-            left = changed.leftStringPosition
+            left = changed.leftIndex
             startString = ''
             if left > 1:
                 startString = self.finalAnswer[0: left - 1]
-            right = changed.rightStringPosition
-            middleString = self.__changeString(self.finalAnswer[left - 1: right])
+            right = changed.rightIndex
+            middleString = self.__changeString(
+                self.finalAnswer[left - 1: right])
             if not middleString:
                 return False
             endString = ''

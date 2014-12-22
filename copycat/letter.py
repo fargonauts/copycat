@@ -8,10 +8,10 @@ class Letter(WorkspaceObject):
         from workspace import workspace
         workspace.objects += [self]
         string.objects += [self]
-        self.leftStringPosition = position
-        self.leftmost = self.leftStringPosition == 1
-        self.rightStringPosition = position
-        self.rightmost = self.rightStringPosition == length
+        self.leftIndex = position
+        self.leftmost = self.leftIndex == 1
+        self.rightIndex = position
+        self.rightmost = self.rightIndex == length
 
     def describe(self, position, length):
         if length == 1:
@@ -29,9 +29,9 @@ class Letter(WorkspaceObject):
     def __str__(self):
         if not self.string:
             return ''
-        i = self.leftStringPosition - 1
+        i = self.leftIndex - 1
         if len(self.string) <= i:
-            raise ValueError('len(self.string) <= self.leftStringPosition :: %d <= %d' % (len(self.string), self.leftStringPosition))
+            raise ValueError('len(self.string) <= self.leftIndex :: %d <= %d' % (len(self.string), self.leftIndex))
         return self.string[i]
 
     def distinguishingDescriptor(self, descriptor):

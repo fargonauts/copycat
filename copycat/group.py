@@ -19,10 +19,10 @@ class Group(WorkspaceObject):
 
         leftObject = objectList[0]
         rightObject = objectList[-1]
-        self.leftStringPosition = leftObject.leftStringPosition
-        self.leftmost = self.leftStringPosition == 1
-        self.rightStringPosition = rightObject.rightStringPosition
-        self.rightmost = self.rightStringPosition == len(self.string)
+        self.leftIndex = leftObject.leftIndex
+        self.leftmost = self.leftIndex == 1
+        self.rightIndex = rightObject.rightIndex
+        self.rightmost = self.rightIndex == len(self.string)
 
         self.descriptions = []
         self.bondDescriptions = []
@@ -54,9 +54,9 @@ class Group(WorkspaceObject):
             self.addDescription(slipnet.directionCategory, self.directionCategory)
         if self.spansString():
             self.addDescription(slipnet.stringPositionCategory, slipnet.whole)
-        elif self.leftStringPosition == 1:
+        elif self.leftIndex == 1:
             self.addDescription(slipnet.stringPositionCategory, slipnet.leftmost)
-        elif self.rightStringPosition == self.string.length:
+        elif self.rightIndex == self.string.length:
             self.addDescription(slipnet.stringPositionCategory, slipnet.rightmost)
         elif self.middleObject():
             self.addDescription(slipnet.stringPositionCategory, slipnet.middle)
@@ -70,8 +70,8 @@ class Group(WorkspaceObject):
 
     def __str__(self):
         s = self.string.__str__()
-        l = self.leftStringPosition - 1
-        r = self.rightStringPosition
+        l = self.leftIndex - 1
+        r = self.rightIndex
         return 'group[%d:%d] == %s' % (l, r - 1, s[l:r])
 
     def getIncompatibleGroups(self):
@@ -190,7 +190,7 @@ class Group(WorkspaceObject):
         count = 0
         for objekt in self.string.objects:
             if isinstance(objekt, Group):
-                if objekt.rightStringPosition < self.leftStringPosition or objekt.leftStringPosition > self.rightStringPosition:
+                if objekt.rightIndex < self.leftIndex or objekt.leftIndex > self.rightIndex:
                     if objekt.groupCategory == self.groupCategory and objekt.directionCategory == self.directionCategory:
                         count += 1
         return count
@@ -201,9 +201,9 @@ class Group(WorkspaceObject):
         return 100.0 * numberOfSupporters / halfLength
 
     def sameGroup(self, other):
-        if self.leftStringPosition != other.leftStringPosition:
+        if self.leftIndex != other.leftIndex:
             return False
-        if self.rightStringPosition != other.rightStringPosition:
+        if self.rightIndex != other.rightIndex:
             return False
         if self.groupCategory != other.groupCategory:
             return False

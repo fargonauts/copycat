@@ -38,7 +38,8 @@ class CoderackPressures(object):
         self.pressures += [CoderackPressure('Rule Codelets')]
         self.pressures += [CoderackPressure('Rule Translator')]
         self.pressures += [CoderackPressure('Bottom Up Correspondences')]
-        self.pressures += [CoderackPressure('Important Object Correspondences')]
+        self.pressures += [CoderackPressure(
+            'Important Object Correspondences')]
         self.pressures += [CoderackPressure('Breakers')]
 
     def calculatePressures(self):
@@ -121,7 +122,7 @@ class CoderackPressures(object):
         if codelet.pressure:
             codelet.pressure.codelets += [codelet]  # XXX why do this
         if i >= 0:
-            codelet.pressure = self.pressures[i]     # when following with this ?
+            codelet.pressure = self.pressures[i]     # when this is next?
         logging.info('Add %s: %d' % (codelet.name, i))
         if node:
             logging.info('Node: %s' % node.name)

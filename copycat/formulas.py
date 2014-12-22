@@ -14,12 +14,12 @@ def selectListPosition(probabilities):
     stopPosition = total * r
     #logging.info('stopPosition: %s' % stopPosition)
     total = 0
-    index = 0
+    i = 0
     for probability in probabilities:
         total += probability
         if total > stopPosition:
-            return index
-        index += 1
+            return i
+        i += 1
     return 0
 
 
@@ -75,9 +75,9 @@ def chooseObjectFromList(objects, attribute):
         probability = temperatureAdjustedValue(value)
         logging.info('Object: %s, value: %d, probability: %d' % (object, value, probability))
         probabilities += [probability]
-    index = selectListPosition(probabilities)
-    logging.info("Selected: %d" % index)
-    return objects[index]
+    i = selectListPosition(probabilities)
+    logging.info("Selected: %d" % i)
+    return objects[i]
 
 
 def chooseRelevantDescriptionByActivation(workspaceObject):
@@ -85,8 +85,8 @@ def chooseRelevantDescriptionByActivation(workspaceObject):
     if not descriptions:
         return None
     activations = [description.descriptor.activation for description in descriptions]
-    index = selectListPosition(activations)
-    return descriptions[index]
+    i = selectListPosition(activations)
+    return descriptions[i]
 
 
 def similarPropertyLinks(slip_node):

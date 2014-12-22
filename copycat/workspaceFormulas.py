@@ -50,9 +50,9 @@ def chooseNeighbour(source):
     for objekt in workspace.objects:
         if objekt.string != source.string:
             continue
-        if objekt.leftStringPosition == source.rightStringPosition + 1:
+        if objekt.leftIndex == source.rightIndex + 1:
             objects += [objekt]
-        elif source.leftStringPosition == objekt.rightStringPosition + 1:
+        elif source.leftIndex == objekt.rightIndex + 1:
             objects += [objekt]
     return formulas.chooseObjectFromList(objects, "intraStringSalience")
 
@@ -69,7 +69,7 @@ def __chooseLeftNeighbor(source):
     objects = []
     for o in workspace.objects:
         if o.string == source.string:
-            if source.leftStringPosition == o.rightStringPosition + 1:
+            if source.leftIndex == o.rightIndex + 1:
                 logging.info('%s is on left of %s' % (o, source))
                 objects += [o]
             else:
@@ -81,7 +81,7 @@ def __chooseLeftNeighbor(source):
 def __chooseRightNeighbor(source):
     objects = [o for o in workspace.objects if
         o.string == source.string and
-        o.leftStringPosition == source.rightStringPosition + 1
+        o.leftIndex == source.rightIndex + 1
     ]
     return formulas.chooseObjectFromList(objects, 'intraStringSalience')
 
