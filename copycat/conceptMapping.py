@@ -6,8 +6,9 @@ class ConceptMapping(object):
     def __init__(self, initialDescriptionType, targetDescriptionType,
                  initialDescriptor, targetDescriptor,
                  initialObject, targetObject):
-        logging.info('make a map: %s-%s' % (initialDescriptionType.get_name(),
-                                            targetDescriptionType.get_name()))
+        # pylint: disable=too-many-arguments
+        logging.info('make a map: %s-%s', initialDescriptionType.get_name(),
+                     targetDescriptionType.get_name())
         self.initialDescriptionType = initialDescriptionType
         self.targetDescriptionType = targetDescriptionType
         self.initialDescriptor = initialDescriptor

@@ -5,6 +5,7 @@ from sliplink import Sliplink
 
 
 class SlipNet(object):
+    # pylint: disable=too-many-instance-attributes
     def __init__(self):
         logging.debug("SlipNet.__init__()")
         self.initiallyClampedSlipnodes = []
@@ -21,8 +22,8 @@ class SlipNet(object):
         return '<slipnet>'
 
     def setConceptualDepths(self, depth):
-        logging.debug('slipnet set all depths to %f' % depth)
-        [node.setConceptualDepth(depth) for node in self.slipnodes]
+        logging.debug('slipnet set all depths to %f', depth)
+        _ = [node.setConceptualDepth(depth) for node in self.slipnodes]
 
     def reset(self):
         logging.debug('slipnet.reset()')
@@ -36,8 +37,8 @@ class SlipNet(object):
         logging.debug('slipnet.update()')
         self.numberOfUpdates += 1
         if self.numberOfUpdates == 50:
-            [node.unclamp() for node in self.initiallyClampedSlipnodes]
-        [node.update() for node in self.slipnodes]
+            _ = [node.unclamp() for node in self.initiallyClampedSlipnodes]
+        _ = [node.update() for node in self.slipnodes]
         for node in self.slipnodes:
             node.spread_activation()
         for node in self.slipnodes:
@@ -46,6 +47,7 @@ class SlipNet(object):
             node.buffer = 0.0
 
     def __addInitialNodes(self):
+        # pylint: disable=too-many-statements
         self.slipnodes = []
         self.letters = []
         for c in 'abcdefghijklmnopqrstuvwxyz':
@@ -135,47 +137,49 @@ class SlipNet(object):
         self.__addCategoryLink(self.samenessGroup, self.letterCategory, 50.0)
         # lengths
         for number in self.numbers:
-            self.__addInstanceLink(self.length, number, 100.0)
-        self.__addNonSlipLink(self.predecessorGroup, self.length, length=95.0)
-        self.__addNonSlipLink(self.successorGroup, self.length, length=95.0)
-        self.__addNonSlipLink(self.samenessGroup, self.length, length=95.0)
-        # opposites
-        self.__addOppositeLink(self.first, self.last)
-        self.__addOppositeLink(self.leftmost, self.rightmost)
-        self.__addOppositeLink(self.left, self.right)
-        self.__addOppositeLink(self.successor, self.predecessor)
-        self.__addOppositeLink(self.successorGroup, self.predecessorGroup)
+            self.__addInstanceLink(self.length, number)
+        groups = [self.predecessorGroup, self.successorGroup,
+                  self.samenessGroup]
+        for group in groups:
+            self.__addNonSlipLink(group, self.length, length=95.0)
+        opposites = [(self.first, self.last), (self.leftmost, self.rightmost),
+                     (self.leftmost, self.rightmost), (self.left, self.right),
+                     (self.successor, self.predecessor),
+                     (self.successorGroup, self.predecessorGroup)]
+        for a, b in opposites:
+            self.__addOppositeLink(a, b)
         # properties
         self.__addPropertyLink(self.letters[0], self.first, 75.0)
         self.__addPropertyLink(self.letters[-1], self.last, 75.0)
-        # object categories
-        self.__addInstanceLink(self.objectCategory, self.letter, 100.0)
-        self.__addInstanceLink(self.objectCategory, self.group, 100.0)
-        # string positions
-        self.__addInstanceLink(
-            self.stringPositionCategory, self.leftmost, 100.0)
-        self.__addInstanceLink(
-            self.stringPositionCategory, self.rightmost, 100.0)
-        self.__addInstanceLink(self.stringPositionCategory, self.middle, 100.0)
-        self.__addInstanceLink(self.stringPositionCategory, self.single, 100.0)
-        self.__addInstanceLink(self.stringPositionCategory, self.whole, 100.0)
-        # alphabetic positions
-        self.__addInstanceLink(
-            self.alphabeticPositionCategory, self.first, 100.0)
-        self.__addInstanceLink(
-            self.alphabeticPositionCategory, self.last, 100.0)
-        # direction categories
-        self.__addInstanceLink(self.directionCategory, self.left, 100.0)
-        self.__addInstanceLink(self.directionCategory, self.right, 100.0)
-        # bond categories
-        self.__addInstanceLink(self.bondCategory, self.predecessor, 100.0)
-        self.__addInstanceLink(self.bondCategory, self.successor, 100.0)
-        self.__addInstanceLink(self.bondCategory, self.sameness, 100.0)
-        # group categories
-        self.__addInstanceLink(
-            self.groupCategory, self.predecessorGroup, 100.0)
-        self.__addInstanceLink(self.groupCategory, self.successorGroup, 100.0)
-        self.__addInstanceLink(self.groupCategory, self.samenessGroup, 100.0)
+        links = [
+            # object categories
+            (self.objectCategory, self.letter),
+            (self.objectCategory, self.group),
+            # string positions,
+            (self.stringPositionCategory, self.leftmost),
+            (self.stringPositionCategory, self.rightmost),
+            (self.stringPositionCategory, self.middle),
+            (self.stringPositionCategory, self.single),
+            (self.stringPositionCategory, self.whole),
+            # alphabetic positions,
+            (self.alphabeticPositionCategory, self.first),
+            (self.alphabeticPositionCategory, self.last),
+            # direction categories,
+            (self.directionCategory, self.left),
+            (self.directionCategory, self.right),
+            # bond categories,
+            (self.bondCategory, self.predecessor),
+            (self.bondCategory, self.successor),
+            (self.bondCategory, self.sameness),
+            # group categories
+            (self.groupCategory, self.predecessorGroup),
+            (self.groupCategory, self.successorGroup),
+            (self.groupCategory, self.samenessGroup),
+            # bond facets
+            (self.bondFacet, self.letterCategory),
+            (self.bondFacet, self.length)]
+        for a, b in links:
+            self.__addInstanceLink(a, b)
         # link bonds to their groups
         self.__addNonSlipLink(
             self.sameness, self.samenessGroup, label=self.groupCategory,
@@ -191,9 +195,6 @@ class SlipNet(object):
                               label=self.bondCategory, length=90.0)
         self.__addNonSlipLink(self.predecessorGroup, self.predecessor,
                               label=self.bondCategory, length=90.0)
-        # bond facets
-        self.__addInstanceLink(self.bondFacet, self.letterCategory, 100.0)
-        self.__addInstanceLink(self.bondFacet, self.length, 100.0)
         # letter category to length
         self.__addSlipLink(self.letterCategory, self.length, length=95.0)
         self.__addSlipLink(self.length, self.letterCategory, length=95.0)
@@ -235,7 +236,7 @@ class SlipNet(object):
         link = self.__addLink(source, destination, None, length)
         source.categoryLinks += [link]
 
-    def __addInstanceLink(self, source, destination, length):
+    def __addInstanceLink(self, source, destination, length=100.0):
         categoryLength = source.conceptualDepth - destination.conceptualDepth
         self.__addCategoryLink(destination, source, categoryLength)
         #noinspection PyArgumentEqualDefault

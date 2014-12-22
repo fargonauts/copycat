@@ -16,6 +16,13 @@ MAX_NUMBER_OF_CODELETS = 100
 codeletsUsed = {}
 
 
+def getUrgencyBin(urgency):
+    i = int(urgency) * NUMBER_OF_BINS / 100
+    if i >= NUMBER_OF_BINS:
+        return NUMBER_OF_BINS
+    return i + 1
+
+
 class CodeRack(object):
     def __init__(self):
         #logging.debug('coderack.__init__()')
@@ -46,13 +53,6 @@ class CodeRack(object):
             self.postTopDownCodelets()
             self.postBottomUpCodelets()
 
-    def getUrgencyBin(self, urgency):
-        bin = int(urgency) * NUMBER_OF_BINS
-        bin /= 100
-        if bin >= NUMBER_OF_BINS:
-            bin = NUMBER_OF_BINS - 1
-        return bin + 1
-
     def post(self, codelet):
         self.postings[codelet.name] = self.postings.get(codelet.name, 0) + 1
         self.pressures.addCodelet(codelet)
@@ -71,10 +71,10 @@ class CodeRack(object):
                 probability = workspaceFormulas.probabilityOfPosting(
                     codeletName)
                 howMany = workspaceFormulas.howManyToPost(codeletName)
-                for unused in range(0, howMany):
+                for _ in range(0, howMany):
                     if random.random() >= probability:
                         continue
-                    urgency = self.getUrgencyBin(
+                    urgency = getUrgencyBin(
                         node.activation * node.conceptualDepth / 100.0)
                     codelet = Codelet(codeletName, urgency, self.codeletsRun)
                     codelet.arguments += [node]
@@ -108,7 +108,7 @@ class CodeRack(object):
             urgency = 1
         if formulas.Temperature < 25.0 and 'translator' in codeletName:
             urgency = 5
-        for unused in range(0, howMany):
+        for _ in range(0, howMany):
             if random.random() < probability:
                 codelet = Codelet(codeletName, urgency, self.codeletsRun)
                 self.post(codelet)
@@ -128,6 +128,7 @@ class CodeRack(object):
         newCodelet.pressure = oldCodelet.pressure
         self.tryRun(newCodelet)
 
+    # pylint: disable=too-many-arguments
     def proposeRule(self, facet, description, category, relation, oldCodelet):
         """Creates a proposed rule, and posts a rule-strength-tester codelet.
 
@@ -162,9 +163,9 @@ class CodeRack(object):
         numberOfMappings = len(mappings)
         if urgency:
             urgency /= numberOfMappings
-        bin = self.getUrgencyBin(urgency)
+        binn = self.getUrgencyBin(urgency)
         logging.info('urgency: %s, number: %d, bin: %d',
-                     urgency, numberOfMappings, bin)
+                     urgency, numberOfMappings, binn)
         self.newCodelet('correspondence-strength-tester',
                         oldCodelet, urgency, correspondence)
 
@@ -226,7 +227,7 @@ class CodeRack(object):
 
     def postInitialCodelets(self):
         for name in self.initialCodeletNames:
-            for unused in range(0, workspaceFormulas.numberOfObjects()):
+            for _ in range(0, workspaceFormulas.numberOfObjects()):
                 codelet = Codelet(name, 1, self.codeletsRun)
                 self.post(codelet)
                 codelet2 = Codelet(name, 1, self.codeletsRun)
@@ -296,8 +297,8 @@ class CodeRack(object):
         threshold = r * urgsum
         chosen = None
         urgencySum = 0.0
-        logging.info('temperature: %f' % formulas.Temperature)
-        logging.info('actualTemperature: %f' % formulas.actualTemperature)
+        logging.info('temperature: %f', formulas.Temperature)
+        logging.info('actualTemperature: %f', formulas.actualTemperature)
         logging.info('Slipnet:')
         for node in slipnet.slipnodes:
             logging.info("\tnode %s, activation: %d, buffer: %d, depth: %s",
@@ -305,7 +306,7 @@ class CodeRack(object):
                          node.conceptualDepth)
         logging.info('Coderack:')
         for codelet in self.codelets:
-            logging.info('\t%s, %d' % (codelet.name, codelet.urgency))
+            logging.info('\t%s, %d', codelet.name, codelet.urgency)
         from workspace import workspace
 
         workspace.initial.log("Initial: ")
@@ -344,7 +345,7 @@ class CodeRack(object):
                              methodName)
         if not callable(method):
             raise RuntimeError('Cannot call %s()' % methodName)
-        args, varargs, varkw, defaults = inspect.getargspec(method)
+        args, _varargs, _varkw, _defaults = inspect.getargspec(method)
         #global codeletsUsed
         #codeletsUsed[methodName] = codeletsUsed.get(methodName,0) + 1
         try:

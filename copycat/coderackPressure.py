@@ -13,6 +13,48 @@ class CoderackPressure(object):
         self.codelets = []
 
 
+def _codelet_index(codelet):
+    name_indices = {
+        'bottom-up-bond-scout': 0,
+        'top-down-bond-scout--category': {
+            slipnet.successor: 1,
+            slipnet.predecessor: 2,
+            None: 3
+        },
+        'top-down-bond-scout--direction': {
+            slipnet.left: 4,
+            slipnet.right: 5,
+            None: 3,
+        },
+        'top-down-group-scout--category': {
+            slipnet.successorGroup: 6,
+            slipnet.predecessorGroup: 7,
+            None: 8,
+        },
+        'top-down-group-scout--direction': {
+            slipnet.left: 9,
+            slipnet.right: 10,
+            None: -1,
+        },
+        'group-scout--whole-string': 11,
+        'replacement-finder': 12,
+        'rule-scout': 13,
+        'rule-translator': 14,
+        'bottom-up-correspondence-scout': 15,
+        'important-object-correspondence-scout': 16,
+        'breaker': 17,
+    }
+    i = name_indices.get(codelet.name, -1)
+    try:
+        return int(i)
+    except ValueError:
+        try:
+            node = codelet.arguments[0]
+            return i[node]
+        except KeyError:
+            return i[None]
+
+
 class CoderackPressures(object):
     def __init__(self):
         #logging.debug('coderackPressures.__init__()')
@@ -70,62 +112,16 @@ class CoderackPressures(object):
 
     def addCodelet(self, codelet):
         node = None
-        i = -1
-        if codelet.name == 'bottom-up-bond-scout':
-            i = 0
-        if codelet.name == 'top-down-bond-scout--category':
-            node = codelet.arguments[0]
-            if node == slipnet.successor:
-                i = 1
-            elif node == slipnet.predecessor:
-                i = 2
-            else:
-                i = 3
-        if codelet.name == 'top-down-bond-scout--direction':
-            node = codelet.arguments[0]
-            if node == slipnet.left:
-                i = 4
-            elif node == slipnet.right:
-                i = 5
-            else:
-                i = 3
-        if codelet.name == 'top-down-group-scout--category':
-            node = codelet.arguments[0]
-            if node == slipnet.successorGroup:
-                i = 6
-            elif node == slipnet.predecessorGroup:
-                i = 7
-            else:
-                i = 8
-        if codelet.name == 'top-down-group-scout--direction':
-            node = codelet.arguments[0]
-            if node == slipnet.left:
-                i = 9
-            elif node == slipnet.right:
-                i = 10
-        if codelet.name == 'group-scout--whole-string':
-            i = 11
-        if codelet.name == 'replacement-finder':
-            i = 12
-        if codelet.name == 'rule-scout':
-            i = 13
-        if codelet.name == 'rule-translator':
-            i = 14
-        if codelet.name == 'bottom-up-correspondence-scout':
-            i = 15
-        if codelet.name == 'important-object-correspondence-scout':
-            i = 16
-        if codelet.name == 'breaker':
-            i = 17
+        i = _codelet_index(codelet)
         if i >= 0:
             self.pressures[i].codelets += [codelet]
         if codelet.pressure:
-            codelet.pressure.codelets += [codelet]  # XXX why do this
+            codelet.pressure.codelets += [codelet]
         if i >= 0:
-            codelet.pressure = self.pressures[i]     # when this is next?
-        logging.info('Add %s: %d' % (codelet.name, i))
+            codelet.pressure = self.pressures[i]
+        logging.info('Add %s: %d', codelet.name, i)
         if node:
-            logging.info('Node: %s' % node.name)
+            logging.info('Node: %s', node.name)
 
     def removeCodelet(self, codelet):
         self.removedCodelets += [codelet]

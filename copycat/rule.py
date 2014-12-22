@@ -1,7 +1,10 @@
+import logging
+
+
 from slipnet import slipnet
 from workspace import workspace
 from workspaceStructure import WorkspaceStructure
-from formulas import *
+from formulas import weightedAverage
 
 
 class Rule(WorkspaceStructure):
@@ -123,7 +126,7 @@ class Rule(WorkspaceStructure):
                     o.described(self.descriptor) and
                     o.described(self.category)]
         changed = changeds and changeds[0] or None
-        logging.debug('changed object = %s' % changed)
+        logging.debug('changed object = %s', changed)
         if changed:
             left = changed.leftIndex
             startString = ''

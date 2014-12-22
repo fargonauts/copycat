@@ -49,7 +49,7 @@ def temperatureAdjustedProbability(value):
     a = math.sqrt(coldness)
     b = 10.0 - a
     c = b / 100
-    d = c * (1.0 - (1.0 - value))  # aka c * value, but we're following the java
+    d = c * (1.0 - (1.0 - value))  # as said the java
     e = (1.0 - value) + d
     f = 1.0 - e
     return max(f, 0.5)
@@ -70,13 +70,14 @@ def chooseObjectFromList(objects, attribute):
     if not objects:
         return None
     probabilities = []
-    for object in objects:
-        value = getattr(object, attribute)
+    for objekt in objects:
+        value = getattr(objekt, attribute)
         probability = temperatureAdjustedValue(value)
-        logging.info('Object: %s, value: %d, probability: %d' % (object, value, probability))
+        logging.info('Object: %s, value: %d, probability: %d',
+                     objekt, value, probability)
         probabilities += [probability]
     i = selectListPosition(probabilities)
-    logging.info("Selected: %d" % i)
+    logging.info('Selected: %d', i)
     return objects[i]
 
 
@@ -84,7 +85,8 @@ def chooseRelevantDescriptionByActivation(workspaceObject):
     descriptions = workspaceObject.relevantDescriptions()
     if not descriptions:
         return None
-    activations = [description.descriptor.activation for description in descriptions]
+    activations = [description.descriptor.activation
+                   for description in descriptions]
     i = selectListPosition(activations)
     return descriptions[i]
 
@@ -119,13 +121,11 @@ def __localRelevance(string, slipnode, relevance):
     numberOfObjectsNotSpanning = numberOfMatches = 0.0
     #logging.info("find relevance for a string: %s" % string);
     for objekt in string.objects:
-        #logging.info('object: %s' % objekt)
         if not objekt.spansString():
             #logging.info('non spanner: %s' % objekt)
             numberOfObjectsNotSpanning += 1.0
             if relevance(objekt, slipnode):
                 numberOfMatches += 1.0
-    #logging.info("matches: %d, not spanning: %d" % (numberOfMatches,numberOfObjectsNotSpanning))
     if numberOfObjectsNotSpanning == 1:
         return 100.0 * numberOfMatches
     return 100.0 * numberOfMatches / (numberOfObjectsNotSpanning - 1.0)
@@ -141,18 +141,20 @@ def localDirectionCategoryRelevance(string, direction):
     return __localRelevance(string, direction, __relevantDirection)
 
 
-def getMappings(objectFromInitial, objectFromTarget, initialDescriptions, targetDescriptions):
+def getMappings(objectFromInitial, objectFromTarget,
+                initialDescriptions, targetDescriptions):
     mappings = []
     from conceptMapping import ConceptMapping
-    for initialDescription in initialDescriptions:
-        for targetDescription in targetDescriptions:
-            if initialDescription.descriptionType == targetDescription.descriptionType:
-                if initialDescription.descriptor == targetDescription.descriptor or initialDescription.descriptor.slipLinked(targetDescription.descriptor):
+    for initial in initialDescriptions:
+        for target in targetDescriptions:
+            if initial.descriptionType == target.descriptionType:
+                if  (initial.descriptor == target.descriptor or
+                     initial.descriptor.slipLinked(target.descriptor)):
                     mapping = ConceptMapping(
-                        initialDescription.descriptionType,
-                        targetDescription.descriptionType,
-                        initialDescription.descriptor,
-                        targetDescription.descriptor,
+                        initial.descriptionType,
+                        target.descriptionType,
+                        initial.descriptor,
+                        target.descriptor,
                         objectFromInitial,
                         objectFromTarget
                     )

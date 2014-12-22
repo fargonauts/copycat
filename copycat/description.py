@@ -47,7 +47,7 @@ class Description(WorkspaceStructure):
         self.descriptionType.buffer = 100.0
         self.descriptor.buffer = 100.0
         if not self.object.described(self.descriptor):
-            logging.info('Add %s to descriptions' % self)
+            logging.info('Add %s to descriptions', self)
             self.object.descriptions += [self]
 
     def breakDescription(self):

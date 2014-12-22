@@ -11,9 +11,14 @@ def jump_threshold():
     return 55.0
 
 
+def points_at(links, other):
+    """Whether any of the links points at the other"""
+    return any([l.points_at(other) for l in links])
+
+
 class Slipnode(object):
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, name, depth, length=0.0):
-    #       logging.info('depth to %s for %s' % (depth,name))
         self.conceptualDepth = depth
         self.usualConceptualDepth = depth
         self.name = name
@@ -52,7 +57,7 @@ class Slipnode(object):
         return not self.clamped
 
     def setConceptualDepth(self, depth):
-        logging.info('set depth to %s for %s' % (depth, self.name))
+        logging.info('set depth to %s for %s', depth, self.name)
         self.conceptualDepth = depth
 
     def category(self):
@@ -90,15 +95,11 @@ class Slipnode(object):
 
     def linked(self, other):
         """Whether the other is among the outgoing links"""
-        return self.points_at(self.outgoingLinks, other)
+        return points_at(self.outgoingLinks, other)
 
     def slipLinked(self, other):
         """Whether the other is among the lateral links"""
-        return self.points_at(self.lateralSlipLinks, other)
-
-    def points_at(self, links, other):
-        """Whether any of the links points at the other"""
-        return any([l.points_at(other) for l in links])
+        return points_at(self.lateralSlipLinks, other)
 
     def related(self, other):
         """Same or linked"""
@@ -142,14 +143,14 @@ class Slipnode(object):
                     result = link.label
                     break
         if result:
-            logging.info('Got bond: %s' % result.name)
+            logging.info('Got bond: %s', result.name)
         else:
             logging.info('Got no bond')
         return result
 
     def spread_activation(self):
         if self.fully_active():
-            [link.spread_activation() for link in self.outgoingLinks]
+            _ = [link.spread_activation() for link in self.outgoingLinks]
 
     def addBuffer(self):
         if self.unclamped():
@@ -157,7 +158,7 @@ class Slipnode(object):
         self.activation = min(self.activation, 100)
         self.activation = max(self.activation, 0)
 
-    def can_jump():
+    def can_jump(self):
         if self.activation <= jump_threshold():
             return False
         if self.clamped:

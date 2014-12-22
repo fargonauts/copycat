@@ -18,14 +18,16 @@ class WorkspaceFormulas(object):
             workspace.rule.updateStrength()
             ruleWeakness = 100.0 - workspace.rule.totalStrength
         values = ((workspace.totalUnhappiness, 0.8), (ruleWeakness, 0.2))
-        slightly_above_actual_temperature = formulas.actualTemperature + 0.001
-        logging.info('actualTemperature: %f' % slightly_above_actual_temperature)
+        above_actual_temperature = formulas.actualTemperature + 0.001
+        logging.info('actualTemperature: %f', above_actual_temperature)
         formulas.actualTemperature = formulas.weightedAverage(values)
-        logging.info('unhappiness: %f, weakness: %f, actualTemperature: %f' % (
-        workspace.totalUnhappiness + 0.001, ruleWeakness + 0.001, formulas.actualTemperature + 0.001))
+        logging.info('unhappiness: %f, weakness: %f, actualTemperature: %f',
+                     workspace.totalUnhappiness + 0.001, ruleWeakness + 0.001,
+                     formulas.actualTemperature + 0.001)
         if temperature.clamped:
             formulas.actualTemperature = 100.0
-        logging.info('actualTemperature: %f' % (formulas.actualTemperature + 0.001))
+        logging.info('actualTemperature: %f',
+                     formulas.actualTemperature + 0.001)
         temperature.update(formulas.actualTemperature)
         if not self.clampTemperature:
             formulas.Temperature = formulas.actualTemperature
@@ -70,46 +72,49 @@ def __chooseLeftNeighbor(source):
     for o in workspace.objects:
         if o.string == source.string:
             if source.leftIndex == o.rightIndex + 1:
-                logging.info('%s is on left of %s' % (o, source))
+                logging.info('%s is on left of %s', o, source)
                 objects += [o]
             else:
-                logging.info('%s is not on left of %s' % (o, source))
-    logging.info('Number of left objects: %s' % len(objects))
+                logging.info('%s is not on left of %s', o, source)
+    logging.info('Number of left objects: %s', len(objects))
     return formulas.chooseObjectFromList(objects, 'intraStringSalience')
 
 
 def __chooseRightNeighbor(source):
-    objects = [o for o in workspace.objects if
-        o.string == source.string and
-        o.leftIndex == source.rightIndex + 1
-    ]
+    objects = [o for o in workspace.objects
+               if o.string == source.string
+               and o.leftIndex == source.rightIndex + 1]
     return formulas.chooseObjectFromList(objects, 'intraStringSalience')
 
 
 def chooseBondFacet(source, destination):
-    sourceFacets = [d.descriptionType for d in source.descriptions if d.descriptionType in slipnet.bondFacets]
-    bondFacets = [d.descriptionType for d in destination.descriptions if d.descriptionType in sourceFacets]
+    sourceFacets = [d.descriptionType for d in source.descriptions
+                    if d.descriptionType in slipnet.bondFacets]
+    bondFacets = [d.descriptionType for d in destination.descriptions
+                  if d.descriptionType in sourceFacets]
     if not bondFacets:
         return None
-    supports = [__supportForDescriptionType(f, source.string) for f in bondFacets]
+    supports = [__supportForDescriptionType(f, source.string)
+                for f in bondFacets]
     i = formulas.selectListPosition(supports)
     return bondFacets[i]
 
 
 def __supportForDescriptionType(descriptionType, string):
-    return (descriptionType.activation + __descriptionTypeSupport(descriptionType, string)) / 2
+    string_support = __descriptionTypeSupport(descriptionType, string)
+    return (descriptionType.activation + string_support) / 2
 
 
 def __descriptionTypeSupport(descriptionType, string):
-    """The proportion of objects in the string that have a description with this descriptionType"""
-    numberOfObjects = totalNumberOfObjects = 0.0
+    """The proportion of objects in the string with this descriptionType"""
+    described_count = total = 0
     for objekt in workspace.objects:
         if objekt.string == string:
-            totalNumberOfObjects += 1.0
+            total += 1
             for description in objekt.descriptions:
                 if description.descriptionType == descriptionType:
-                    numberOfObjects += 1.0
-    return numberOfObjects / totalNumberOfObjects
+                    described_count += 1
+    return described_count / float(total)
 
 
 def probabilityOfPosting(codeletName):
@@ -139,9 +144,7 @@ def probabilityOfPosting(codeletName):
 
 
 def howManyToPost(codeletName):
-    if codeletName == 'breaker':
-        return 1
-    if 'description' in codeletName:
+    if codeletName == 'breaker' or 'description' in codeletName:
         return 1
     if 'translator' in codeletName:
         if not workspace.rule:
@@ -156,7 +159,6 @@ def howManyToPost(codeletName):
     number = 0
     if 'bond' in codeletName:
         number = workspace.numberOfUnrelatedObjects()
-#       print 'post number of unrelated: %d, objects: %d' % (number,len(workspace.objects))
     if 'group' in codeletName:
         number = workspace.numberOfUngroupedObjects()
     if 'replacement' in codeletName:

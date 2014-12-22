@@ -1,14 +1,25 @@
-import random
 
+
+import random
+import logging
+
+
+import slipnet
+import temperature
+import formulas
+from workspaceFormulas import chooseDirectedNeighbor
+from workspaceFormulas import chooseNeighbour
 from coderack import coderack
 from workspaceObject import WorkspaceObject
 from letter import Letter
 from replacement import Replacement
-from formulas import *
-from workspaceFormulas import *
+from workspaceFormulas import workspace
 from group import Group
-from bond import Bond, possibleGroupBonds
+from bond import Bond
+from bond import possibleGroupBonds
 from correspondence import Correspondence
+from workspaceFormulas import chooseUnmodifiedObject
+from workspaceFormulas import chooseBondFacet
 
 
 # some methods common to the codelets
@@ -28,10 +39,10 @@ def __getScoutSource(slipnode, relevanceMethod, typeName):
     targetRelevance = relevanceMethod(workspace.target, slipnode)
     initialUnhappiness = workspace.initial.intraStringUnhappiness
     targetUnhappiness = workspace.target.intraStringUnhappiness
-    logging.info('initial : relevance = %d, unhappiness=%d' % (
-        initialRelevance, int(initialUnhappiness)))
-    logging.info('target : relevance = %d, unhappiness=%d' % (
-        targetRelevance, int(targetUnhappiness)))
+    logging.info('initial : relevance = %d, unhappiness=%d',
+                 initialRelevance, int(initialUnhappiness))
+    logging.info('target : relevance = %d, unhappiness=%d',
+                 targetRelevance, int(targetUnhappiness))
     string = workspace.initial
     relevances = initialRelevance + targetRelevance
     unhappinesses = initialUnhappiness + targetUnhappiness
@@ -39,11 +50,11 @@ def __getScoutSource(slipnode, relevanceMethod, typeName):
     initials = initialRelevance + initialUnhappiness
     if randomized > initials:
         string = workspace.target
-        logging.info('target string selected: %s for %s' % (
-            workspace.target, typeName))
+        logging.info('target string selected: %s for %s',
+                     workspace.target, typeName)
     else:
-        logging.info('initial string selected: %s for %s' % (
-            workspace.initial, typeName))
+        logging.info('initial string selected: %s for %s',
+                     workspace.initial, typeName)
     source = chooseUnmodifiedObject('intraStringSalience', string.objects)
     return source
 
@@ -68,12 +79,12 @@ def __allOppositeMappings(mappings):
 def __structureVsStructure(structure1, weight1, structure2, weight2):
     structure1.updateStrength()
     structure2.updateStrength()
-    weightedStrength1 = temperatureAdjustedValue(
+    weightedStrength1 = formulas.temperatureAdjustedValue(
         structure1.totalStrength * weight1)
-    weightedStrength2 = temperatureAdjustedValue(
+    weightedStrength2 = formulas.temperatureAdjustedValue(
         structure2.totalStrength * weight2)
     rhs = (weightedStrength1 + weightedStrength2) * random.random()
-    logging.info('%d > %d' % (weightedStrength1, rhs))
+    logging.info('%d > %d', weightedStrength1, rhs)
     return weightedStrength1 > rhs
 
 
@@ -83,9 +94,9 @@ def __fight(structure, structureWeight, incompatibles, incompatibleWeight):
     for incompatible in incompatibles:
         if not __structureVsStructure(structure, structureWeight,
                                       incompatible, incompatibleWeight):
-            logging.info('lost fight with %s' % incompatible)
+            logging.info('lost fight with %s', incompatible)
             return False
-        logging.info('won fight with %s' % incompatible)
+        logging.info('won fight with %s', incompatible)
     return True
 
 
@@ -94,18 +105,19 @@ def __fightIncompatibles(incompatibles, structure, name,
     if len(incompatibles):
         if __fight(structure, structureWeight,
                    incompatibles, incompatibleWeight):
-            logging.info('broke the %s' % name)
+            logging.info('broke the %s', name)
             return True
-        logging.info('failed to break %s: Fizzle' % name)
+        logging.info('failed to break %s: Fizzle', name)
         return False
-    logging.info('no incompatible %s' % name)
+    logging.info('no incompatible %s', name)
     return True
 
 
 def __slippability(conceptMappings):
     for mapping in conceptMappings:
         slippiness = mapping.slipability() / 100.0
-        probabilityOfSlippage = temperatureAdjustedProbability(slippiness)
+        probabilityOfSlippage = formulas.temperatureAdjustedProbability(
+            slippiness)
         if formulas.coinFlip(probabilityOfSlippage):
             return True
     return False
@@ -113,8 +125,8 @@ def __slippability(conceptMappings):
 
 # start the actual codelets
 def breaker():
-    probabilityOfFizzle = (100.0 - Temperature) / 100.0
-    assert not coinFlip(probabilityOfFizzle)
+    probabilityOfFizzle = (100.0 - formulas.Temperature) / 100.0
+    assert not formulas.coinFlip(probabilityOfFizzle)
     # choose a structure at random
     structures = [s for s in workspace.structures if
                   isinstance(s, (Group, Bond, Correspondence))]
@@ -128,9 +140,9 @@ def breaker():
                 breakObjects += [structure.source.group]
     # try to break all objects
     for structure in breakObjects:
-        breakProbability = temperatureAdjustedProbability(
+        breakProbability = formulas.temperatureAdjustedProbability(
             structure.totalStrength / 100.0)
-        if coinFlip(breakProbability):
+        if formulas.coinFlip(breakProbability):
             return
     for structure in breakObjects:
         structure.break_the_structure()
@@ -140,13 +152,13 @@ def bottom_up_description_scout(codelet):
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
-    description = chooseRelevantDescriptionByActivation(chosenObject)
+    description = formulas.chooseRelevantDescriptionByActivation(chosenObject)
     assert description
-    sliplinks = similarPropertyLinks(description.descriptor)
+    sliplinks = formulas.similarPropertyLinks(description.descriptor)
     assert sliplinks and len(sliplinks)
     values = [sliplink.degreeOfAssociation() * sliplink.destination.activation
               for sliplink in sliplinks]
-    i = selectListPosition(values)
+    i = formulas.selectListPosition(values)
     chosen = sliplinks[i]
     chosenProperty = chosen.destination
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
@@ -161,7 +173,7 @@ def top_down_description_scout(codelet):
     descriptions = chosenObject.getPossibleDescriptions(descriptionType)
     assert descriptions and len(descriptions)
     values = [n.activation for n in descriptions]
-    i = selectListPosition(values)
+    i = formulas.selectListPosition(values)
     chosenProperty = descriptions[i]
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
                                 chosenProperty, codelet)
@@ -172,7 +184,7 @@ def description_strength_tester(codelet):
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
-    probability = temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
     assert formulas.coinFlip(probability)
     coderack.newCodelet('description-builder', codelet, strength)
 
@@ -192,10 +204,10 @@ def bottom_up_bond_scout(codelet):
     __showWhichStringObjectIsFrom(source)
     destination = chooseNeighbour(source)
     assert destination
-    logging.info('destination: %s' % destination)
+    logging.info('destination: %s', destination)
     bondFacet = __getBondFacet(source, destination)
-    logging.info('chosen bond facet: %s' % bondFacet.get_name())
-    logging.info('Source: %s, destination: %s' % (source, destination))
+    logging.info('chosen bond facet: %s', bondFacet.get_name())
+    logging.info('Source: %s, destination: %s', source, destination)
     bond_descriptors = __getDescriptors(bondFacet, source, destination)
     sourceDescriptor, destinationDescriptor = bond_descriptors
     logging.info("source descriptor: %s", sourceDescriptor.name.upper())
@@ -205,7 +217,7 @@ def bottom_up_bond_scout(codelet):
     assert category
     if category == slipnet.identity:
         category = slipnet.sameness
-    logging.info('proposing %s bond ' % category.name)
+    logging.info('proposing %s bond ', category.name)
     coderack.proposeBond(source, destination, category, bondFacet,
                          sourceDescriptor, destinationDescriptor, codelet)
 
@@ -243,16 +255,16 @@ def rule_scout(codelet):
             if targetObject.described(node):
                 if targetObject.distinguishingDescriptor(node):
                     newList += [node]
-        objectList = newList  # XXX surely this should be +=
+        objectList = newList  # surely this should be +=
                               # "union of this and distinguishing descriptors"
     assert objectList and len(objectList)
     # use conceptual depth to choose a description
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = temperatureAdjustedValue(depth)
+        value = formulas.temperatureAdjustedValue(depth)
         valueList += [value]
-    i = selectListPosition(valueList)
+    i = formulas.selectListPosition(valueList)
     descriptor = objectList[i]
     # choose the relation (change the letmost object to "successor" or "d"
     objectList = []
@@ -264,9 +276,9 @@ def rule_scout(codelet):
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = temperatureAdjustedValue(depth)
+        value = formulas.temperatureAdjustedValue(depth)
         valueList += [value]
-    i = selectListPosition(valueList)
+    i = formulas.selectListPosition(valueList)
     relation = objectList[i]
     coderack.proposeRule(slipnet.letterCategory, descriptor,
                          slipnet.letter, relation, codelet)
@@ -275,7 +287,8 @@ def rule_scout(codelet):
 def rule_strength_tester(codelet):
     rule = codelet.arguments[0]
     rule.updateStrength()
-    probability = temperatureAdjustedProbability(rule.totalStrength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(
+        rule.totalStrength / 100.0)
     assert random.random() <= probability
     coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
@@ -305,7 +318,7 @@ def replacement_finder():
             -1: slipnet.successor,
             1: slipnet.predecessor}
         relation = relations[diff]
-        logging.info('Relation found: %s' % relation.name)
+        logging.info('Relation found: %s', relation.name)
     else:
         relation = None
         logging.info('no relation found')
@@ -320,9 +333,10 @@ def replacement_finder():
 def top_down_bond_scout__category(codelet):
     logging.info('top_down_bond_scout__category')
     category = codelet.arguments[0]
-    source = __getScoutSource(category, localBondCategoryRelevance, 'bond')
+    source = __getScoutSource(category, formulas.localBondCategoryRelevance,
+                              'bond')
     destination = chooseNeighbour(source)
-    logging.info('source: %s, destination: %s' % (source, destination))
+    logging.info('source: %s, destination: %s', source, destination)
     assert destination
     bondFacet = __getBondFacet(source, destination)
     sourceDescriptor, destinationDescriptor = __getDescriptors(
@@ -347,10 +361,10 @@ def top_down_bond_scout__category(codelet):
 def top_down_bond_scout__direction(codelet):
     direction = codelet.arguments[0]
     source = __getScoutSource(
-        direction, localDirectionCategoryRelevance, 'bond')
+        direction, formulas.localDirectionCategoryRelevance, 'bond')
     destination = chooseDirectedNeighbor(source, direction)
     assert destination
-    logging.info('to object: %s' % destination)
+    logging.info('to object: %s', destination)
     bondFacet = __getBondFacet(source, destination)
     sourceDescriptor, destinationDescriptor = __getDescriptors(
         bondFacet, source, destination)
@@ -367,8 +381,8 @@ def bond_strength_tester(codelet):
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
     strength = bond.totalStrength
-    probability = temperatureAdjustedProbability(strength / 100.0)
-    logging.info('bond strength = %d for %s' % (strength, bond))
+    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
+    logging.info('bond strength = %d for %s', strength, bond)
     assert formulas.coinFlip(probability)
     bond.facet.buffer = 100.0
     bond.sourceDescriptor.buffer = 100.0
@@ -391,9 +405,9 @@ def bond_builder(codelet):
             logging.info('already exists: activate descriptors & Fizzle')
             return
     incompatibleBonds = bond.getIncompatibleBonds()
-    logging.info('number of incompatibleBonds: %d' % len(incompatibleBonds))
+    logging.info('number of incompatibleBonds: %d', len(incompatibleBonds))
     if len(incompatibleBonds):
-        logging.info('%s' % incompatibleBonds[0])
+        logging.info('%s', incompatibleBonds[0])
     assert __fightIncompatibles(incompatibleBonds, bond, 'bonds', 1.0, 1.0)
     incompatibleGroups = bond.source.getCommonGroups(bond.destination)
     assert __fightIncompatibles(incompatibleGroups, bond, 'groups', 1.0, 1.0)
@@ -413,15 +427,18 @@ def bond_builder(codelet):
         incompatible.break_the_structure()
     for incompatible in incompatibleCorrespondences:
         incompatible.break_the_structure()
-    logging.info('building bond %s' % bond)
+    logging.info('building bond %s', bond)
     bond.buildBond()
 
 
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
 def top_down_group_scout__category(codelet):
     groupCategory = codelet.arguments[0]
     category = groupCategory.getRelatedNode(slipnet.bondCategory)
     assert category
-    source = __getScoutSource(category, localBondCategoryRelevance, 'group')
+    source = __getScoutSource(category, formulas.localBondCategoryRelevance,
+                              'group')
     assert source and not source.spansString()
     if source.leftmost:
         direction = slipnet.right
@@ -430,7 +447,7 @@ def top_down_group_scout__category(codelet):
     else:
         activations = [slipnet.left.activation]
         activations += [slipnet.right.activation]
-        if not selectListPosition(activations):
+        if not formulas.selectListPosition(activations):
             direction = slipnet.left
         else:
             direction = slipnet.right
@@ -500,9 +517,10 @@ def top_down_group_scout__category(codelet):
 
 def top_down_group_scout__direction(codelet):
     direction = codelet.arguments[0]
-    source = __getScoutSource(direction, localDirectionCategoryRelevance,
+    source = __getScoutSource(direction,
+                              formulas.localDirectionCategoryRelevance,
                               'direction')
-    logging.info('source chosen = %s' % source)
+    logging.info('source chosen = %s', source)
     assert not source.spansString()
     if source.leftmost:
         mydirection = slipnet.right
@@ -511,7 +529,7 @@ def top_down_group_scout__direction(codelet):
     else:
         activations = [slipnet.left.activation]
         activations += [slipnet.right.activation]
-        if not selectListPosition(activations):
+        if not formulas.selectListPosition(activations):
             mydirection = slipnet.left
         else:
             mydirection = slipnet.right
@@ -522,7 +540,7 @@ def top_down_group_scout__direction(codelet):
     if not firstBond:
         logging.info('no firstBond')
     else:
-        logging.info('firstBond: %s' % firstBond)
+        logging.info('firstBond: %s', firstBond)
     if firstBond and not firstBond.directionCategory:
         direction = None
     if not firstBond or firstBond.directionCategory != direction:
@@ -533,15 +551,15 @@ def top_down_group_scout__direction(codelet):
         if not firstBond:
             logging.info('no firstBond2')
         else:
-            logging.info('firstBond2: %s' % firstBond)
+            logging.info('firstBond2: %s', firstBond)
         if firstBond and not firstBond.directionCategory:
             direction = None
         assert firstBond and firstBond.directionCategory == direction
-    logging.info('possible group: %s' % firstBond)
+    logging.info('possible group: %s', firstBond)
     category = firstBond.category
     assert category
     groupCategory = category.getRelatedNode(slipnet.groupCategory)
-    logging.info('trying from %s to %s' % (source, category.name))
+    logging.info('trying from %s to %s', source, category.name)
     bondFacet = None
     # find leftmost object in group with these bonds
     search = True
@@ -576,7 +594,7 @@ def top_down_group_scout__direction(codelet):
             destination = destination.rightBond.rightObject
             search = True
     assert destination != source
-    logging.info('proposing group from %s to %s' % (source, destination))
+    logging.info('proposing group from %s to %s', source, destination)
     objects = [source]
     bonds = []
     while source != destination:
@@ -592,9 +610,9 @@ def group_scout__whole_string(codelet):
     string = workspace.initial
     if random.random() > 0.5:
         string = workspace.target
-        logging.info('target string selected: %s' % workspace.target)
+        logging.info('target string selected: %s', workspace.target)
     else:
-        logging.info('initial string selected: %s' % workspace.initial)
+        logging.info('initial string selected: %s', workspace.initial)
     # find leftmost object & the highest group to which it belongs
     leftmost = None
     for objekt in string.objects:
@@ -634,7 +652,7 @@ def group_strength_tester(codelet):
     __showWhichStringObjectIsFrom(group)
     group.updateStrength()
     strength = group.totalStrength
-    probability = temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
     assert random.random() <= probability
     # it is strong enough - post builder  & activate nodes
     group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
@@ -671,16 +689,16 @@ def group_builder(codelet):
                     continue
                 incompatibleBonds += [leftBond]
             previous = objekt
-        next = group.objectList[-1]
+        next_object = group.objectList[-1]
         for objekt in reversed(group.objectList[:-1]):
             rightBond = objekt.rightBond
             if rightBond:
-                if rightBond.rightObject == next:
+                if rightBond.rightObject == next_object:
                     continue
                 if rightBond.directionCategory == group.directionCategory:
                     continue
                 incompatibleBonds += [rightBond]
-            next = objekt
+            next_object = objekt
     # if incompatible bonds exist - fight
     group.updateStrength()
     assert __fightIncompatibles(incompatibleBonds, group, 'bonds', 1.0, 1.0)
@@ -778,9 +796,10 @@ def bottom_up_correspondence_scout(codelet):
                                               workspace.target.objects)
     assert objectFromInitial.spansString() == objectFromTarget.spansString()
     # get the posible concept mappings
-    conceptMappings = getMappings(objectFromInitial, objectFromTarget,
-                                  objectFromInitial.relevantDescriptions(),
-                                  objectFromTarget.relevantDescriptions())
+    conceptMappings = formulas.getMappings(
+        objectFromInitial, objectFromTarget,
+        objectFromInitial.relevantDescriptions(),
+        objectFromTarget.relevantDescriptions())
     assert conceptMappings and __slippability(conceptMappings)
     #find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
@@ -795,12 +814,13 @@ def bottom_up_correspondence_scout(codelet):
     if  (objectFromInitial.spansString() and
          objectFromTarget.spansString() and
          slipnet.directionCategory in initialDescriptionTypes
-         and __allOppositeMappings(oppositeMappings)
+         and __allOppositeMappings(formulas.oppositeMappings)
          and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
-        conceptMappings = getMappings(objectFromInitial, objectFromTarget,
-                                      objectFromInitial.relevantDescriptions(),
-                                      objectFromTarget.relevantDescriptions())
+        conceptMappings = formulas.getMappings(
+            objectFromInitial, objectFromTarget,
+            objectFromInitial.relevantDescriptions(),
+            objectFromTarget.relevantDescriptions())
         flipTargetObject = True
     coderack.proposeCorrespondence(objectFromInitial, objectFromTarget,
                                    conceptMappings, flipTargetObject, codelet)
@@ -810,7 +830,7 @@ def important_object_correspondence_scout(codelet):
     objectFromInitial = chooseUnmodifiedObject('relativeImportance',
                                                workspace.initial.objects)
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
-    slipnode = chooseSlipnodeByConceptualDepth(descriptors)
+    slipnode = formulas.chooseSlipnodeByConceptualDepth(descriptors)
     assert slipnode
     initialDescriptor = slipnode
     for mapping in workspace.slippages():
@@ -826,9 +846,10 @@ def important_object_correspondence_scout(codelet):
                                               targetCandidates)
     assert objectFromInitial.spansString() == objectFromTarget.spansString()
     # get the posible concept mappings
-    conceptMappings = getMappings(objectFromInitial, objectFromTarget,
-                                  objectFromInitial.relevantDescriptions(),
-                                  objectFromTarget.relevantDescriptions())
+    conceptMappings = formulas.getMappings(
+        objectFromInitial, objectFromTarget,
+        objectFromInitial.relevantDescriptions(),
+        objectFromTarget.relevantDescriptions())
     assert conceptMappings and __slippability(conceptMappings)
     #find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
@@ -843,12 +864,13 @@ def important_object_correspondence_scout(codelet):
     if  (objectFromInitial.spansString()
          and objectFromTarget.spansString()
          and slipnet.directionCategory in initialDescriptionTypes
-         and __allOppositeMappings(oppositeMappings)
+         and __allOppositeMappings(formulas.oppositeMappings)
          and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
-        conceptMappings = getMappings(objectFromInitial, objectFromTarget,
-                                      objectFromInitial.relevantDescriptions(),
-                                      objectFromTarget.relevantDescriptions())
+        conceptMappings = formulas.getMappings(
+            objectFromInitial, objectFromTarget,
+            objectFromInitial.relevantDescriptions(),
+            objectFromTarget.relevantDescriptions())
         flipTargetObject = True
     coderack.proposeCorrespondence(objectFromInitial, objectFromTarget,
                                    conceptMappings, flipTargetObject, codelet)
@@ -865,7 +887,7 @@ def correspondence_strength_tester(codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
-    probability = temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
     assert random.random() <= probability
     # activate some concepts
     for mapping in correspondence.conceptMappings:

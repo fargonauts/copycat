@@ -5,7 +5,20 @@ from slipnet import slipnet
 from workspaceStructure import WorkspaceStructure
 
 
+def distinguishingDescriptor(descriptor):
+    """Whether no other object of the same type has the same descriptor"""
+    if descriptor == slipnet.letter:
+        return False
+    if descriptor == slipnet.group:
+        return False
+    for number in slipnet.numbers:
+        if number == descriptor:
+            return False
+    return True
+
+
 class WorkspaceObject(WorkspaceStructure):
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, workspaceString):
         WorkspaceStructure.__init__(self)
         self.string = workspaceString
@@ -45,13 +58,13 @@ class WorkspaceObject(WorkspaceStructure):
 
     def addDescription(self, descriptionType, descriptor):
         description = Description(self, descriptionType, descriptor)
-        logging.info("Adding description: %s to %s" % (description, self))
+        logging.info("Adding description: %s to %s", description, self)
         self.descriptions += [description]
 
     def addDescriptions(self, descriptions):
         copy = descriptions[:]  # in case we add to our own descriptions
         for description in copy:
-            logging.info('might add: %s' % description)
+            logging.info('might add: %s', description)
             if not self.containsDescription(description):
                 self.addDescription(description.descriptionType,
                                     description.descriptor)
@@ -69,7 +82,7 @@ class WorkspaceObject(WorkspaceStructure):
         for bond in self.bonds:
             bondStrength += bond.totalStrength
         divisor = 6.0
-        if self.spansString():  # XXX then we have already returned
+        if self.spansString():  # then we have already returned
             divisor = 3.0
         return bondStrength / divisor
 
@@ -98,7 +111,6 @@ class WorkspaceObject(WorkspaceStructure):
         if self.correspondence:
             interStringHappiness = self.correspondence.totalStrength
         self.interStringUnhappiness = 100.0 - interStringHappiness
-        #logging.info("Unhappy: %s"%self.interStringUnhappiness)
 
         averageHappiness = (intraStringHappiness + interStringHappiness) / 2
         self.totalUnhappiness = 100.0 - averageHappiness
@@ -116,9 +128,9 @@ class WorkspaceObject(WorkspaceStructure):
                 (self.interStringUnhappiness, 0.2)))
         self.totalSalience = (self.intraStringSalience +
                               self.interStringSalience) / 2.0
-        logging.info('Set salience of %s to %f = (%f + %f)/2' % (
-            self.__str__(), self.totalSalience,
-            self.intraStringSalience, self.interStringSalience))
+        logging.info('Set salience of %s to %f = (%f + %f)/2',
+                     self.__str__(), self.totalSalience,
+                     self.intraStringSalience, self.interStringSalience)
 
     def isWithin(self, other):
         return (self.leftIndex >= other.leftIndex and
@@ -128,11 +140,8 @@ class WorkspaceObject(WorkspaceStructure):
         return [d for d in self.descriptions
                 if d.descriptionType.fully_active()]
 
-    def morePossibleDescriptions(self, node):
-        return []
-
     def getPossibleDescriptions(self, descriptionType):
-        logging.info('getting possible descriptions for %s' % self)
+        logging.info('getting possible descriptions for %s', self)
         descriptions = []
         from group import Group
         for link in descriptionType.instanceLinks:
@@ -168,7 +177,7 @@ class WorkspaceObject(WorkspaceStructure):
         return bool([d for d in self.descriptions if d.descriptor == slipnode])
 
     def middleObject(self):
-        # XXX only works if string is 3 chars long
+        # only works if string is 3 chars long
         # as we have access to the string, why not just " == len / 2" ?
         objectOnMyRightIsRightmost = objectOnMyLeftIsLeftmost = False
         for objekt in self.string.objects:
@@ -178,29 +187,18 @@ class WorkspaceObject(WorkspaceStructure):
                 objectOnMyRightIsRightmost = True
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
 
-    def distinguishingDescriptor(self, descriptor):
-        """Whether no other object of the same type has the same descriptor"""
-        if descriptor == slipnet.letter:
-            return False
-        if descriptor == slipnet.group:
-            return False
-        for number in slipnet.numbers:
-            if number == descriptor:
-                return False
-        return True
-
     def relevantDistinguishingDescriptors(self):
         return [d.descriptor
                 for d in self.relevantDescriptions()
-                if self.distinguishingDescriptor(d.descriptor)]
+                if distinguishingDescriptor(d.descriptor)]
 
     def getDescriptor(self, descriptionType):
         """The description attached to this object of the description type."""
         descriptor = None
-        logging.info("\nIn %s, trying for type: %s" % (
-            self, descriptionType.get_name()))
+        logging.info("\nIn %s, trying for type: %s",
+                     self, descriptionType.get_name())
         for description in self.descriptions:
-            logging.info("Trying description: %s" % description)
+            logging.info("Trying description: %s", description)
             if description.descriptionType == descriptionType:
                 return description.descriptor
         return descriptor
