@@ -119,7 +119,7 @@ class CodeRack(object):
 
     def newCodelet(self, name, oldCodelet, strength, arguments=None):
         #logging.debug('Posting new codelet called %s' % name)
-        urgency = self.getUrgencyBin(strength)
+        urgency = getUrgencyBin(strength)
         newCodelet = Codelet(name, urgency, self.codeletsRun)
         if arguments:
             newCodelet.arguments = [arguments]
@@ -163,7 +163,7 @@ class CodeRack(object):
         numberOfMappings = len(mappings)
         if urgency:
             urgency /= numberOfMappings
-        binn = self.getUrgencyBin(urgency)
+        binn = getUrgencyBin(urgency)
         logging.info('urgency: %s, number: %d, bin: %d',
                      urgency, numberOfMappings, binn)
         self.newCodelet('correspondence-strength-tester',

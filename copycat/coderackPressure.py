@@ -47,7 +47,7 @@ def _codelet_index(codelet):
     i = name_indices.get(codelet.name, -1)
     try:
         return int(i)
-    except ValueError:
+    except (TypeError, ValueError):
         try:
             node = codelet.arguments[0]
             return i[node]

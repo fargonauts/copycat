@@ -1,20 +1,8 @@
 import logging
 
 from description import Description
-from slipnet import slipnet
+from slipnet import slipnet, distinguishingDescriptor
 from workspaceStructure import WorkspaceStructure
-
-
-def distinguishingDescriptor(descriptor):
-    """Whether no other object of the same type has the same descriptor"""
-    if descriptor == slipnet.letter:
-        return False
-    if descriptor == slipnet.group:
-        return False
-    for number in slipnet.numbers:
-        if number == descriptor:
-            return False
-    return True
 
 
 class WorkspaceObject(WorkspaceStructure):
@@ -22,7 +10,6 @@ class WorkspaceObject(WorkspaceStructure):
     def __init__(self, workspaceString):
         WorkspaceStructure.__init__(self)
         self.string = workspaceString
-        #self.string.objects += [ self ]
         self.descriptions = []
         self.extrinsicDescriptions = []
         self.incomingBonds = []
@@ -186,6 +173,10 @@ class WorkspaceObject(WorkspaceStructure):
             if objekt.rightmost and objekt.leftIndex == self.rightIndex + 1:
                 objectOnMyRightIsRightmost = True
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
+
+    def distinguishingDescriptor(self, descriptor):
+        # pylint: disable=no-self-use
+        return distinguishingDescriptor(descriptor)
 
     def relevantDistinguishingDescriptors(self):
         return [d.descriptor

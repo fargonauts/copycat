@@ -4,7 +4,7 @@ import random
 import logging
 
 
-import slipnet
+from slipnet import slipnet
 import temperature
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
