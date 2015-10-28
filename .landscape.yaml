@@ -1,0 +1,6 @@
+pylint:
+    options:
+        dummy-variables-rgx: _
+
+pyflakes:
+    run: false
