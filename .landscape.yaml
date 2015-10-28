@@ -5,3 +5,6 @@ pylint:
 
 pyflakes:
     run: false
+
+mccabe:
+    run: false
