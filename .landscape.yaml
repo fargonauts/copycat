@@ -1,6 +1,7 @@
 pylint:
     options:
         dummy-variables-rgx: _
+        max-branchs: 30
 
 pyflakes:
     run: false
