@@ -115,7 +115,7 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 def __slippability(conceptMappings):
     for mapping in conceptMappings:
-        slippiness = mapping.slipability() / 100.0
+        slippiness = mapping.slippability() / 100.0
         probabilityOfSlippage = formulas.temperatureAdjustedProbability(
             slippiness)
         if formulas.coinFlip(probabilityOfSlippage):

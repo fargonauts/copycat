@@ -24,7 +24,7 @@ class ConceptMapping(object):
     def __str__(self):
         return self.label and self.label.name or 'anonymous'
 
-    def slipability(self):
+    def slippability(self):
         association = self.__degreeOfAssociation()
         if association == 100.0:
             return 100.0
