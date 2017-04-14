@@ -31,7 +31,7 @@ def __showWhichStringObjectIsFrom(structure):
         whence = 'target'
         if structure.string == workspace.initial:
             whence = 'initial'
-    print 'object chosen = %s from %s string' % (structure, whence)
+    #print 'object chosen = %s from %s string' % (structure, whence)
 
 
 def __getScoutSource(slipnode, relevanceMethod, typeName):
