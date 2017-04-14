@@ -13,7 +13,7 @@ def jump_threshold():
 
 def points_at(links, other):
     """Whether any of the links points at the other"""
-    return any([l.points_at(other) for l in links])
+    return any(l.points_at(other) for l in links)
 
 
 class Slipnode(object):
@@ -124,8 +124,7 @@ class Slipnode(object):
                         for l in self.outgoingLinks if l.label == relation]
         if destinations:
             return destinations[0]
-        node = None
-        return node
+        return None
 
     def getBondCategory(self, destination):
         """Return the label of the link between these nodes if it exists.
@@ -150,13 +149,13 @@ class Slipnode(object):
 
     def spread_activation(self):
         if self.fully_active():
-            _ = [link.spread_activation() for link in self.outgoingLinks]
+            for link in self.outgoingLinks:
+                link.spread_activation()
 
     def addBuffer(self):
         if self.unclamped():
             self.activation += self.buffer
-        self.activation = min(self.activation, 100)
-        self.activation = max(self.activation, 0)
+        self.activation = min(max(0, self.activation), 100)
 
     def can_jump(self):
         if self.activation <= jump_threshold():

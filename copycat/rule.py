@@ -91,8 +91,8 @@ class Rule(WorkspaceStructure):
         if correspondence.objectFromInitial != changed:
             return False
         # it is incompatible if the rule descriptor is not in the mapping list
-        return bool([m for m in correspondence.conceptMappings
-                     if m.initialDescriptor == self.descriptor])
+        return any(m.initialDescriptor == self.descriptor
+                   for m in correspondence.conceptMappings)
 
     def __changeString(self, string):
         # applies the changes to self string ie. successor

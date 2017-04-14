@@ -35,7 +35,8 @@ class SlipNet(object):
 
     def setConceptualDepths(self, depth):
         logging.debug('slipnet set all depths to %f', depth)
-        _ = [node.setConceptualDepth(depth) for node in self.slipnodes]
+        for node in self.slipnodes:
+            node.setConceptualDepth(depth)
 
     def reset(self):
         logging.debug('slipnet.reset()')
@@ -49,8 +50,10 @@ class SlipNet(object):
         logging.debug('slipnet.update()')
         self.numberOfUpdates += 1
         if self.numberOfUpdates == 50:
-            _ = [node.unclamp() for node in self.initiallyClampedSlipnodes]
-        _ = [node.update() for node in self.slipnodes]
+            for node in self.initiallyClampedSlipnodes:
+                node.unclamp()
+        for node in self.slipnodes:
+            node.update()
         for node in self.slipnodes:
             node.spread_activation()
         for node in self.slipnodes:

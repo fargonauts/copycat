@@ -79,6 +79,7 @@ class ConceptMapping(object):
     def sameDescriptors(self, other):
         if self.sameInitialDescriptor(other):
             return self.sameTargetDescriptor(other)
+        return False
 
     def sameKind(self, other):
         return self.sameTypes(other) and self.sameDescriptors(other)
@@ -87,10 +88,10 @@ class ConceptMapping(object):
         return self.sameTypes(other) and self.sameInitialDescriptor(other)
 
     def isContainedBy(self, mappings):
-        return any([self.sameKind(mapping) for mapping in mappings])
+        return any(self.sameKind(mapping) for mapping in mappings)
 
     def isNearlyContainedBy(self, mappings):
-        return any([self.nearlySameKind(mapping) for mapping in mappings])
+        return any(self.nearlySameKind(mapping) for mapping in mappings)
 
     def related(self, other):
         if self.initialDescriptor.related(other.initialDescriptor):
@@ -136,10 +137,12 @@ class ConceptMapping(object):
     def relevant(self):
         if self.initialDescriptionType.fully_active():
             return self.targetDescriptionType.fully_active()
+        return False
 
     def slippage(self):
         if self.label != slipnet.sameness:
             return self.label != slipnet.identity
+        return False
 
     def symmetricVersion(self):
         if not self.slippage():
