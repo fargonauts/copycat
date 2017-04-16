@@ -197,7 +197,7 @@ class Group(WorkspaceObject):
 
     def localSupport(self):
         numberOfSupporters = self.numberOfLocalSupportingGroups()
-        if numberOfSupporters == 0.0:
+        if numberOfSupporters == 0:
             return 0.0
         supportFactor = min(1.0, 0.6 ** (1 / (numberOfSupporters ** 3)))
         densityFactor = 100.0 * ((self.localDensity() / 100.0) ** 0.5)

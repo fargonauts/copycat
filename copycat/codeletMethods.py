@@ -73,7 +73,7 @@ def __getDescriptors(bondFacet, source, destination):
 
 
 def __allOppositeMappings(mappings):
-    return len([m for m in mappings if m.label != slipnet.opposite]) == 0
+    return all(m.label == slipnet.opposite for m in mappings)
 
 
 def __structureVsStructure(structure1, weight1, structure2, weight2):
