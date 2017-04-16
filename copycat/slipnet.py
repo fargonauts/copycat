@@ -144,8 +144,8 @@ class SlipNet(object):
 
     def __addInitialLinks(self):
         self.sliplinks = []
-        self.__link_items_to_their_neighbours(self.letters)
-        self.__link_items_to_their_neighbours(self.numbers)
+        self.__link_items_to_their_neighbors(self.letters)
+        self.__link_items_to_their_neighbors(self.numbers)
         # letter categories
         for letter in self.letters:
             self.__addInstanceLink(self.letterCategory, letter, 97.0)
@@ -216,7 +216,7 @@ class SlipNet(object):
         # letter to group
         self.__addSlipLink(self.letter, self.group, length=90.0)
         self.__addSlipLink(self.group, self.letter, length=90.0)
-        # direction-position, direction-neighbour, position-neighbour
+        # direction-position, direction-neighbor, position-neighbor
         self.__addBidirectionalLink(self.left, self.leftmost, 90.0)
         self.__addBidirectionalLink(self.right, self.rightmost, 90.0)
         self.__addBidirectionalLink(self.right, self.leftmost, 100.0)
@@ -272,7 +272,7 @@ class SlipNet(object):
         self.slipnodes += [slipnode]
         return slipnode
 
-    def __link_items_to_their_neighbours(self, items):
+    def __link_items_to_their_neighbors(self, items):
         previous = items[0]
         for item in items[1:]:
             self.__addNonSlipLink(previous, item, label=self.successor)

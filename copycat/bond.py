@@ -163,13 +163,13 @@ class Bond(WorkspaceStructure):
         except ZeroDivisionError:
             return 0.0
 
-    def sameNeighbours(self, other):
+    def sameNeighbors(self, other):
         if self.leftObject == other.leftObject:
             return True
         return self.rightObject == other.rightObject
 
     def getIncompatibleBonds(self):
-        return [b for b in self.string.bonds if self.sameNeighbours(b)]
+        return [b for b in self.string.bonds if self.sameNeighbors(b)]
 
     def get_source(self):
         return self.source

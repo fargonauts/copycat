@@ -8,7 +8,7 @@ from slipnet import slipnet
 import temperature
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
-from workspaceFormulas import chooseNeighbour
+from workspaceFormulas import chooseNeighbor
 from coderack import coderack
 from workspaceObject import WorkspaceObject
 from letter import Letter
@@ -202,7 +202,7 @@ def description_builder(codelet):
 def bottom_up_bond_scout(codelet):
     source = chooseUnmodifiedObject('intraStringSalience', workspace.objects)
     __showWhichStringObjectIsFrom(source)
-    destination = chooseNeighbour(source)
+    destination = chooseNeighbor(source)
     assert destination
     logging.info('destination: %s', destination)
     bondFacet = __getBondFacet(source, destination)
@@ -335,7 +335,7 @@ def top_down_bond_scout__category(codelet):
     category = codelet.arguments[0]
     source = __getScoutSource(category, formulas.localBondCategoryRelevance,
                               'bond')
-    destination = chooseNeighbour(source)
+    destination = chooseNeighbor(source)
     logging.info('source: %s, destination: %s', source, destination)
     assert destination
     bondFacet = __getBondFacet(source, destination)
@@ -398,7 +398,7 @@ def bond_builder(codelet):
     assert (bond.source in workspace.objects or
             bond.destination in workspace.objects)
     for stringBond in bond.string.bonds:
-        if bond.sameNeighbours(stringBond) and bond.sameCategories(stringBond):
+        if bond.sameNeighbors(stringBond) and bond.sameCategories(stringBond):
             if bond.directionCategory:
                 bond.directionCategory.buffer = 100.0
             bond.category.buffer = 100.0

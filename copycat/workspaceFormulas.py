@@ -47,7 +47,7 @@ def chooseUnmodifiedObject(attribute, inObjects):
     return formulas.chooseObjectFromList(objects, attribute)
 
 
-def chooseNeighbour(source):
+def chooseNeighbor(source):
     objects = []
     for objekt in workspace.objects:
         if objekt.string != source.string:
