@@ -27,7 +27,6 @@ class SlipNet(object):
         self.numberOfUpdates = 0
         self.__addInitialNodes()
         self.__addInitialLinks()
-        self.predecessor = None
 
     def __repr__(self):
         return '<slipnet>'
