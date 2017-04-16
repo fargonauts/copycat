@@ -109,9 +109,8 @@ class Correspondence(WorkspaceStructure):
             if self.objectFromTarget.spansString():
                 return 100.0
         total = sum(c.totalStrength for c in workspace.correspondences()
-                     if self.supporting(c))
-        total = min(total, 100.0)
-        return total
+                    if self.supporting(c))
+        return min(total, 100.0)
 
     def updateInternalStrength(self):
         """A function of how many concept mappings there are
@@ -144,8 +143,8 @@ class Correspondence(WorkspaceStructure):
     def internallyCoherent(self):
         """Whether any pair of distinguishing mappings support each other"""
         mappings = self.relevantDistinguishingConceptMappings()
-        for i in range(0, len(mappings)):
-            for j in range(0, len(mappings)):
+        for i in xrange(len(mappings)):
+            for j in xrange(len(mappings)):
                 if i != j:
                     if mappings[i].supports(mappings[j]):
                         return True

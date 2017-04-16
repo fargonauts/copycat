@@ -21,4 +21,5 @@ class Temperature(object):
     def log(self):
         logging.debug('temperature.value: %f', self.value)
 
+
 temperature = Temperature()

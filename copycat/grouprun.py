@@ -12,4 +12,5 @@ class GroupRun(object):
         self.modified = workspace.modified
         self.target = workspace.target
 
+
 groupRun = GroupRun()

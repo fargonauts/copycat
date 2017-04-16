@@ -1,6 +1,6 @@
 import math
 import logging
-from random import random
+import random
 
 
 def full_activation():
@@ -9,11 +9,6 @@ def full_activation():
 
 def jump_threshold():
     return 55.0
-
-
-def points_at(links, other):
-    """Whether any of the links points at the other"""
-    return any(l.points_at(other) for l in links)
 
 
 class Slipnode(object):
@@ -95,11 +90,11 @@ class Slipnode(object):
 
     def linked(self, other):
         """Whether the other is among the outgoing links"""
-        return points_at(self.outgoingLinks, other)
+        return any(l.points_at(other) for l in self.outgoingLinks)
 
     def slipLinked(self, other):
         """Whether the other is among the lateral links"""
-        return points_at(self.lateralSlipLinks, other)
+        return any(l.points_at(other) for l in self.lateralSlipLinks)
 
     def related(self, other):
         """Same or linked"""
@@ -163,7 +158,7 @@ class Slipnode(object):
         if self.clamped:
             return False
         value = (self.activation / 100.0) ** 3
-        return random() < value
+        return random.random() < value
 
     def jump(self):
         if self.can_jump():

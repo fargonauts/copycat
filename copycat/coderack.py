@@ -71,7 +71,7 @@ class CodeRack(object):
                 probability = workspaceFormulas.probabilityOfPosting(
                     codeletName)
                 howMany = workspaceFormulas.howManyToPost(codeletName)
-                for _ in range(0, howMany):
+                for _ in xrange(howMany):
                     if random.random() >= probability:
                         continue
                     urgency = getUrgencyBin(
@@ -108,7 +108,7 @@ class CodeRack(object):
             urgency = 1
         if formulas.Temperature < 25.0 and 'translator' in codeletName:
             urgency = 5
-        for _ in range(0, howMany):
+        for _ in xrange(howMany):
             if random.random() < probability:
                 codelet = Codelet(codeletName, urgency, self.codeletsRun)
                 self.post(codelet)
@@ -219,7 +219,7 @@ class CodeRack(object):
             urgencies += [urgency]
         threshold = random.random() * sum(urgencies)
         sumOfUrgencies = 0.0
-        for i in range(0, len(self.codelets)):
+        for i in xrange(len(self.codelets)):
             sumOfUrgencies += urgencies[i]
             if sumOfUrgencies > threshold:
                 return self.codelets[i]
@@ -227,11 +227,9 @@ class CodeRack(object):
 
     def postInitialCodelets(self):
         for name in self.initialCodeletNames:
-            for _ in range(0, workspaceFormulas.numberOfObjects()):
+            for _ in xrange(2 * workspaceFormulas.numberOfObjects()):
                 codelet = Codelet(name, 1, self.codeletsRun)
                 self.post(codelet)
-                codelet2 = Codelet(name, 1, self.codeletsRun)
-                self.post(codelet2)
 
     def tryRun(self, newCodelet):
         if self.removeTerracedScan:
@@ -267,7 +265,8 @@ class CodeRack(object):
             'bottom-up-correspondence-scout',
             'important-object-correspondence-scout',
             'correspondence-strength-tester',
-            'correspondence-builder',)
+            'correspondence-builder',
+        )
         self.methods = {}
         for codeletName in knownCodeletNames:
             methodName = re.sub('[ -]', '_', codeletName)
@@ -351,5 +350,6 @@ class CodeRack(object):
                 method()
         except AssertionError:
             pass
+
 
 coderack = CodeRack()

@@ -710,7 +710,7 @@ def group_builder(codelet):
         incompatible.break_the_structure()
     # create new bonds
     group.bondList = []
-    for i in range(1, len(group.objectList)):
+    for i in xrange(1, len(group.objectList)):
         #print 803
         object1 = group.objectList[i - 1]
         object2 = group.objectList[i]
@@ -761,7 +761,7 @@ def __getCutOff(density):
         distribution = [1.0, 1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0]
     stop = sum(distribution) * random.random()
     total = 0.0
-    for i in range(0, len(distribution)):
+    for i in xrange(len(distribution)):
         total += distribution[i]
         if total >= stop:
             return i + 1

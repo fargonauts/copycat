@@ -10,9 +10,8 @@ def distinguishingDescriptor(descriptor):
         return False
     if descriptor == slipnet.group:
         return False
-    for number in slipnet.numbers:
-        if number == descriptor:
-            return False
+    if descriptor in slipnet.numbers:
+        return False
     return True
 
 
@@ -43,8 +42,8 @@ class SlipNet(object):
         self.numberOfUpdates = 0
         for node in self.slipnodes:
             node.reset()
-            if node in self.initiallyClampedSlipnodes:
-                node.clampHigh()
+        for node in self.initiallyClampedSlipnodes:
+            node.clampHigh()
 
     def update(self):
         logging.debug('slipnet.update()')
@@ -278,5 +277,6 @@ class SlipNet(object):
             self.__addNonSlipLink(previous, item, label=self.successor)
             self.__addNonSlipLink(item, previous, label=self.predecessor)
             previous = item
+
 
 slipnet = SlipNet()
