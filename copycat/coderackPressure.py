@@ -63,37 +63,35 @@ class CoderackPressures(object):
 
     def initialisePressures(self):
         #logging.debug('coderackPressures.initialisePressures()')
-        self.pressures = []
-        self.pressures += [CoderackPressure('Bottom Up Bonds')]
-        self.pressures += [CoderackPressure('Top Down Successor Bonds')]
-        self.pressures += [CoderackPressure('Top Down Predecessor Bonds')]
-        self.pressures += [CoderackPressure('Top Down Sameness Bonds')]
-        self.pressures += [CoderackPressure('Top Down Left Bonds')]
-        self.pressures += [CoderackPressure('Top Down Right Bonds')]
-        self.pressures += [CoderackPressure('Top Down Successor Group')]
-        self.pressures += [CoderackPressure('Top Down Predecessor Group')]
-        self.pressures += [CoderackPressure('Top Down Sameness Group')]
-        self.pressures += [CoderackPressure('Top Down Left Group')]
-        self.pressures += [CoderackPressure('Top Down Right Group')]
-        self.pressures += [CoderackPressure('Bottom Up Whole Group')]
-        self.pressures += [CoderackPressure('Replacement Finder')]
-        self.pressures += [CoderackPressure('Rule Codelets')]
-        self.pressures += [CoderackPressure('Rule Translator')]
-        self.pressures += [CoderackPressure('Bottom Up Correspondences')]
-        self.pressures += [CoderackPressure(
-            'Important Object Correspondences')]
-        self.pressures += [CoderackPressure('Breakers')]
+        self.pressures = [
+            CoderackPressure('Bottom Up Bonds'),
+            CoderackPressure('Top Down Successor Bonds'),
+            CoderackPressure('Top Down Predecessor Bonds'),
+            CoderackPressure('Top Down Sameness Bonds'),
+            CoderackPressure('Top Down Left Bonds'),
+            CoderackPressure('Top Down Right Bonds'),
+            CoderackPressure('Top Down Successor Group'),
+            CoderackPressure('Top Down Predecessor Group'),
+            CoderackPressure('Top Down Sameness Group'),
+            CoderackPressure('Top Down Left Group'),
+            CoderackPressure('Top Down Right Group'),
+            CoderackPressure('Bottom Up Whole Group'),
+            CoderackPressure('Replacement Finder'),
+            CoderackPressure('Rule Codelets'),
+            CoderackPressure('Rule Translator'),
+            CoderackPressure('Bottom Up Correspondences'),
+            CoderackPressure('Important Object Correspondences'),
+            CoderackPressure('Breakers'),
+        ]
 
     def calculatePressures(self):
         #logging.debug('coderackPressures.calculatePressures()')
         scale = (100.0 - Temperature + 10.0) / 15.0
-        values = []
-        for pressure in self.pressures:
-            value = sum([c.urgency ** scale for c in pressure.codelets])
-            values += [value]
-        totalValue = sum(values)
-        if not totalValue:
-            totalValue = 1.0
+        values = map(
+            lambda pressure: sum([c.urgency ** scale for c in pressure.codelets]),
+            self.pressures
+        )
+        totalValue = sum(values) or 1.0
         values = [value / totalValue for value in values]
         self.maxValue = max(values)
         for pressure, value in zip(self.pressures, values):
