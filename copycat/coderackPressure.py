@@ -109,17 +109,12 @@ class CoderackPressures(object):
         self.removedCodelets = []
 
     def addCodelet(self, codelet):
-        node = None
         i = _codelet_index(codelet)
         if i >= 0:
-            self.pressures[i].codelets += [codelet]
+            codelet.pressure = self.pressures[i]
         if codelet.pressure:
             codelet.pressure.codelets += [codelet]
-        if i >= 0:
-            codelet.pressure = self.pressures[i]
         logging.info('Add %s: %d', codelet.name, i)
-        if node:
-            logging.info('Node: %s', node.name)
 
     def removeCodelet(self, codelet):
         self.removedCodelets += [codelet]
