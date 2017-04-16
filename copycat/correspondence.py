@@ -108,8 +108,8 @@ class Correspondence(WorkspaceStructure):
         if isinstance(self.objectFromTarget, Letter):
             if self.objectFromTarget.spansString():
                 return 100.0
-        total = sum([c.totalStrength for c in workspace.correspondences()
-                     if self.supporting(c)])
+        total = sum(c.totalStrength for c in workspace.correspondences()
+                     if self.supporting(c))
         total = min(total, 100.0)
         return total
 
@@ -122,7 +122,7 @@ class Correspondence(WorkspaceStructure):
         if numberOfConceptMappings < 1:
             self.internalStrength = 0.0
             return
-        totalStrength = sum([m.strength() for m in distinguishingMappings])
+        totalStrength = sum(m.strength() for m in distinguishingMappings)
         averageStrength = totalStrength / numberOfConceptMappings
         if numberOfConceptMappings == 1.0:
             numberOfConceptMappingsFactor = 0.8

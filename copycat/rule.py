@@ -106,11 +106,11 @@ class Rule(WorkspaceStructure):
         if self.relation == slipnet.predecessor:
             if 'a' in string:
                 return None
-            return ''.join([chr(ord(c) - 1) for c in string])
+            return ''.join(chr(ord(c) - 1) for c in string)
         elif self.relation == slipnet.successor:
             if 'z' in string:
                 return None
-            return ''.join([chr(ord(c) + 1) for c in string])
+            return ''.join(chr(ord(c) + 1) for c in string)
         else:
             return self.relation.name.lower()
 

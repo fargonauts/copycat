@@ -159,7 +159,7 @@ class CodeRack(object):
             mapping.targetDescriptionType.buffer = 100.0
             mapping.targetDescriptor.buffer = 100.0
         mappings = correspondence.distinguishingConceptMappings()
-        urgency = sum([mapping.strength() for mapping in mappings])
+        urgency = sum(mapping.strength() for mapping in mappings)
         numberOfMappings = len(mappings)
         if urgency:
             urgency /= numberOfMappings
@@ -287,37 +287,33 @@ class CodeRack(object):
     def chooseCodeletToRun(self):
         if not self.codelets:
             return None
-        temp = formulas.Temperature
-        scale = (100.0 - temp + 10.0) / 15.0
-        urgsum = 0.0
-        for codelet in self.codelets:
-            urg = codelet.urgency ** scale
-            urgsum += urg
-        r = random.random()
-        threshold = r * urgsum
-        chosen = None
-        urgencySum = 0.0
-        logging.info('temperature: %f', formulas.Temperature)
-        logging.info('actualTemperature: %f', formulas.actualTemperature)
-        logging.info('Slipnet:')
-        for node in slipnet.slipnodes:
-            logging.info("\tnode %s, activation: %d, buffer: %d, depth: %s",
-                         node.get_name(), node.activation, node.buffer,
-                         node.conceptualDepth)
-        logging.info('Coderack:')
-        for codelet in self.codelets:
-            logging.info('\t%s, %d', codelet.name, codelet.urgency)
-        from workspace import workspace
 
-        workspace.initial.log("Initial: ")
-        workspace.target.log("Target: ")
+        #logging.info('temperature: %f', formulas.Temperature)
+        #logging.info('actualTemperature: %f', formulas.actualTemperature)
+        #logging.info('Slipnet:')
+        #for node in slipnet.slipnodes:
+        #    logging.info("\tnode %s, activation: %d, buffer: %d, depth: %s",
+        #                 node.get_name(), node.activation, node.buffer,
+        #                 node.conceptualDepth)
+        #logging.info('Coderack:')
+        #for codelet in self.codelets:
+        #    logging.info('\t%s, %d', codelet.name, codelet.urgency)
+
+        #from workspace import workspace
+        #workspace.initial.log("Initial: ")
+        #workspace.target.log("Target: ")
+
+        scale = (100.0 - formulas.Temperature + 10.0) / 15.0
+        urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)
+        threshold = random.random() * urgsum
+        chosen = self.codelets[0]
+        urgencySum = 0.0
+
         for codelet in self.codelets:
             urgencySum += codelet.urgency ** scale
-            if not chosen and urgencySum > threshold:
+            if urgencySum > threshold:
                 chosen = codelet
                 break
-        if not chosen:
-            chosen = self.codelets[0]
         self.removeCodelet(chosen)
         logging.info('chosen codelet\n\t%s, urgency = %s',
                      chosen.name, chosen.urgency)

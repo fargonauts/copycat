@@ -32,7 +32,9 @@ class Description(WorkspaceStructure):
     def localSupport(self):
         from workspace import workspace
         described_like_self = 0
-        for other in workspace.otherObjects(self.object):
+        for other in workspace.objects:
+            if self.object == other:
+                continue
             if self.object.isWithin(other) or other.isWithin(self.object):
                 continue
             for description in other.descriptions:

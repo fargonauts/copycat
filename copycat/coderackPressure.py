@@ -88,7 +88,7 @@ class CoderackPressures(object):
         #logging.debug('coderackPressures.calculatePressures()')
         scale = (100.0 - Temperature + 10.0) / 15.0
         values = map(
-            lambda pressure: sum([c.urgency ** scale for c in pressure.codelets]),
+            lambda pressure: sum(c.urgency ** scale for c in pressure.codelets),
             self.pressures
         )
         totalValue = sum(values) or 1.0

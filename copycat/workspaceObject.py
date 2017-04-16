@@ -185,22 +185,20 @@ class WorkspaceObject(WorkspaceStructure):
 
     def getDescriptor(self, descriptionType):
         """The description attached to this object of the description type."""
-        descriptor = None
         logging.info("\nIn %s, trying for type: %s",
                      self, descriptionType.get_name())
         for description in self.descriptions:
             logging.info("Trying description: %s", description)
             if description.descriptionType == descriptionType:
                 return description.descriptor
-        return descriptor
+        return None
 
     def getDescriptionType(self, sought_description):
         """The description_type attached to this object of that description"""
         for description in self.descriptions:
             if description.descriptor == sought_description:
                 return description.descriptionType
-        description = None
-        return description
+        return None
 
     def getCommonGroups(self, other):
         return [o for o in self.string.objects

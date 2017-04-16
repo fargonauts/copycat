@@ -56,7 +56,7 @@ class WorkspaceString(object):
 
     def updateRelativeImportance(self):
         """Update the normalised importance of all objects in the string"""
-        total = sum([o.rawImportance for o in self.objects])
+        total = sum(o.rawImportance for o in self.objects)
         if not total:
             for o in self.objects:
                 o.relativeImportance = 0.0
@@ -71,7 +71,7 @@ class WorkspaceString(object):
         if not len(self.objects):
             self.intraStringUnhappiness = 0.0
             return
-        total = sum([o.intraStringUnhappiness for o in self.objects])
+        total = sum(o.intraStringUnhappiness for o in self.objects)
         self.intraStringUnhappiness = total / len(self.objects)
 
     def equivalentGroup(self, sought):

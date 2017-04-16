@@ -42,14 +42,15 @@ class Workspace(object):
         self.target = WorkspaceString(self.targetString)
 
     def assessUnhappiness(self):
-        self.intraStringUnhappiness = __adjustUnhappiness([
+        self.intraStringUnhappiness = __adjustUnhappiness(
             o.relativeImportance * o.intraStringUnhappiness
-            for o in self.objects])
-        self.interStringUnhappiness = __adjustUnhappiness([
+            for o in self.objects)
+        self.interStringUnhappiness = __adjustUnhappiness(
             o.relativeImportance * o.interStringUnhappiness
-            for o in self.objects])
-        self.totalUnhappiness = __adjustUnhappiness([
-            o.relativeImportance * o.totalUnhappiness for o in self.objects])
+            for o in self.objects)
+        self.totalUnhappiness = __adjustUnhappiness(
+            o.relativeImportance * o.totalUnhappiness
+            for o in self.objects)
 
     def assessTemperature(self):
         self.calculateIntraStringUnhappiness()
@@ -57,24 +58,21 @@ class Workspace(object):
         self.calculateTotalUnhappiness()
 
     def calculateIntraStringUnhappiness(self):
-        values = [o.relativeImportance * o.intraStringUnhappiness
-                  for o in self.objects]
-        value = sum(values) / 2.0
+        value = sum(o.relativeImportance * o.intraStringUnhappiness
+                  for o in self.objects) / 2.0
         self.intraStringUnhappiness = min(value, 100.0)
 
     def calculateInterStringUnhappiness(self):
-        values = [o.relativeImportance * o.interStringUnhappiness
-                  for o in self.objects]
-        value = sum(values) / 2.0
+        value = sum(o.relativeImportance * o.interStringUnhappiness
+                  for o in self.objects) / 2.0
         self.interStringUnhappiness = min(value, 100.0)
 
     def calculateTotalUnhappiness(self):
         for o in self.objects:
             logging.info("%s, totalUnhappiness: %d, relativeImportance: %d",
                          o, o.totalUnhappiness, o.relativeImportance * 1000)
-        values = [o.relativeImportance * o.totalUnhappiness
-                  for o in self.objects]
-        value = sum(values) / 2.0
+        value = sum(o.relativeImportance * o.totalUnhappiness
+                  for o in self.objects) / 2.0
         self.totalUnhappiness = min(value, 100.0)
 
     def updateEverything(self):
@@ -86,9 +84,6 @@ class Workspace(object):
         self.target.updateRelativeImportance()
         self.initial.updateIntraStringUnhappiness()
         self.target.updateIntraStringUnhappiness()
-
-    def otherObjects(self, anObject):
-        return [o for o in self.objects if o != anObject]
 
     def numberOfUnrelatedObjects(self):
         """A list of all objects in the workspace with >= 1 open bond slots"""
