@@ -21,7 +21,7 @@ def getUrgencyBin(urgency):
     return i + 1
 
 
-class CodeRack(object):
+class Coderack(object):
     def __init__(self):
         self.pressures = CoderackPressures()
         self.pressures.initialisePressures()
@@ -288,6 +288,3 @@ class CodeRack(object):
             method(self, codelet)
         except AssertionError:
             pass
-
-
-coderack = CodeRack()

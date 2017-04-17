@@ -3,8 +3,9 @@ import logging
 from workspace import workspace
 from slipnet import slipnet
 from temperature import temperature
-from coderack import coderack
+from coderack import Coderack
 
+coderack = Coderack()
 
 def updateEverything():
     workspace.updateEverything()
