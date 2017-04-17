@@ -9,6 +9,8 @@ import workspaceFormulas
 from slipnet import slipnet
 from codelet import Codelet
 from coderackPressure import CoderackPressures
+from temperature import temperature
+
 
 NUMBER_OF_BINS = 7
 
@@ -36,8 +38,6 @@ class CodeRack(object):
         self.postings = {}
 
     def reset(self):
-        from temperature import temperature
-
         self.codelets = []
         self.codeletsRun = 0
         temperature.clamped = True

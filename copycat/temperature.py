@@ -10,15 +10,10 @@ class Temperature(object):
     def update(self, value):
         self.value = value
 
-    def tryUnclamp(self):
-        from coderack import coderack
-
-        if self.clamped and coderack.codeletsRun >= self.clampTime:
-            logging.info('unclamp temperature at %d', coderack.codeletsRun)
+    def tryUnclamp(self, currentTime):
+        if self.clamped and currentTime >= self.clampTime:
+            logging.info('unclamp temperature at %d', currentTime)
             self.clamped = False
-
-    def log(self):
-        logging.debug('temperature.value: %f', self.value)
 
 
 temperature = Temperature()

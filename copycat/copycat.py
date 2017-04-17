@@ -15,7 +15,7 @@ def updateEverything():
 
 
 def mainLoop(lastUpdate):
-    temperature.tryUnclamp()
+    temperature.tryUnclamp(coderack.codeletsRun)
     result = lastUpdate
     if not coderack.codeletsRun:
         updateEverything()
