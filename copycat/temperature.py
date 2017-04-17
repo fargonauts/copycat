@@ -8,7 +8,6 @@ class Temperature(object):
         self.clampTime = 30
 
     def update(self, value):
-        logging.debug('update to %s', value)
         self.value = value
 
     def tryUnclamp(self):

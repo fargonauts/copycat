@@ -6,37 +6,6 @@ from slipnet import slipnet
 import formulas
 
 
-class WorkspaceFormulas(object):
-    def __init__(self):
-        self.clampTemperature = False
-
-    def updateTemperature(self):
-        logging.debug('updateTemperature')
-        workspace.assessTemperature()
-        ruleWeakness = 100.0
-        if workspace.rule:
-            workspace.rule.updateStrength()
-            ruleWeakness = 100.0 - workspace.rule.totalStrength
-        values = ((workspace.totalUnhappiness, 0.8), (ruleWeakness, 0.2))
-        above_actual_temperature = formulas.actualTemperature + 0.001
-        logging.info('actualTemperature: %f', above_actual_temperature)
-        formulas.actualTemperature = formulas.weightedAverage(values)
-        logging.info('unhappiness: %f, weakness: %f, actualTemperature: %f',
-                     workspace.totalUnhappiness + 0.001, ruleWeakness + 0.001,
-                     formulas.actualTemperature + 0.001)
-        if temperature.clamped:
-            formulas.actualTemperature = 100.0
-        logging.info('actualTemperature: %f',
-                     formulas.actualTemperature + 0.001)
-        temperature.update(formulas.actualTemperature)
-        if not self.clampTemperature:
-            formulas.Temperature = formulas.actualTemperature
-        temperature.update(formulas.Temperature)
-
-
-workspaceFormulas = WorkspaceFormulas()
-
-
 def numberOfObjects():
     return len(workspace.objects)
 

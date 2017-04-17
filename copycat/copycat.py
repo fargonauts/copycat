@@ -1,7 +1,6 @@
 import logging
 
 from workspace import workspace
-from workspaceFormulas import workspaceFormulas
 from slipnet import slipnet
 from temperature import temperature
 from coderack import coderack
@@ -12,7 +11,7 @@ def updateEverything():
     workspace.updateEverything()
     coderack.updateCodelets()
     slipnet.update()
-    workspaceFormulas.updateTemperature()
+    workspace.updateTemperature()
     coderackPressures.calculatePressures()
 
 

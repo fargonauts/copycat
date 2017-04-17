@@ -1,6 +1,7 @@
 import logging
 
 from description import Description
+from formulas import weightedAverage
 from slipnet import slipnet, distinguishingDescriptor
 from workspaceStructure import WorkspaceStructure
 
@@ -106,7 +107,6 @@ class WorkspaceObject(WorkspaceStructure):
             self.intraStringSalience = 100.0
             self.interStringSalience = 100.0
         else:
-            from formulas import weightedAverage
             self.intraStringSalience = weightedAverage((
                 (self.relativeImportance, 0.2),
                 (self.intraStringUnhappiness, 0.8)))

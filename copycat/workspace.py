@@ -1,5 +1,7 @@
 import logging
 
+import formulas
+from temperature import temperature
 from workspaceString import WorkspaceString
 
 
@@ -82,6 +84,20 @@ class Workspace(object):
         self.target.updateRelativeImportance()
         self.initial.updateIntraStringUnhappiness()
         self.target.updateIntraStringUnhappiness()
+
+    def updateTemperature(self):
+        self.assessTemperature()
+        ruleWeakness = 100.0
+        if self.rule:
+            self.rule.updateStrength()
+            ruleWeakness = 100.0 - self.rule.totalStrength
+        values = ((self.totalUnhappiness, 0.8), (ruleWeakness, 0.2))
+        above_actual_temperature = formulas.actualTemperature + 0.001
+        formulas.actualTemperature = formulas.weightedAverage(values)
+        if temperature.clamped:
+            formulas.actualTemperature = 100.0
+        formulas.Temperature = formulas.actualTemperature
+        temperature.update(formulas.Temperature)
 
     def numberOfUnrelatedObjects(self):
         """A list of all objects in the workspace with >= 1 open bond slots"""
