@@ -75,16 +75,42 @@ def howManyToPost(workspace, codeletName):
 class Coderack(object):
     def __init__(self):
         self.pressures = CoderackPressures()
-        self.pressures.initialisePressures()
         self.reset()
-        self.initialCodeletNames = (
-            'bottom-up-bond-scout',
-            'replacement-finder',
-            'bottom-up-correspondence-scout',
-        )
         self.runCodelets = {}
         self.postings = {}
-        self.getCodeletMethods()
+        self.methods = {}
+
+        for name in dir(codeletMethods):
+            method = getattr(codeletMethods, name)
+            if getattr(method, 'is_codelet_method', False):
+                self.methods[method.codelet_name] = method
+
+        assert set(self.methods.keys()) == set([
+            'breaker',
+            'bottom-up-description-scout',
+            'top-down-description-scout',
+            'description-strength-tester',
+            'description-builder',
+            'bottom-up-bond-scout',
+            'top-down-bond-scout--category',
+            'top-down-bond-scout--direction',
+            'bond-strength-tester',
+            'bond-builder',
+            'top-down-group-scout--category',
+            'top-down-group-scout--direction',
+            'group-scout--whole-string',
+            'group-strength-tester',
+            'group-builder',
+            'replacement-finder',
+            'rule-scout',
+            'rule-strength-tester',
+            'rule-builder',
+            'rule-translator',
+            'bottom-up-correspondence-scout',
+            'important-object-correspondence-scout',
+            'correspondence-strength-tester',
+            'correspondence-builder',
+        ])
 
     def reset(self):
         self.codelets = []
@@ -263,56 +289,26 @@ class Coderack(object):
         return self.codelets[0]
 
     def postInitialCodelets(self):
-        for name in self.initialCodeletNames:
+        logging.info("posting initial codelets")
+        codeletsToPost = [
+            'bottom-up-bond-scout',
+            'replacement-finder',
+            'bottom-up-correspondence-scout',
+        ]
+        for name in codeletsToPost:
             for _ in xrange(2 * len(workspace.objects)):
                 codelet = Codelet(name, 1, self.codeletsRun)
                 self.post(codelet)
 
-    def getCodeletMethods(self):
-        self.methods = {}
-        for name in dir(codeletMethods):
-            method = getattr(codeletMethods, name)
-            if getattr(method, 'is_codelet_method', False):
-                self.methods[method.codelet_name] = method
-
-        assert set(self.methods.keys()) == set([
-            'breaker',
-            'bottom-up-description-scout',
-            'top-down-description-scout',
-            'description-strength-tester',
-            'description-builder',
-            'bottom-up-bond-scout',
-            'top-down-bond-scout--category',
-            'top-down-bond-scout--direction',
-            'bond-strength-tester',
-            'bond-builder',
-            'top-down-group-scout--category',
-            'top-down-group-scout--direction',
-            'group-scout--whole-string',
-            'group-strength-tester',
-            'group-builder',
-            'replacement-finder',
-            'rule-scout',
-            'rule-strength-tester',
-            'rule-builder',
-            'rule-translator',
-            'bottom-up-correspondence-scout',
-            'important-object-correspondence-scout',
-            'correspondence-strength-tester',
-            'correspondence-builder',
-        ])
-
     def chooseAndRunCodelet(self):
         if not len(self.codelets):
+            # Indeed, this happens fairly often.
             self.postInitialCodelets()
         codelet = self.chooseCodeletToRun()
-        if codelet:
-            self.run(codelet)
+        self.run(codelet)
 
     def chooseCodeletToRun(self):
-        if not self.codelets:
-            return None
-
+        assert self.codelets
         scale = (100.0 - formulas.Temperature + 10.0) / 15.0
         urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)
         threshold = random.random() * urgsum

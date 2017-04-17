@@ -56,10 +56,6 @@ def _codelet_index(codelet):
 
 class CoderackPressures(object):
     def __init__(self):
-        self.initialisePressures()
-        self.reset()
-
-    def initialisePressures(self):
         self.pressures = [
             CoderackPressure('Bottom Up Bonds'),
             CoderackPressure('Top Down Successor Bonds'),
@@ -80,6 +76,7 @@ class CoderackPressures(object):
             CoderackPressure('Important Object Correspondences'),
             CoderackPressure('Breakers'),
         ]
+        self.reset()
 
     def calculatePressures(self):
         scale = (100.0 - Temperature + 10.0) / 15.0
