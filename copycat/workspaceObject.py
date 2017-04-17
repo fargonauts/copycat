@@ -2,7 +2,7 @@ import logging
 
 from description import Description
 from formulas import weightedAverage
-from slipnet import slipnet, distinguishingDescriptor
+from slipnet import slipnet
 from workspaceStructure import WorkspaceStructure
 
 
@@ -170,13 +170,12 @@ class WorkspaceObject(WorkspaceStructure):
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
 
     def distinguishingDescriptor(self, descriptor):
-        # pylint: disable=no-self-use
-        return distinguishingDescriptor(descriptor)
+        return slipnet.isDistinguishingDescriptor(descriptor)
 
     def relevantDistinguishingDescriptors(self):
         return [d.descriptor
                 for d in self.relevantDescriptions()
-                if distinguishingDescriptor(d.descriptor)]
+                if slipnet.isDistinguishingDescriptor(d.descriptor)]
 
     def getDescriptor(self, descriptionType):
         """The description attached to this object of the description type."""

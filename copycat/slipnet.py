@@ -4,17 +4,6 @@ from slipnode import Slipnode
 from sliplink import Sliplink
 
 
-def distinguishingDescriptor(descriptor):
-    """Whether no other object of the same type has the same descriptor"""
-    if descriptor == slipnet.letter:
-        return False
-    if descriptor == slipnet.group:
-        return False
-    if descriptor in slipnet.numbers:
-        return False
-    return True
-
-
 class SlipNet(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(self):
@@ -57,6 +46,16 @@ class SlipNet(object):
             node.addBuffer()
             node.jump()
             node.buffer = 0.0
+
+    def isDistinguishingDescriptor(self, descriptor):
+        """Whether no other object of the same type has the same descriptor"""
+        if descriptor == self.letter:
+            return False
+        if descriptor == self.group:
+            return False
+        if descriptor in self.numbers:
+            return False
+        return True
 
     def __addInitialNodes(self):
         # pylint: disable=too-many-statements
