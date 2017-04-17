@@ -13,10 +13,11 @@ def jump_threshold():
 
 class Slipnode(object):
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, name, depth, length=0.0):
+    def __init__(self, slipnet, name, depth, length=0.0):
+        self.slipnet = slipnet
+        self.name = name
         self.conceptualDepth = depth
         self.usualConceptualDepth = depth
-        self.name = name
         self.intrinsicLinkLength = length
         self.shrunkLinkLength = length * 0.4
 
@@ -111,9 +112,7 @@ class Slipnode(object):
 
         If no linked node is found, return None
         """
-        from slipnet import slipnet
-
-        if relation == slipnet.identity:
+        if relation == self.slipnet.identity:
             return self
         destinations = [l.destination
                         for l in self.outgoingLinks if l.label == relation]
@@ -126,11 +125,9 @@ class Slipnode(object):
 
         If it does not exist return None
         """
-        from slipnet import slipnet
-
         result = None
         if self == destination:
-            result = slipnet.identity
+            result = self.slipnet.identity
         else:
             for link in self.outgoingLinks:
                 if link.destination == destination:

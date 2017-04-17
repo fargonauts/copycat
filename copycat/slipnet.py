@@ -265,7 +265,7 @@ class SlipNet(object):
         self.__addSlipLink(destination, source, label=self.opposite)
 
     def __addNode(self, name, depth, length=0):
-        slipnode = Slipnode(name, depth, length)
+        slipnode = Slipnode(self, name, depth, length)
         self.slipnodes += [slipnode]
         return slipnode
 

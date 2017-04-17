@@ -1,5 +1,3 @@
-#from slipnode import Slipnode
-
 
 class Sliplink(object):
     def __init__(self, source, destination, label=None, length=0.0):
