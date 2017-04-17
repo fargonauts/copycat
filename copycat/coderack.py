@@ -1,9 +1,8 @@
-import re
-import inspect
 import math
 import logging
 import random
 
+import codeletMethods
 import formulas
 import workspaceFormulas
 from slipnet import slipnet
@@ -24,18 +23,17 @@ def getUrgencyBin(urgency):
 
 class CodeRack(object):
     def __init__(self):
-        self.speedUpBonds = False
-        self.removeBreakerCodelets = False
-        self.removeTerracedScan = False
         self.pressures = CoderackPressures()
         self.pressures.initialisePressures()
         self.reset()
-        self.initialCodeletNames = ('bottom-up-bond-scout',
-                                    'replacement-finder',
-                                    'bottom-up-correspondence-scout')
-        self.codeletMethodsDir = None
+        self.initialCodeletNames = (
+            'bottom-up-bond-scout',
+            'replacement-finder',
+            'bottom-up-correspondence-scout',
+        )
         self.runCodelets = {}
         self.postings = {}
+        self.getCodeletMethods()
 
     def reset(self):
         self.codelets = []
@@ -87,17 +85,11 @@ class CodeRack(object):
         self.__postBottomUpCodelets('replacement-finder')
         self.__postBottomUpCodelets('rule-scout')
         self.__postBottomUpCodelets('rule-translator')
-        if not self.removeBreakerCodelets:
-            self.__postBottomUpCodelets('breaker')
+        self.__postBottomUpCodelets('breaker')
 
     def __postBottomUpCodelets(self, codeletName):
         probability = workspaceFormulas.probabilityOfPosting(codeletName)
         howMany = workspaceFormulas.howManyToPost(codeletName)
-        #if codeletName == 'bottom-up-bond-scout':
-        #   print 'post --> %f:%d' % (probability,howMany)
-        if self.speedUpBonds:
-            if 'bond' in codeletName or 'group' in codeletName:
-                howMany *= 3
         urgency = 3
         if codeletName == 'breaker':
             urgency = 1
@@ -121,7 +113,7 @@ class CodeRack(object):
         else:
             newCodelet.arguments = oldCodelet.arguments
         newCodelet.pressure = oldCodelet.pressure
-        self.tryRun(newCodelet)
+        self.post(newCodelet)
 
     # pylint: disable=too-many-arguments
     def proposeRule(self, facet, description, category, relation, oldCodelet):
@@ -209,7 +201,7 @@ class CodeRack(object):
             return None
         urgencies = []
         for codelet in self.codelets:
-            urgency = ((coderack.codeletsRun - codelet.timeStamp) *
+            urgency = ((self.codeletsRun - codelet.timeStamp) *
                        (7.5 - codelet.urgency))
             urgencies += [urgency]
         threshold = random.random() * sum(urgencies)
@@ -226,17 +218,14 @@ class CodeRack(object):
                 codelet = Codelet(name, 1, self.codeletsRun)
                 self.post(codelet)
 
-    def tryRun(self, newCodelet):
-        if self.removeTerracedScan:
-            self.run(newCodelet)
-        else:
-            self.post(newCodelet)
+    def getCodeletMethods(self):
+        self.methods = {}
+        for name in dir(codeletMethods):
+            method = getattr(codeletMethods, name)
+            if getattr(method, 'is_codelet_method', False):
+                self.methods[method.codelet_name] = method
 
-    def getCodeletmethods(self):
-        import codeletMethods
-
-        self.codeletMethodsDir = dir(codeletMethods)
-        knownCodeletNames = (
+        assert set(self.methods.keys()) == set([
             'breaker',
             'bottom-up-description-scout',
             'top-down-description-scout',
@@ -261,19 +250,11 @@ class CodeRack(object):
             'important-object-correspondence-scout',
             'correspondence-strength-tester',
             'correspondence-builder',
-        )
-        self.methods = {}
-        for codeletName in knownCodeletNames:
-            methodName = re.sub('[ -]', '_', codeletName)
-            if methodName not in self.codeletMethodsDir:
-                raise NotImplementedError(
-                    'Cannot find %s in codeletMethods' % methodName)
-            method = getattr(codeletMethods, methodName)
-            self.methods[methodName] = method
+        ])
 
     def chooseAndRunCodelet(self):
-        if not len(coderack.codelets):
-            coderack.postInitialCodelets()
+        if not len(self.codelets):
+            self.postInitialCodelets()
         codelet = self.chooseCodeletToRun()
         if codelet:
             self.run(codelet)
@@ -281,21 +262,6 @@ class CodeRack(object):
     def chooseCodeletToRun(self):
         if not self.codelets:
             return None
-
-        #logging.info('temperature: %f', formulas.Temperature)
-        #logging.info('actualTemperature: %f', formulas.actualTemperature)
-        #logging.info('Slipnet:')
-        #for node in slipnet.slipnodes:
-        #    logging.info("\tnode %s, activation: %d, buffer: %d, depth: %s",
-        #                 node.get_name(), node.activation, node.buffer,
-        #                 node.conceptualDepth)
-        #logging.info('Coderack:')
-        #for codelet in self.codelets:
-        #    logging.info('\t%s, %d', codelet.name, codelet.urgency)
-
-        #from workspace import workspace
-        #workspace.initial.log("Initial: ")
-        #workspace.target.log("Target: ")
 
         scale = (100.0 - formulas.Temperature + 10.0) / 15.0
         urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)
@@ -314,33 +280,12 @@ class CodeRack(object):
         return chosen
 
     def run(self, codelet):
-        methodName = re.sub('[ -]', '_', codelet.name)
+        methodName = codelet.name
         self.codeletsRun += 1
         self.runCodelets[methodName] = self.runCodelets.get(methodName, 0) + 1
-
-        #if self.codeletsRun > 2000:
-        #import sys
-        #print "running too many codelets"
-        #for name,count in self.postings.iteritems():
-        #print '%d:%s' % (count,name)
-        #raise ValueError
-        #else:
-        #   print 'running %d' % self.codeletsRun
-        if not self.codeletMethodsDir:
-            self.getCodeletmethods()
-        #if not self.codeletMethodsDir:
         method = self.methods[methodName]
-        if not method:
-            raise ValueError('Found %s in codeletMethods, but cannot get it',
-                             methodName)
-        if not callable(method):
-            raise RuntimeError('Cannot call %s()' % methodName)
-        args, _varargs, _varkw, _defaults = inspect.getargspec(method)
         try:
-            if 'codelet' in args:
-                method(codelet)
-            else:
-                method()
+            method(self, codelet)
         except AssertionError:
             pass
 
