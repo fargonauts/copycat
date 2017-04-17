@@ -31,7 +31,7 @@ class Bond(WorkspaceStructure):
 
     def flippedVersion(self):
         return Bond(
-            self.destination, self.get_source(),
+            self.destination, self.source,
             self.category.getRelatedNode(slipnet.opposite),
             self.facet, self.destinationDescriptor, self.sourceDescriptor)
 
@@ -99,7 +99,7 @@ class Bond(WorkspaceStructure):
     def updateInternalStrength(self):
         # bonds between objects of same type(ie. letter or group) are
         # stronger than bonds between different types
-        sourceGap = self.get_source().leftIndex != self.get_source().rightIndex
+        sourceGap = self.source.leftIndex != self.source.rightIndex
         destinationGap = (self.destination.leftIndex !=
                           self.destination.rightIndex)
         if sourceGap == destinationGap:
@@ -128,7 +128,7 @@ class Bond(WorkspaceStructure):
 
     def numberOfLocalSupportingBonds(self):
         return len([b for b in self.string.bonds if
-                    b.string == self.get_source().string and
+                    b.string == self.source.string and
                     self.leftObject.letterDistance(b.leftObject) != 0 and
                     self.rightObject.letterDistance(b.rightObject) != 0 and
                     self.category == b.category and
@@ -139,15 +139,16 @@ class Bond(WorkspaceStructure):
                 self.directionCategory == other.directionCategory)
 
     def myEnds(self, object1, object2):
-        if self.get_source() == object1 and self.destination == object2:
+        if self.source == object1 and self.destination == object2:
             return True
-        return self.get_source() == object2 and self.destination == object1
+        return self.source == object2 and self.destination == object1
 
     def localDensity(self):
         # returns a rough measure of the density in the string
         # of the same bond-category and the direction-category of
         # the given bond
-        slotSum = supportSum = 0.0
+        slotSum = 0.0
+        supportSum = 0.0
         for object1 in workspace.objects:
             if object1.string == self.string:
                 for object2 in workspace.objects:
@@ -171,9 +172,6 @@ class Bond(WorkspaceStructure):
     def getIncompatibleBonds(self):
         return [b for b in self.string.bonds if self.sameNeighbors(b)]
 
-    def get_source(self):
-        return self.source
-
     def set_source(self, value):
         self.source = value
 
@@ -193,7 +191,7 @@ def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
                 return None  # a different bond cannot be made here
             if bond.category == slipnet.sameness:
                 return None
-            bond = Bond(bond.destination, bond.get_source(), bondCategory,
+            bond = Bond(bond.destination, bond.source, bondCategory,
                         bondFacet, bond.destinationDescriptor,
                         bond.sourceDescriptor)
             result += [bond]
