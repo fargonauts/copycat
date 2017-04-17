@@ -23,7 +23,7 @@ def probabilityOfPosting(workspace, codeletName):
     if codeletName == 'breaker':
         return 1.0
     if 'description' in codeletName:
-        result = (formulas.Temperature / 100.0) ** 2
+        result = (temperature.value() / 100.0) ** 2
     else:
         result = workspace.intraStringUnhappiness / 100.0
     if 'correspondence' in codeletName:
@@ -165,7 +165,7 @@ class Coderack(object):
         urgency = 3
         if codeletName == 'breaker':
             urgency = 1
-        if formulas.Temperature < 25.0 and 'translator' in codeletName:
+        if temperature.value() < 25.0 and 'translator' in codeletName:
             urgency = 5
         for _ in xrange(howMany):
             if formulas.coinFlip(probability):
@@ -303,7 +303,7 @@ class Coderack(object):
 
     def chooseCodeletToRun(self):
         assert self.codelets
-        scale = (100.0 - formulas.Temperature + 10.0) / 15.0
+        scale = (100.0 - temperature.value() + 10.0) / 15.0
         urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)
         threshold = random.random() * urgsum
         chosen = self.codelets[0]

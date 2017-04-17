@@ -3,7 +3,7 @@ import logging
 import random
 
 from slipnet import slipnet
-import temperature
+from temperature import temperature
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
 from workspaceFormulas import chooseNeighbor
@@ -130,7 +130,7 @@ def __slippability(conceptMappings):
 
 @codelet('breaker')
 def breaker(coderack, codelet):
-    probabilityOfFizzle = (100.0 - formulas.Temperature) / 100.0
+    probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
     if formulas.coinFlip(probabilityOfFizzle):
         return
     # choose a structure at random
@@ -804,13 +804,11 @@ def rule_translator(coderack, codelet):
         if bondDensity > 1.0:
             bondDensity = 1.0
     cutoff = __getCutOff(bondDensity) * 10.0
-    assert cutoff >= formulas.actualTemperature
-    if workspace.rule.buildTranslatedRule():
-        workspace.foundAnswer = True
-    else:
-        temperature.clampTime = coderack.codeletsRun + 100
-        temperature.clamped = True
-        formulas.Temperature = 100.0
+    if cutoff >= temperature.actual_value:
+        if workspace.rule.buildTranslatedRule():
+            workspace.foundAnswer = True
+        else:
+            temperature.clampUntil(coderack.codeletsRun + 100)
 
 
 @codelet('bottom-up-correspondence-scout')

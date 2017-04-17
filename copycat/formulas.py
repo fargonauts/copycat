@@ -4,8 +4,6 @@ import random
 
 from temperature import temperature
 
-actualTemperature = Temperature = 100.0
-
 
 def selectListPosition(probabilities):
     total = sum(probabilities)
@@ -35,23 +33,18 @@ def weightedAverage(values):
 
 
 def temperatureAdjustedValue(value):
-    #logging.info('Temperature: %s' % Temperature)
-    #logging.info('actualTemperature: %s' % actualTemperature)
-    return value ** (((100.0 - Temperature) / 30.0) + 0.5)
+    return value ** (((100.0 - temperature.value()) / 30.0) + 0.5)
 
 
 def temperatureAdjustedProbability(value):
-    if not value or value == 0.5 or not temperature.value:
+    if value == 0 or value == 0.5 or temperature.value() == 0:
         return value
     if value < 0.5:
         return 1.0 - temperatureAdjustedProbability(1.0 - value)
-    coldness = 100.0 - temperature.value
+    coldness = 100.0 - temperature.value()
     a = math.sqrt(coldness)
-    b = 10.0 - a
-    c = b / 100
-    d = c * (1.0 - (1.0 - value))  # as said the java
-    e = (1.0 - value) + d
-    f = 1.0 - e
+    c = (10 - a) / 100
+    f = (c + 1) * value
     return max(f, 0.5)
 
 

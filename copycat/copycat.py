@@ -17,7 +17,7 @@ def mainLoop(lastUpdate):
         workspace.updateEverything()
         coderack.updateCodelets()
         slipnet.update()
-        workspace.updateTemperature()
+        temperature.update(workspace.getUpdatedTemperature())
         lastUpdate = currentTime
     logging.debug('Number of codelets: %d', len(coderack.codelets))
     coderack.chooseAndRunCodelet()
@@ -36,7 +36,7 @@ def runTrial(answers):
         answer = workspace.rule.finalAnswer
     else:
         answer = None
-    finalTemperature = temperature.value
+    finalTemperature = temperature.last_unclamped_value
     finalTime = coderack.codeletsRun
     print 'Answered %s (time %d, final temperature %.1f)' % (answer, finalTime, finalTemperature)
     answers[answer] = answers.get(answer, {'count': 0, 'tempsum': 0, 'timesum': 0})

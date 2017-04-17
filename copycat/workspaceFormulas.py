@@ -1,7 +1,6 @@
 import logging
 
 from workspace import workspace
-from temperature import temperature
 from slipnet import slipnet
 import formulas
 
