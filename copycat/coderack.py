@@ -4,7 +4,6 @@ import random
 
 import codeletMethods
 import formulas
-from slipnet import slipnet
 from codelet import Codelet
 from coderackPressure import CoderackPressures
 from temperature import temperature
@@ -73,7 +72,8 @@ def howManyToPost(workspace, codeletName):
 
 
 class Coderack(object):
-    def __init__(self):
+    def __init__(self, slipnet):
+        self.slipnet = slipnet
         self.pressures = CoderackPressures()
         self.reset()
         self.runCodelets = {}
@@ -132,7 +132,7 @@ class Coderack(object):
             self.removeCodelet(oldCodelet)
 
     def postTopDownCodelets(self):
-        for node in slipnet.slipnodes:
+        for node in self.slipnet.slipnodes:
             #logging.info('Trying slipnode: %s' % node.get_name())
             if node.activation != 100.0:
                 continue
@@ -242,14 +242,14 @@ class Coderack(object):
                         oldCodelet, urgency, description)
 
     def proposeSingleLetterGroup(self, source, codelet):
-        self.proposeGroup([source], [], slipnet.samenessGroup, None,
-                          slipnet.letterCategory, codelet)
+        self.proposeGroup([source], [], self.slipnet.samenessGroup, None,
+                          self.slipnet.letterCategory, codelet)
 
     def proposeGroup(self, objects, bondList, groupCategory, directionCategory,
                      bondFacet, oldCodelet):
         from group import Group
 
-        bondCategory = groupCategory.getRelatedNode(slipnet.bondCategory)
+        bondCategory = groupCategory.getRelatedNode(self.slipnet.bondCategory)
         bondCategory.buffer = 100.0
         if directionCategory:
             directionCategory.buffer = 100.0

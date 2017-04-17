@@ -6,7 +6,7 @@ from temperature import temperature
 from coderack import Coderack
 
 
-coderack = Coderack()
+coderack = Coderack(slipnet)
 
 
 def mainLoop(lastUpdate):
