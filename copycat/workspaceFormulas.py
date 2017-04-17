@@ -6,10 +6,6 @@ from slipnet import slipnet
 import formulas
 
 
-def numberOfObjects():
-    return len(workspace.objects)
-
-
 def chooseUnmodifiedObject(attribute, inObjects):
     objects = [o for o in inObjects if o.string != workspace.modified]
     if not len(objects):
@@ -85,54 +81,3 @@ def __descriptionTypeSupport(descriptionType, string):
                 if description.descriptionType == descriptionType:
                     described_count += 1
     return described_count / float(total)
-
-
-def probabilityOfPosting(codeletName):
-    if codeletName == 'breaker':
-        return 1.0
-    if 'description' in codeletName:
-        result = (formulas.Temperature / 100.0) ** 2
-    else:
-        result = workspace.intraStringUnhappiness / 100.0
-    if 'correspondence' in codeletName:
-        result = workspace.interStringUnhappiness / 100.0
-    if 'replacement' in codeletName:
-        if workspace.numberOfUnreplacedObjects() > 0:
-            return 1.0
-        return 0.0
-    if 'rule' in codeletName:
-        if not workspace.rule:
-            return 1.0
-        return workspace.rule.totalWeakness() / 100.0
-    if 'translator' in codeletName:
-        assert False
-    return result
-
-
-def howManyToPost(codeletName):
-    if codeletName == 'breaker' or 'description' in codeletName:
-        return 1
-    if 'translator' in codeletName:
-        if not workspace.rule:
-            return 0
-        return 1
-    if 'rule' in codeletName:
-        return 2
-    if 'group' in codeletName and not workspace.numberOfBonds():
-        return 0
-    if 'replacement' in codeletName and workspace.rule:
-        return 0
-    number = 0
-    if 'bond' in codeletName:
-        number = workspace.numberOfUnrelatedObjects()
-    if 'group' in codeletName:
-        number = workspace.numberOfUngroupedObjects()
-    if 'replacement' in codeletName:
-        number = workspace.numberOfUnreplacedObjects()
-    if 'correspondence' in codeletName:
-        number = workspace.numberOfUncorrespondingObjects()
-    if number < formulas.blur(2.0):
-        return 1
-    if number < formulas.blur(4.0):
-        return 2
-    return 3
