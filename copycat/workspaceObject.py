@@ -66,13 +66,8 @@ class WorkspaceObject(WorkspaceStructure):
             return 100.0
         if self.group:
             return self.group.totalStrength
-        bondStrength = 0.0
-        for bond in self.bonds:
-            bondStrength += bond.totalStrength
-        divisor = 6.0
-        if self.spansString():  # then we have already returned
-            divisor = 3.0
-        return bondStrength / divisor
+        bondStrength = sum(bond.totalStrength for bond in self.bonds)
+        return bondStrength / 6.0
 
     def __calculateRawImportance(self):
         """Calculate the raw importance of this object.
