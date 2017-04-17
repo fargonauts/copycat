@@ -5,7 +5,6 @@ import random
 import codeletMethods
 import formulas
 from codelet import Codelet
-from coderackPressure import CoderackPressures
 from temperature import temperature
 from workspace import workspace
 
@@ -74,7 +73,6 @@ def howManyToPost(workspace, codeletName):
 class Coderack(object):
     def __init__(self, slipnet):
         self.slipnet = slipnet
-        self.pressures = CoderackPressures()
         self.reset()
         self.runCodelets = {}
         self.postings = {}
@@ -116,7 +114,6 @@ class Coderack(object):
         self.codelets = []
         self.codeletsRun = 0
         temperature.clamped = True
-        self.pressures.reset()
 
     def updateCodelets(self):
         if self.codeletsRun > 0:
@@ -125,7 +122,6 @@ class Coderack(object):
 
     def post(self, codelet):
         self.postings[codelet.name] = self.postings.get(codelet.name, 0) + 1
-        self.pressures.addCodelet(codelet)
         self.codelets += [codelet]
         if len(self.codelets) > 100:
             oldCodelet = self.chooseOldCodelet()
@@ -178,7 +174,6 @@ class Coderack(object):
 
     def removeCodelet(self, codelet):
         self.codelets.remove(codelet)
-        self.pressures.removeCodelet(codelet)
 
     def newCodelet(self, name, oldCodelet, strength, arguments=None):
         #logging.debug('Posting new codelet called %s' % name)
@@ -188,7 +183,6 @@ class Coderack(object):
             newCodelet.arguments = [arguments]
         else:
             newCodelet.arguments = oldCodelet.arguments
-        newCodelet.pressure = oldCodelet.pressure
         self.post(newCodelet)
 
     # pylint: disable=too-many-arguments

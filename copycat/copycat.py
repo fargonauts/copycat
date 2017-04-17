@@ -18,7 +18,6 @@ def mainLoop(lastUpdate):
         coderack.updateCodelets()
         slipnet.update()
         workspace.updateTemperature()
-        coderack.pressures.calculatePressures()
         lastUpdate = currentTime
     logging.debug('Number of codelets: %d', len(coderack.codelets))
     coderack.chooseAndRunCodelet()

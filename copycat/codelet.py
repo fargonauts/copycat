@@ -3,7 +3,6 @@ class Codelet(object):
         self.name = name
         self.urgency = urgency
         self.arguments = []
-        self.pressure = None
         self.timeStamp = timestamp
 
     def __repr__(self):
