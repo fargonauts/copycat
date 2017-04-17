@@ -1,3 +1,4 @@
+import logging
 
 class Context(object):
     def __init__(self):
@@ -7,8 +8,8 @@ class Context(object):
         self.slipnet = None
 
     def mainLoop(self, lastUpdate):
-        currentTime = coderack.codeletsRun
-        temperature.tryUnclamp(currentTime)
+        currentTime = self.coderack.codeletsRun
+        self.temperature.tryUnclamp(currentTime)
         # Every 15 codelets, we update the workspace.
         if currentTime >= lastUpdate + 15:
             self.workspace.updateEverything()

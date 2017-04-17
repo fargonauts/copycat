@@ -2,7 +2,7 @@ import math
 import logging
 import random
 
-from temperature import temperature
+from context import context
 
 
 def selectListPosition(probabilities):
@@ -32,16 +32,16 @@ def weightedAverage(values):
     return total / totalWeights
 
 
-def temperatureAdjustedValue(value):
-    return value ** (((100.0 - temperature.value()) / 30.0) + 0.5)
+def temperatureAdjustedValue(ctx, value):
+    return value ** (((100.0 - ctx.temperature.value()) / 30.0) + 0.5)
 
 
-def temperatureAdjustedProbability(value):
-    if value == 0 or value == 0.5 or temperature.value() == 0:
+def temperatureAdjustedProbability(ctx, value):
+    if value == 0 or value == 0.5 or ctx.temperature.value() == 0:
         return value
     if value < 0.5:
-        return 1.0 - temperatureAdjustedProbability(1.0 - value)
-    coldness = 100.0 - temperature.value()
+        return 1.0 - temperatureAdjustedProbability(ctx, 1.0 - value)
+    coldness = 100.0 - ctx.temperature.value()
     a = math.sqrt(coldness)
     c = (10 - a) / 100
     f = (c + 1) * value
@@ -65,7 +65,7 @@ def chooseObjectFromList(objects, attribute):
     probabilities = []
     for objekt in objects:
         value = getattr(objekt, attribute)
-        probability = temperatureAdjustedValue(value)
+        probability = temperatureAdjustedValue(context, value)
         logging.info('Object: %s, value: %d, probability: %d',
                      objekt, value, probability)
         probabilities += [probability]
@@ -88,7 +88,7 @@ def similarPropertyLinks(slip_node):
     result = []
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
-        probability = temperatureAdjustedProbability(association)
+        probability = temperatureAdjustedProbability(context, association)
         if coinFlip(probability):
             result += [slip_link]
     return result
@@ -97,7 +97,7 @@ def similarPropertyLinks(slip_node):
 def chooseSlipnodeByConceptualDepth(slip_nodes):
     if not slip_nodes:
         return None
-    depths = [temperatureAdjustedValue(n.conceptualDepth) for n in slip_nodes]
+    depths = [temperatureAdjustedValue(context, n.conceptualDepth) for n in slip_nodes]
     i = selectListPosition(depths)
     return slip_nodes[i]
 

@@ -2,7 +2,7 @@ import logging
 
 import formulas
 from workspaceString import WorkspaceString
-from context import context
+
 
 def __adjustUnhappiness(values):
     result = sum(values) / 2

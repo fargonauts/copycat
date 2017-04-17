@@ -4,10 +4,10 @@ from slipnode import Slipnode
 from sliplink import Sliplink
 
 
-class SlipNet(object):
+class Slipnet(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(self):
-        logging.debug("SlipNet.__init__()")
+        logging.debug("Slipnet.__init__()")
         self.initiallyClampedSlipnodes = []
         self.slipnodes = []
         self.sliplinks = []
@@ -276,4 +276,4 @@ class SlipNet(object):
             previous = item
 
 
-slipnet = SlipNet()
+slipnet = Slipnet()

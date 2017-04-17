@@ -5,6 +5,7 @@ from workspace import workspace
 from workspaceObject import WorkspaceObject
 from slipnet import slipnet
 import formulas
+from context import context
 
 
 class Group(WorkspaceObject):
@@ -111,7 +112,7 @@ class Group(WorkspaceObject):
         support = self.localSupport() / 100.0
         activation = slipnet.length.activation / 100.0
         supportedActivation = (support * activation) ** exp
-        return formulas.temperatureAdjustedProbability(supportedActivation)
+        return formulas.temperatureAdjustedProbability(context, supportedActivation)
 
     def flippedVersion(self):
         flippedBonds = [b.flippedversion() for b in self.bondList]
@@ -142,7 +143,7 @@ class Group(WorkspaceObject):
         cubedlength = length ** 3
         fred = cubedlength * (100.0 - slipnet.length.activation) / 100.0
         probability = 0.5 ** fred
-        value = formulas.temperatureAdjustedProbability(probability)
+        value = formulas.temperatureAdjustedProbability(context, probability)
         if value < 0.06:
             value = 0.0  # otherwise 1/20 chance always
         return value

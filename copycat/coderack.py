@@ -71,8 +71,10 @@ def howManyToPost(workspace, codeletName):
 
 
 class Coderack(object):
-    def __init__(self, slipnet):
-        self.slipnet = slipnet
+    def __init__(self, ctx):
+        assert ctx.slipnet is not None
+        self.ctx = ctx
+        self.slipnet = ctx.slipnet
         self.reset()
         self.runCodelets = {}
         self.postings = {}
@@ -325,6 +327,6 @@ class Coderack(object):
         self.runCodelets[methodName] = self.runCodelets.get(methodName, 0) + 1
         method = self.methods[methodName]
         try:
-            method(self, codelet)
+            method(self.ctx, codelet)
         except AssertionError:
             pass

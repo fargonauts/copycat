@@ -2,15 +2,12 @@ import inspect
 import logging
 import random
 
-from slipnet import slipnet
-from temperature import temperature
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
 from workspaceFormulas import chooseNeighbor
 from workspaceObject import WorkspaceObject
 from letter import Letter
 from replacement import Replacement
-from workspaceFormulas import workspace
 from group import Group
 from bond import Bond
 from bond import possibleGroupBonds
@@ -21,7 +18,7 @@ from workspaceFormulas import chooseBondFacet
 def codelet(name):
     """Decorator for otherwise-unused functions that are in fact used as codelet behaviors"""
     def wrap(f):
-        assert tuple(inspect.getargspec(f)) == (['coderack', 'codelet'], None, None, None)
+        assert tuple(inspect.getargspec(f)) == (['ctx', 'codelet'], None, None, None)
         f.is_codelet_method = True
         f.codelet_name = name
         return f
@@ -29,6 +26,8 @@ def codelet(name):
 
 # some methods common to the codelets
 def __showWhichStringObjectIsFrom(structure):
+    from context import context as ctx
+    workspace = ctx.workspace
     if not structure:
         return
     whence = 'other'
@@ -40,6 +39,8 @@ def __showWhichStringObjectIsFrom(structure):
 
 
 def __getScoutSource(slipnode, relevanceMethod, typeName):
+    from context import context as ctx
+    workspace = ctx.workspace
     initialRelevance = relevanceMethod(workspace.initial, slipnode)
     targetRelevance = relevanceMethod(workspace.target, slipnode)
     initialUnhappiness = workspace.initial.intraStringUnhappiness
@@ -78,11 +79,12 @@ def __getDescriptors(bondFacet, source, destination):
 
 
 def __structureVsStructure(structure1, weight1, structure2, weight2):
+    from context import context as ctx
     structure1.updateStrength()
     structure2.updateStrength()
-    weightedStrength1 = formulas.temperatureAdjustedValue(
+    weightedStrength1 = formulas.temperatureAdjustedValue(ctx,
         structure1.totalStrength * weight1)
-    weightedStrength2 = formulas.temperatureAdjustedValue(
+    weightedStrength2 = formulas.temperatureAdjustedValue(ctx,
         structure2.totalStrength * weight2)
     rhs = (weightedStrength1 + weightedStrength2) * random.random()
     logging.info('%d > %d', weightedStrength1, rhs)
@@ -115,9 +117,10 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 
 def __slippability(conceptMappings):
+    from context import context as ctx
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
-        probabilityOfSlippage = formulas.temperatureAdjustedProbability(
+        probabilityOfSlippage = formulas.temperatureAdjustedProbability(ctx,
             slippiness)
         if formulas.coinFlip(probabilityOfSlippage):
             return True
@@ -125,7 +128,9 @@ def __slippability(conceptMappings):
 
 
 @codelet('breaker')
-def breaker(coderack, codelet):
+def breaker(ctx, codelet):
+    temperature = ctx.temperature
+    workspace = ctx.workspace
     probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
     if formulas.coinFlip(probabilityOfFizzle):
         return
@@ -142,7 +147,7 @@ def breaker(coderack, codelet):
                 breakObjects += [structure.source.group]
     # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
-        breakProbability = formulas.temperatureAdjustedProbability(
+        breakProbability = formulas.temperatureAdjustedProbability(ctx,
             structure.totalStrength / 100.0)
         if formulas.coinFlip(breakProbability):
             return
@@ -151,7 +156,9 @@ def breaker(coderack, codelet):
 
 
 @codelet('bottom-up-description-scout')
-def bottom_up_description_scout(coderack, codelet):
+def bottom_up_description_scout(ctx, codelet):
+    coderack = ctx.coderack
+    workspace = ctx.workspace
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
@@ -169,7 +176,9 @@ def bottom_up_description_scout(coderack, codelet):
 
 
 @codelet('top-down-description-scout')
-def top_down_description_scout(coderack, codelet):
+def top_down_description_scout(ctx, codelet):
+    coderack = ctx.coderack
+    workspace = ctx.workspace
     descriptionType = codelet.arguments[0]
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
     assert chosenObject
@@ -184,18 +193,20 @@ def top_down_description_scout(coderack, codelet):
 
 
 @codelet('description-strength-tester')
-def description_strength_tester(coderack, codelet):
+def description_strength_tester(ctx, codelet):
+    coderack = ctx.coderack
     description = codelet.arguments[0]
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
-    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
     assert formulas.coinFlip(probability)
     coderack.newCodelet('description-builder', codelet, strength)
 
 
 @codelet('description-builder')
-def description_builder(coderack, codelet):
+def description_builder(ctx, codelet):
+    workspace = ctx.workspace
     description = codelet.arguments[0]
     assert description.object in workspace.objects
     if description.object.described(description.descriptor):
@@ -206,7 +217,10 @@ def description_builder(coderack, codelet):
 
 
 @codelet('bottom-up-bond-scout')
-def bottom_up_bond_scout(coderack, codelet):
+def bottom_up_bond_scout(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     source = chooseUnmodifiedObject('intraStringSalience', workspace.objects)
     __showWhichStringObjectIsFrom(source)
     destination = chooseNeighbor(source)
@@ -230,7 +244,10 @@ def bottom_up_bond_scout(coderack, codelet):
 
 
 @codelet('rule-scout')
-def rule_scout(coderack, codelet):
+def rule_scout(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     assert workspace.numberOfUnreplacedObjects() == 0
     changedObjects = [o for o in workspace.initial.objects if o.changed]
     #assert len(changedObjects) < 2
@@ -270,7 +287,7 @@ def rule_scout(coderack, codelet):
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = formulas.temperatureAdjustedValue(depth)
+        value = formulas.temperatureAdjustedValue(ctx, depth)
         valueList += [value]
     i = formulas.selectListPosition(valueList)
     descriptor = objectList[i]
@@ -284,7 +301,7 @@ def rule_scout(coderack, codelet):
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = formulas.temperatureAdjustedValue(depth)
+        value = formulas.temperatureAdjustedValue(ctx, depth)
         valueList += [value]
     i = formulas.selectListPosition(valueList)
     relation = objectList[i]
@@ -293,17 +310,19 @@ def rule_scout(coderack, codelet):
 
 
 @codelet('rule-strength-tester')
-def rule_strength_tester(coderack, codelet):
+def rule_strength_tester(ctx, codelet):
+    coderack = ctx.coderack
     rule = codelet.arguments[0]
     rule.updateStrength()
-    probability = formulas.temperatureAdjustedProbability(
-        rule.totalStrength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(ctx, rule.totalStrength / 100.0)
     if formulas.coinFlip(probability):
         coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
 
 @codelet('replacement-finder')
-def replacement_finder(coderack, codelet):
+def replacement_finder(ctx, codelet):
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     # choose random letter in initial string
     letters = [o for o in workspace.initial.objects if isinstance(o, Letter)]
     letterOfInitialString = random.choice(letters)
@@ -341,7 +360,9 @@ def replacement_finder(coderack, codelet):
 
 
 @codelet('top-down-bond-scout--category')
-def top_down_bond_scout__category(coderack, codelet):
+def top_down_bond_scout__category(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
     logging.info('top_down_bond_scout__category')
     category = codelet.arguments[0]
     source = __getScoutSource(category, formulas.localBondCategoryRelevance,
@@ -370,7 +391,9 @@ def top_down_bond_scout__category(coderack, codelet):
 
 
 @codelet('top-down-bond-scout--direction')
-def top_down_bond_scout__direction(coderack, codelet):
+def top_down_bond_scout__direction(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
     direction = codelet.arguments[0]
     source = __getScoutSource(
         direction, formulas.localDirectionCategoryRelevance, 'bond')
@@ -389,12 +412,13 @@ def top_down_bond_scout__direction(coderack, codelet):
 
 
 @codelet('bond-strength-tester')
-def bond_strength_tester(coderack, codelet):
+def bond_strength_tester(ctx, codelet):
+    coderack = ctx.coderack
     bond = codelet.arguments[0]
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
     strength = bond.totalStrength
-    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
     logging.info('bond strength = %d for %s', strength, bond)
     assert formulas.coinFlip(probability)
     bond.facet.buffer = 100.0
@@ -405,7 +429,8 @@ def bond_strength_tester(coderack, codelet):
 
 
 @codelet('bond-builder')
-def bond_builder(coderack, codelet):
+def bond_builder(ctx, codelet):
+    workspace = ctx.workspace
     bond = codelet.arguments[0]
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
@@ -448,7 +473,9 @@ def bond_builder(coderack, codelet):
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
 @codelet('top-down-group-scout--category')
-def top_down_group_scout__category(coderack, codelet):
+def top_down_group_scout__category(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
     groupCategory = codelet.arguments[0]
     category = groupCategory.getRelatedNode(slipnet.bondCategory)
     assert category
@@ -530,7 +557,9 @@ def top_down_group_scout__category(coderack, codelet):
 
 
 @codelet('top-down-group-scout--direction')
-def top_down_group_scout__direction(coderack, codelet):
+def top_down_group_scout__direction(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
     direction = codelet.arguments[0]
     source = __getScoutSource(direction,
                               formulas.localDirectionCategoryRelevance,
@@ -622,7 +651,10 @@ def top_down_group_scout__direction(coderack, codelet):
 
 #noinspection PyStringFormat
 @codelet('group-scout--whole-string')
-def group_scout__whole_string(coderack, codelet):
+def group_scout__whole_string(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     if formulas.coinFlip():
         string = workspace.target
         logging.info('target string selected: %s', workspace.target)
@@ -663,13 +695,15 @@ def group_scout__whole_string(coderack, codelet):
 
 
 @codelet('group-strength-tester')
-def group_strength_tester(coderack, codelet):
+def group_strength_tester(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
     # update strength value of the group
     group = codelet.arguments[0]
     __showWhichStringObjectIsFrom(group)
     group.updateStrength()
     strength = group.totalStrength
-    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
     if formulas.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
         group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
@@ -679,7 +713,9 @@ def group_strength_tester(coderack, codelet):
 
 
 @codelet('group-builder')
-def group_builder(coderack, codelet):
+def group_builder(ctx, codelet):
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     # update strength value of the group
     group = codelet.arguments[0]
     #print '%s' % group
@@ -754,7 +790,8 @@ def group_builder(coderack, codelet):
 
 
 @codelet('rule-builder')
-def rule_builder(coderack, codelet):
+def rule_builder(ctx, codelet):
+    workspace = ctx.workspace
     rule = codelet.arguments[0]
     if rule.ruleEqual(workspace.rule):
         rule.activateRuleDescriptions()
@@ -788,7 +825,10 @@ def __getCutOff(density):
 
 
 @codelet('rule-translator')
-def rule_translator(coderack, codelet):
+def rule_translator(ctx, codelet):
+    coderack = ctx.coderack
+    temperature = ctx.temperature
+    workspace = ctx.workspace
     assert workspace.rule
     if len(workspace.initial) == 1 and len(workspace.target) == 1:
         bondDensity = 1.0
@@ -808,7 +848,10 @@ def rule_translator(coderack, codelet):
 
 
 @codelet('bottom-up-correspondence-scout')
-def bottom_up_correspondence_scout(coderack, codelet):
+def bottom_up_correspondence_scout(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject('interStringSalience',
                                                workspace.initial.objects)
     objectFromTarget = chooseUnmodifiedObject('interStringSalience',
@@ -846,7 +889,10 @@ def bottom_up_correspondence_scout(coderack, codelet):
 
 
 @codelet('important-object-correspondence-scout')
-def important_object_correspondence_scout(coderack, codelet):
+def important_object_correspondence_scout(ctx, codelet):
+    coderack = ctx.coderack
+    slipnet = ctx.slipnet
+    workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject('relativeImportance',
                                                workspace.initial.objects)
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
@@ -897,7 +943,9 @@ def important_object_correspondence_scout(coderack, codelet):
 
 
 @codelet('correspondence-strength-tester')
-def correspondence_strength_tester(coderack, codelet):
+def correspondence_strength_tester(ctx, codelet):
+    coderack = ctx.coderack
+    workspace = ctx.workspace
     correspondence = codelet.arguments[0]
     objectFromInitial = correspondence.objectFromInitial
     objectFromTarget = correspondence.objectFromTarget
@@ -908,7 +956,7 @@ def correspondence_strength_tester(coderack, codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
-    probability = formulas.temperatureAdjustedProbability(strength / 100.0)
+    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
     if formulas.coinFlip(probability):
         # activate some concepts
         for mapping in correspondence.conceptMappings:
@@ -921,7 +969,8 @@ def correspondence_strength_tester(coderack, codelet):
 
 
 @codelet('correspondence-builder')
-def correspondence_builder(coderack, codelet):
+def correspondence_builder(ctx, codelet):
+    workspace = ctx.workspace
     correspondence = codelet.arguments[0]
     objectFromInitial = correspondence.objectFromInitial
     objectFromTarget = correspondence.objectFromTarget
