@@ -23,7 +23,6 @@ class SlipNet(object):
         self.slipnodes = []
         self.sliplinks = []
         self.bondFacets = []
-        self.timeStepLength = 15
         self.numberOfUpdates = 0
         self.__addInitialNodes()
         self.__addInitialLinks()

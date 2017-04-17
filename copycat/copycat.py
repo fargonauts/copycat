@@ -5,28 +5,24 @@ from slipnet import slipnet
 from temperature import temperature
 from coderack import Coderack
 
-coderack = Coderack()
 
-def updateEverything():
-    workspace.updateEverything()
-    coderack.updateCodelets()
-    slipnet.update()
-    workspace.updateTemperature()
-    coderack.pressures.calculatePressures()
+coderack = Coderack()
 
 
 def mainLoop(lastUpdate):
-    temperature.tryUnclamp(coderack.codeletsRun)
-    result = lastUpdate
-    if not coderack.codeletsRun:
-        updateEverything()
-        result = coderack.codeletsRun
-    elif coderack.codeletsRun - lastUpdate >= slipnet.timeStepLength:
-        updateEverything()
-        result = coderack.codeletsRun
+    currentTime = coderack.codeletsRun
+    temperature.tryUnclamp(currentTime)
+    # Every 15 codelets, we update the workspace.
+    if currentTime >= lastUpdate + 15:
+        workspace.updateEverything()
+        coderack.updateCodelets()
+        slipnet.update()
+        workspace.updateTemperature()
+        coderack.pressures.calculatePressures()
+        lastUpdate = currentTime
     logging.debug('Number of codelets: %d', len(coderack.codelets))
     coderack.chooseAndRunCodelet()
-    return result
+    return lastUpdate
 
 
 def runTrial(answers):
@@ -34,7 +30,7 @@ def runTrial(answers):
     slipnet.reset()
     workspace.reset()
     coderack.reset()
-    lastUpdate = 0
+    lastUpdate = float('-inf')
     while not workspace.foundAnswer:
         lastUpdate = mainLoop(lastUpdate)
     if workspace.rule:
