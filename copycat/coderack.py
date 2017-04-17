@@ -11,9 +11,6 @@ from codelet import Codelet
 from coderackPressure import CoderackPressures
 
 NUMBER_OF_BINS = 7
-MAX_NUMBER_OF_CODELETS = 100
-
-codeletsUsed = {}
 
 
 def getUrgencyBin(urgency):
@@ -341,8 +338,6 @@ class CodeRack(object):
         if not callable(method):
             raise RuntimeError('Cannot call %s()' % methodName)
         args, _varargs, _varkw, _defaults = inspect.getargspec(method)
-        #global codeletsUsed
-        #codeletsUsed[methodName] = codeletsUsed.get(methodName,0) + 1
         try:
             if 'codelet' in args:
                 method(codelet)

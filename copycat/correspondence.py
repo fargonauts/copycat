@@ -1,5 +1,3 @@
-
-
 from workspace import workspace
 from workspaceStructure import WorkspaceStructure
 from formulas import getMappings

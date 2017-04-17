@@ -2,8 +2,6 @@ import logging
 
 from workspaceString import WorkspaceString
 
-unknownAnswer = '?'
-
 
 def __adjustUnhappiness(values):
     result = sum(values) / 2
