@@ -2,7 +2,6 @@ import logging
 
 from description import Description
 from formulas import weightedAverage
-from slipnet import slipnet
 from workspaceStructure import WorkspaceStructure
 
 
@@ -50,6 +49,8 @@ class WorkspaceObject(WorkspaceStructure):
         self.descriptions += [description]
 
     def addDescriptions(self, descriptions):
+        from context import context as ctx
+        workspace = ctx.workspace
         copy = descriptions[:]  # in case we add to our own descriptions
         for description in copy:
             logging.info('might add: %s', description)
@@ -58,7 +59,6 @@ class WorkspaceObject(WorkspaceStructure):
                                     description.descriptor)
             else:
                 logging.info("Won't add it")
-        from workspace import workspace
         workspace.buildDescriptions(self)
 
     def __calculateIntraStringHappiness(self):
@@ -123,21 +123,21 @@ class WorkspaceObject(WorkspaceStructure):
                 if d.descriptionType.fully_active()]
 
     def getPossibleDescriptions(self, descriptionType):
+        from group import Group  # gross, TODO FIXME
+        from context import context as ctx
+        slipnet = ctx.slipnet
         logging.info('getting possible descriptions for %s', self)
         descriptions = []
-        from group import Group
         for link in descriptionType.instanceLinks:
             node = link.destination
             if node == slipnet.first and self.described(slipnet.letters[0]):
                 descriptions += [node]
             if node == slipnet.last and self.described(slipnet.letters[-1]):
                 descriptions += [node]
-            i = 1
-            for number in slipnet.numbers:
+            for i, number in enumerate(slipnet.numbers, 1):
                 if node == number and isinstance(self, Group):
                     if len(self.objectList) == i:
                         descriptions += [node]
-                i += 1
             if node == slipnet.middle and self.middleObject():
                 descriptions += [node]
         s = ''
@@ -170,9 +170,13 @@ class WorkspaceObject(WorkspaceStructure):
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
 
     def distinguishingDescriptor(self, descriptor):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         return slipnet.isDistinguishingDescriptor(descriptor)
 
     def relevantDistinguishingDescriptors(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         return [d.descriptor
                 for d in self.relevantDescriptions()
                 if slipnet.isDistinguishingDescriptor(d.descriptor)]

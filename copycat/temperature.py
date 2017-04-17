@@ -1,6 +1,9 @@
 
 class Temperature(object):
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.actual_value = 100.0
         self.last_unclamped_value = 100.0
         self.clamped = True

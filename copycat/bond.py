@@ -1,12 +1,12 @@
 from workspaceStructure import WorkspaceStructure
-from slipnet import slipnet
-from workspace import workspace
 
 
 class Bond(WorkspaceStructure):
     # pylint: disable=too-many-arguments
     def __init__(self, source, destination, bondCategory, bondFacet,
                  sourceDescriptor, destinationDescriptor):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         WorkspaceStructure.__init__(self)
         self.source = source
         self.string = self.source.string
@@ -30,6 +30,8 @@ class Bond(WorkspaceStructure):
             self.directionCategory = None
 
     def flippedVersion(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         return Bond(
             self.destination, self.source,
             self.category.getRelatedNode(slipnet.opposite),
@@ -43,6 +45,8 @@ class Bond(WorkspaceStructure):
             self.category.name, self.leftObject, self.rightObject)
 
     def buildBond(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         workspace.structures += [self]
         self.string.bonds += [self]
         self.category.buffer = 100.0
@@ -57,6 +61,8 @@ class Bond(WorkspaceStructure):
         self.breakBond()
 
     def breakBond(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         if self in workspace.structures:
             workspace.structures.remove(self)
         if self in self.string.bonds:
@@ -71,6 +77,8 @@ class Bond(WorkspaceStructure):
     def getIncompatibleCorrespondences(self):
         # returns a list of correspondences that are incompatible with
         # self bond
+        from context import context as ctx
+        workspace = ctx.workspace
         incompatibles = []
         if self.leftObject.leftmost and self.leftObject.correspondence:
             correspondence = self.leftObject.correspondence
@@ -97,6 +105,8 @@ class Bond(WorkspaceStructure):
         return incompatibles
 
     def updateInternalStrength(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         # bonds between objects of same type(ie. letter or group) are
         # stronger than bonds between different types
         sourceGap = self.source.leftIndex != self.source.rightIndex
@@ -147,6 +157,8 @@ class Bond(WorkspaceStructure):
         # returns a rough measure of the density in the string
         # of the same bond-category and the direction-category of
         # the given bond
+        from context import context as ctx
+        workspace = ctx.workspace
         slotSum = 0.0
         supportSum = 0.0
         for object1 in workspace.objects:
@@ -177,6 +189,8 @@ class Bond(WorkspaceStructure):
 
 
 def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
+    from context import context as ctx
+    slipnet = ctx.slipnet
     result = []
     for bond in bonds:
         if  (bond.category == bondCategory and

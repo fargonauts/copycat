@@ -1,6 +1,7 @@
-from workspace import workspace
+from conceptMapping import ConceptMapping
+from letter import Letter
 from workspaceStructure import WorkspaceStructure
-from formulas import getMappings
+import formulas
 
 
 class Correspondence(WorkspaceStructure):
@@ -44,14 +45,14 @@ class Correspondence(WorkspaceStructure):
         return initialBond
 
     def getIncompatibleBond(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         initialBond = self.extract_initial_bond()
         if not initialBond:
             return None
         targetBond = self.extract_target_bond()
         if not targetBond:
             return None
-        from conceptMapping import ConceptMapping
-        from slipnet import slipnet
         if initialBond.directionCategory and targetBond.directionCategory:
             mapping = ConceptMapping(
                 slipnet.directionCategory,
@@ -67,6 +68,8 @@ class Correspondence(WorkspaceStructure):
         return None
 
     def getIncompatibleCorrespondences(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         return [o.correspondence for o in workspace.initial.objects
                 if o and self.incompatible(o.correspondence)]
 
@@ -99,7 +102,8 @@ class Correspondence(WorkspaceStructure):
         return False
 
     def support(self):
-        from letter import Letter
+        from context import context as ctx
+        workspace = ctx.workspace
         if isinstance(self.objectFromInitial, Letter):
             if self.objectFromInitial.spansString():
                 return 100.0
@@ -162,6 +166,8 @@ class Correspondence(WorkspaceStructure):
         return False
 
     def buildCorrespondence(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         workspace.structures += [self]
         if self.objectFromInitial.correspondence:
             self.objectFromInitial.correspondence.breakCorrespondence()
@@ -177,7 +183,7 @@ class Correspondence(WorkspaceStructure):
         from group import Group
         if isinstance(self.objectFromInitial, Group):
             if isinstance(self.objectFromTarget, Group):
-                bondMappings = getMappings(
+                bondMappings = formulas.getMappings(
                     self.objectFromInitial,
                     self.objectFromTarget,
                     self.objectFromInitial.bondDescriptions,
@@ -196,6 +202,8 @@ class Correspondence(WorkspaceStructure):
         self.breakCorrespondence()
 
     def breakCorrespondence(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         workspace.structures.remove(self)
         self.objectFromInitial.correspondence = None
         self.objectFromTarget.correspondence = None

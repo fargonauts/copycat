@@ -1,5 +1,6 @@
 import logging
 
+
 class Context(object):
     def __init__(self):
         self.temperature = None
@@ -23,9 +24,10 @@ class Context(object):
 
     def runTrial(self, answers):
         """Run a trial of the copycat algorithm"""
-        self.slipnet.reset()
-        self.workspace.reset()
         self.coderack.reset()
+        self.slipnet.reset()
+        self.temperature.reset()
+        self.workspace.reset()
         lastUpdate = float('-inf')
         while not self.workspace.foundAnswer:
             lastUpdate = self.mainLoop(lastUpdate)

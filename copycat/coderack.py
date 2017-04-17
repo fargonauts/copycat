@@ -5,8 +5,6 @@ import random
 import codeletMethods
 import formulas
 from codelet import Codelet
-from temperature import temperature
-from workspace import workspace
 
 
 NUMBER_OF_BINS = 7
@@ -19,62 +17,9 @@ def getUrgencyBin(urgency):
     return i + 1
 
 
-def probabilityOfPosting(workspace, codeletName):
-    if codeletName == 'breaker':
-        return 1.0
-    if 'description' in codeletName:
-        result = (temperature.value() / 100.0) ** 2
-    else:
-        result = workspace.intraStringUnhappiness / 100.0
-    if 'correspondence' in codeletName:
-        result = workspace.interStringUnhappiness / 100.0
-    if 'replacement' in codeletName:
-        if workspace.numberOfUnreplacedObjects() > 0:
-            return 1.0
-        return 0.0
-    if 'rule' in codeletName:
-        if not workspace.rule:
-            return 1.0
-        return workspace.rule.totalWeakness() / 100.0
-    if 'translator' in codeletName:
-        assert False
-    return result
-
-
-def howManyToPost(workspace, codeletName):
-    if codeletName == 'breaker' or 'description' in codeletName:
-        return 1
-    if 'translator' in codeletName:
-        if not workspace.rule:
-            return 0
-        return 1
-    if 'rule' in codeletName:
-        return 2
-    if 'group' in codeletName and not workspace.numberOfBonds():
-        return 0
-    if 'replacement' in codeletName and workspace.rule:
-        return 0
-    number = 0
-    if 'bond' in codeletName:
-        number = workspace.numberOfUnrelatedObjects()
-    if 'group' in codeletName:
-        number = workspace.numberOfUngroupedObjects()
-    if 'replacement' in codeletName:
-        number = workspace.numberOfUnreplacedObjects()
-    if 'correspondence' in codeletName:
-        number = workspace.numberOfUncorrespondingObjects()
-    if number < formulas.blur(2.0):
-        return 1
-    if number < formulas.blur(4.0):
-        return 2
-    return 3
-
-
 class Coderack(object):
     def __init__(self, ctx):
-        assert ctx.slipnet is not None
         self.ctx = ctx
-        self.slipnet = ctx.slipnet
         self.reset()
         self.runCodelets = {}
         self.postings = {}
@@ -115,12 +60,63 @@ class Coderack(object):
     def reset(self):
         self.codelets = []
         self.codeletsRun = 0
-        temperature.clamped = True
 
     def updateCodelets(self):
         if self.codeletsRun > 0:
             self.postTopDownCodelets()
             self.postBottomUpCodelets()
+
+    def probabilityOfPosting(self, codeletName):
+        temperature = self.ctx.temperature
+        workspace = self.ctx.workspace
+        if codeletName == 'breaker':
+            return 1.0
+        if 'description' in codeletName:
+            result = (temperature.value() / 100.0) ** 2
+        else:
+            result = workspace.intraStringUnhappiness / 100.0
+        if 'correspondence' in codeletName:
+            result = workspace.interStringUnhappiness / 100.0
+        if 'replacement' in codeletName:
+            if workspace.numberOfUnreplacedObjects() > 0:
+                return 1.0
+            return 0.0
+        if 'rule' in codeletName:
+            if not workspace.rule:
+                return 1.0
+            return workspace.rule.totalWeakness() / 100.0
+        if 'translator' in codeletName:
+            assert False
+        return result
+
+    def howManyToPost(self, codeletName):
+        workspace = self.ctx.workspace
+        if codeletName == 'breaker' or 'description' in codeletName:
+            return 1
+        if 'translator' in codeletName:
+            if not workspace.rule:
+                return 0
+            return 1
+        if 'rule' in codeletName:
+            return 2
+        if 'group' in codeletName and not workspace.numberOfBonds():
+            return 0
+        if 'replacement' in codeletName and workspace.rule:
+            return 0
+        number = 0
+        if 'bond' in codeletName:
+            number = workspace.numberOfUnrelatedObjects()
+        if 'group' in codeletName:
+            number = workspace.numberOfUngroupedObjects()
+        if 'replacement' in codeletName:
+            number = workspace.numberOfUnreplacedObjects()
+        if 'correspondence' in codeletName:
+            number = workspace.numberOfUncorrespondingObjects()
+        if number < formulas.blur(2.0):
+            return 1
+        if number < formulas.blur(4.0):
+            return 2
+        return 3
 
     def post(self, codelet):
         self.postings[codelet.name] = self.postings.get(codelet.name, 0) + 1
@@ -130,14 +126,15 @@ class Coderack(object):
             self.removeCodelet(oldCodelet)
 
     def postTopDownCodelets(self):
-        for node in self.slipnet.slipnodes:
+        slipnet = self.ctx.slipnet
+        for node in slipnet.slipnodes:
             #logging.info('Trying slipnode: %s' % node.get_name())
             if node.activation != 100.0:
                 continue
             #logging.info('using slipnode: %s' % node.get_name())
             for codeletName in node.codelets:
-                probability = probabilityOfPosting(workspace, codeletName)
-                howMany = howManyToPost(workspace, codeletName)
+                probability = self.probabilityOfPosting(codeletName)
+                howMany = self.howManyToPost(codeletName)
                 for _ in xrange(howMany):
                     if not formulas.coinFlip(probability):
                         continue
@@ -162,8 +159,9 @@ class Coderack(object):
         self.__postBottomUpCodelets('breaker')
 
     def __postBottomUpCodelets(self, codeletName):
-        probability = probabilityOfPosting(workspace, codeletName)
-        howMany = howManyToPost(workspace, codeletName)
+        temperature = self.ctx.temperature
+        probability = self.probabilityOfPosting(codeletName)
+        howMany = self.howManyToPost(codeletName)
         urgency = 3
         if codeletName == 'breaker':
             urgency = 1
@@ -238,14 +236,15 @@ class Coderack(object):
                         oldCodelet, urgency, description)
 
     def proposeSingleLetterGroup(self, source, codelet):
-        self.proposeGroup([source], [], self.slipnet.samenessGroup, None,
-                          self.slipnet.letterCategory, codelet)
+        slipnet = self.ctx.slipnet
+        self.proposeGroup([source], [], slipnet.samenessGroup, None,
+                          slipnet.letterCategory, codelet)
 
     def proposeGroup(self, objects, bondList, groupCategory, directionCategory,
                      bondFacet, oldCodelet):
         from group import Group
-
-        bondCategory = groupCategory.getRelatedNode(self.slipnet.bondCategory)
+        slipnet = self.ctx.slipnet
+        bondCategory = groupCategory.getRelatedNode(slipnet.bondCategory)
         bondCategory.buffer = 100.0
         if directionCategory:
             directionCategory.buffer = 100.0
@@ -285,6 +284,7 @@ class Coderack(object):
         return self.codelets[0]
 
     def postInitialCodelets(self):
+        workspace = self.ctx.workspace
         logging.info("posting initial codelets")
         codeletsToPost = [
             'bottom-up-bond-scout',
@@ -304,6 +304,7 @@ class Coderack(object):
         self.run(codelet)
 
     def chooseCodeletToRun(self):
+        temperature = self.ctx.temperature
         assert self.codelets
         scale = (100.0 - temperature.value() + 10.0) / 15.0
         urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)

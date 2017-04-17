@@ -2,7 +2,7 @@ import math
 import logging
 import random
 
-from context import context
+from conceptMapping import ConceptMapping
 
 
 def selectListPosition(probabilities):
@@ -60,12 +60,13 @@ def blur(value):
 
 
 def chooseObjectFromList(objects, attribute):
+    from context import context as ctx
     if not objects:
         return None
     probabilities = []
     for objekt in objects:
         value = getattr(objekt, attribute)
-        probability = temperatureAdjustedValue(context, value)
+        probability = temperatureAdjustedValue(ctx, value)
         logging.info('Object: %s, value: %d, probability: %d',
                      objekt, value, probability)
         probabilities += [probability]
@@ -85,19 +86,21 @@ def chooseRelevantDescriptionByActivation(workspaceObject):
 
 
 def similarPropertyLinks(slip_node):
+    from context import context as ctx
     result = []
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
-        probability = temperatureAdjustedProbability(context, association)
+        probability = temperatureAdjustedProbability(ctx, association)
         if coinFlip(probability):
             result += [slip_link]
     return result
 
 
 def chooseSlipnodeByConceptualDepth(slip_nodes):
+    from context import context as ctx
     if not slip_nodes:
         return None
-    depths = [temperatureAdjustedValue(context, n.conceptualDepth) for n in slip_nodes]
+    depths = [temperatureAdjustedValue(ctx, n.conceptualDepth) for n in slip_nodes]
     i = selectListPosition(depths)
     return slip_nodes[i]
 
@@ -137,7 +140,6 @@ def localDirectionCategoryRelevance(string, direction):
 def getMappings(objectFromInitial, objectFromTarget,
                 initialDescriptions, targetDescriptions):
     mappings = []
-    from conceptMapping import ConceptMapping
     for initial in initialDescriptions:
         for target in targetDescriptions:
             if initial.descriptionType == target.descriptionType:

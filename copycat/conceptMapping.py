@@ -1,5 +1,4 @@
 import logging
-from slipnet import slipnet
 
 
 class ConceptMapping(object):
@@ -52,6 +51,8 @@ class ConceptMapping(object):
                 self.targetDescriptor.conceptualDepth) / 2.0
 
     def distinguishing(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         if self.initialDescriptor == slipnet.whole:
             if self.targetDescriptor == slipnet.whole:
                 return False
@@ -140,6 +141,8 @@ class ConceptMapping(object):
         return False
 
     def slippage(self):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         if self.label != slipnet.sameness:
             return self.label != slipnet.identity
         return False

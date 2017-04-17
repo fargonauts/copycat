@@ -1,11 +1,11 @@
 from workspaceObject import WorkspaceObject
-from slipnet import slipnet
 
 
 class Letter(WorkspaceObject):
     def __init__(self, string, position, length):
+        from context import context as ctx
+        workspace = ctx.workspace
         WorkspaceObject.__init__(self, string)
-        from workspace import workspace
         workspace.objects += [self]
         string.objects += [self]
         self.leftIndex = position
@@ -14,6 +14,8 @@ class Letter(WorkspaceObject):
         self.rightmost = self.rightIndex == length
 
     def describe(self, position, length):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         if length == 1:
             self.addDescription(slipnet.stringPositionCategory,
                                 slipnet.single)

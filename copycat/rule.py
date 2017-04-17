@@ -1,8 +1,6 @@
 import logging
 
 
-from slipnet import slipnet
-from workspace import workspace
 from workspaceStructure import WorkspaceStructure
 from formulas import weightedAverage
 
@@ -26,6 +24,8 @@ class Rule(WorkspaceStructure):
         self.externalStrength = self.internalStrength
 
     def updateInternalStrength(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         if not (self.descriptor and self.relation):
             self.internalStrength = 0.0
             return
@@ -81,6 +81,8 @@ class Rule(WorkspaceStructure):
             self.descriptor.buffer = 100.0
 
     def incompatibleRuleCorrespondence(self, correspondence):
+        from context import context as ctx
+        workspace = ctx.workspace
         if not correspondence:
             return False
         # find changed object
@@ -95,6 +97,8 @@ class Rule(WorkspaceStructure):
                    for m in correspondence.conceptMappings)
 
     def __changeString(self, string):
+        from context import context as ctx
+        slipnet = ctx.slipnet
         # applies the changes to self string ie. successor
         if self.facet == slipnet.length:
             if self.relation == slipnet.predecessor:
@@ -115,6 +119,8 @@ class Rule(WorkspaceStructure):
             return self.relation.name.lower()
 
     def buildTranslatedRule(self):
+        from context import context as ctx
+        workspace = ctx.workspace
         slippages = workspace.slippages()
         self.category = self.category.applySlippages(slippages)
         self.facet = self.facet.applySlippages(slippages)

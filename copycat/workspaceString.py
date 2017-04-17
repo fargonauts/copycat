@@ -1,10 +1,12 @@
 import logging
 from letter import Letter
-from slipnet import slipnet
 
 
 class WorkspaceString(object):
     def __init__(self, s):
+        from context import context as ctx
+        slipnet = ctx.slipnet
+        workspace = ctx.workspace
         self.string = s
         self.bonds = []
         self.objects = []
@@ -14,7 +16,6 @@ class WorkspaceString(object):
         if not self.length:
             return
         position = 0
-        from workspace import workspace
 
         for c in self.string.upper():
             value = ord(c) - ord('A')
