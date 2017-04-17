@@ -4,7 +4,6 @@ from workspace import workspace
 from slipnet import slipnet
 from temperature import temperature
 from coderack import coderack
-from coderackPressure import coderackPressures
 
 
 def updateEverything():
@@ -12,7 +11,7 @@ def updateEverything():
     coderack.updateCodelets()
     slipnet.update()
     workspace.updateTemperature()
-    coderackPressures.calculatePressures()
+    coderack.pressures.calculatePressures()
 
 
 def mainLoop(lastUpdate):

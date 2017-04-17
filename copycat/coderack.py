@@ -22,7 +22,6 @@ def getUrgencyBin(urgency):
 
 class CodeRack(object):
     def __init__(self):
-        #logging.debug('coderack.__init__()')
         self.speedUpBonds = False
         self.removeBreakerCodelets = False
         self.removeTerracedScan = False
@@ -37,7 +36,6 @@ class CodeRack(object):
         self.postings = {}
 
     def reset(self):
-        #logging.debug('coderack.reset()')
         from temperature import temperature
 
         self.codelets = []

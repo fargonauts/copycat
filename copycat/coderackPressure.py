@@ -8,7 +8,6 @@ class CoderackPressure(object):
         self.name = name
 
     def reset(self):
-        self.unmodifedValues = []
         self.values = []
         self.codelets = []
 
@@ -57,12 +56,10 @@ def _codelet_index(codelet):
 
 class CoderackPressures(object):
     def __init__(self):
-        #logging.debug('coderackPressures.__init__()')
         self.initialisePressures()
         self.reset()
 
     def initialisePressures(self):
-        #logging.debug('coderackPressures.initialisePressures()')
         self.pressures = [
             CoderackPressure('Bottom Up Bonds'),
             CoderackPressure('Top Down Successor Bonds'),
@@ -85,7 +82,6 @@ class CoderackPressures(object):
         ]
 
     def calculatePressures(self):
-        #logging.debug('coderackPressures.calculatePressures()')
         scale = (100.0 - Temperature + 10.0) / 15.0
         values = map(
             lambda pressure: sum(c.urgency ** scale for c in pressure.codelets),
@@ -98,15 +94,14 @@ class CoderackPressures(object):
             pressure.values += [value * 100.0]
         for codelet in self.removedCodelets:
             if codelet.pressure:
-                codelet.pressure.codelets.removeElement(codelet)
+                codelet.pressure.codelets.remove(codelet)
         self.removedCodelets = []
 
     def reset(self):
-        #logging.debug('coderackPressures.reset()')
         self.maxValue = 0.001
+        self.removedCodelets = []
         for pressure in self.pressures:
             pressure.reset()
-        self.removedCodelets = []
 
     def addCodelet(self, codelet):
         i = _codelet_index(codelet)
@@ -121,5 +116,3 @@ class CoderackPressures(object):
 
     def numberOfPressures(self):
         return len(self.pressures)
-
-coderackPressures = CoderackPressures()
