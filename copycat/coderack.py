@@ -271,7 +271,7 @@ class Coderack(object):
             return None
         urgencies = []
         for codelet in self.codelets:
-            urgency = ((self.codeletsRun - codelet.timeStamp) *
+            urgency = ((self.codeletsRun - codelet.birthdate) *
                        (7.5 - codelet.urgency))
             urgencies += [urgency]
         threshold = random.random() * sum(urgencies)
