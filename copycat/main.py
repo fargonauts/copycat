@@ -1,7 +1,10 @@
 """Run the copycat program"""
 
 import logging
+import random
 import sys
+
+random.seed(42)
 
 import copycat
 
