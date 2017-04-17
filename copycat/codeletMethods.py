@@ -131,7 +131,8 @@ def __slippability(conceptMappings):
 @codelet('breaker')
 def breaker(coderack, codelet):
     probabilityOfFizzle = (100.0 - formulas.Temperature) / 100.0
-    assert not formulas.coinFlip(probabilityOfFizzle)
+    if formulas.coinFlip(probabilityOfFizzle):
+        return
     # choose a structure at random
     structures = [s for s in workspace.structures if
                   isinstance(s, (Group, Bond, Correspondence))]
@@ -143,7 +144,7 @@ def breaker(coderack, codelet):
         if structure.source.group:
             if structure.source.group == structure.destination.group:
                 breakObjects += [structure.source.group]
-    # try to break all objects
+    # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
         breakProbability = formulas.temperatureAdjustedProbability(
             structure.totalStrength / 100.0)
@@ -301,8 +302,8 @@ def rule_strength_tester(coderack, codelet):
     rule.updateStrength()
     probability = formulas.temperatureAdjustedProbability(
         rule.totalStrength / 100.0)
-    assert random.random() <= probability
-    coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
+    if formulas.coinFlip(probability):
+        coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
 
 @codelet('replacement-finder')
@@ -463,8 +464,7 @@ def top_down_group_scout__category(coderack, codelet):
     elif source.rightmost:
         direction = slipnet.left
     else:
-        activations = [slipnet.left.activation]
-        activations += [slipnet.right.activation]
+        activations = [slipnet.left.activation, slipnet.right.activation]
         if not formulas.selectListPosition(activations):
             direction = slipnet.left
         else:
@@ -484,8 +484,8 @@ def top_down_group_scout__category(coderack, codelet):
                 group = Group(source.string, slipnet.samenessGroup,
                               None, slipnet.letterCategory, [source], [])
                 probability = group.singleLetterGroupProbability()
-                assert random.random() >= probability
-                coderack.proposeSingleLetterGroup(source, codelet)
+                if formulas.coinFlip(probability):
+                    coderack.proposeSingleLetterGroup(source, codelet)
         return
     direction = firstBond.directionCategory
     search = True
@@ -627,11 +627,11 @@ def top_down_group_scout__direction(coderack, codelet):
 #noinspection PyStringFormat
 @codelet('group-scout--whole-string')
 def group_scout__whole_string(coderack, codelet):
-    string = workspace.initial
-    if random.random() > 0.5:
+    if formulas.coinFlip():
         string = workspace.target
         logging.info('target string selected: %s', workspace.target)
     else:
+        string = workspace.initial
         logging.info('initial string selected: %s', workspace.initial)
     # find leftmost object & the highest group to which it belongs
     leftmost = None
@@ -674,12 +674,12 @@ def group_strength_tester(coderack, codelet):
     group.updateStrength()
     strength = group.totalStrength
     probability = formulas.temperatureAdjustedProbability(strength / 100.0)
-    assert random.random() <= probability
-    # it is strong enough - post builder  & activate nodes
-    group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
-    if group.directionCategory:
-        group.directionCategory.buffer = 100.0
-    coderack.newCodelet('group-builder', codelet, strength)
+    if formulas.coinFlip(probability):
+        # it is strong enough - post builder  & activate nodes
+        group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
+        if group.directionCategory:
+            group.directionCategory.buffer = 100.0
+        coderack.newCodelet('group-builder', codelet, strength)
 
 
 @codelet('group-builder')
@@ -915,15 +915,15 @@ def correspondence_strength_tester(coderack, codelet):
     correspondence.updateStrength()
     strength = correspondence.totalStrength
     probability = formulas.temperatureAdjustedProbability(strength / 100.0)
-    assert random.random() <= probability
-    # activate some concepts
-    for mapping in correspondence.conceptMappings:
-        mapping.initialDescriptionType.buffer = 100.0
-        mapping.initialDescriptor.buffer = 100.0
-        mapping.targetDescriptionType.buffer = 100.0
-        mapping.targetDescriptor.buffer = 100.0
-    coderack.newCodelet('correspondence-builder', codelet,
-                        strength, correspondence)
+    if formulas.coinFlip(probability):
+        # activate some concepts
+        for mapping in correspondence.conceptMappings:
+            mapping.initialDescriptionType.buffer = 100.0
+            mapping.initialDescriptor.buffer = 100.0
+            mapping.targetDescriptionType.buffer = 100.0
+            mapping.targetDescriptor.buffer = 100.0
+        coderack.newCodelet('correspondence-builder', codelet,
+                            strength, correspondence)
 
 
 @codelet('correspondence-builder')
