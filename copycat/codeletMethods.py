@@ -77,10 +77,6 @@ def __getDescriptors(bondFacet, source, destination):
     return sourceDescriptor, destinationDescriptor
 
 
-def __allOppositeMappings(mappings):
-    return all(m.label == slipnet.opposite for m in mappings)
-
-
 def __structureVsStructure(structure1, weight1, structure2, weight2):
     structure1.updateStrength()
     structure2.updateStrength()
@@ -837,7 +833,7 @@ def bottom_up_correspondence_scout(coderack, codelet):
     if  (objectFromInitial.spansString() and
          objectFromTarget.spansString() and
          slipnet.directionCategory in initialDescriptionTypes
-         and __allOppositeMappings(formulas.oppositeMappings)
+         and all(m.label == slipnet.opposite for m in opposites)  # unreached?
          and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
         conceptMappings = formulas.getMappings(
@@ -888,7 +884,7 @@ def important_object_correspondence_scout(coderack, codelet):
     if  (objectFromInitial.spansString()
          and objectFromTarget.spansString()
          and slipnet.directionCategory in initialDescriptionTypes
-         and __allOppositeMappings(formulas.oppositeMappings)
+         and all(m.label == slipnet.opposite for m in opposites)  # unreached?
          and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
         conceptMappings = formulas.getMappings(
