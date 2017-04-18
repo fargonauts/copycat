@@ -57,14 +57,8 @@ def __getScoutSource(ctx, slipnode, relevanceMethod, typeName):
     else:
         logging.info('initial string selected: %s for %s',
                      workspace.initial, typeName)
-    source = chooseUnmodifiedObject('intraStringSalience', string.objects)
+    source = chooseUnmodifiedObject(ctx, 'intraStringSalience', string.objects)
     return source
-
-
-def __getBondFacet(source, destination):
-    bondFacet = chooseBondFacet(source, destination)
-    assert bondFacet
-    return bondFacet
 
 
 def __getDescriptors(bondFacet, source, destination):
@@ -178,7 +172,7 @@ def bottom_up_description_scout(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
     workspace = ctx.workspace
-    chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
+    chosenObject = chooseUnmodifiedObject(ctx, 'totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
     # choose relevant description by activation
@@ -202,7 +196,7 @@ def top_down_description_scout(ctx, codelet):
     random = ctx.random
     workspace = ctx.workspace
     descriptionType = codelet.arguments[0]
-    chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
+    chosenObject = chooseUnmodifiedObject(ctx, 'totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
     descriptions = chosenObject.getPossibleDescriptions(descriptionType)
@@ -244,12 +238,13 @@ def bottom_up_bond_scout(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
     workspace = ctx.workspace
-    source = chooseUnmodifiedObject('intraStringSalience', workspace.objects)
+    source = chooseUnmodifiedObject(ctx, 'intraStringSalience', workspace.objects)
     __showWhichStringObjectIsFrom(source)
-    destination = chooseNeighbor(source)
+    destination = chooseNeighbor(ctx, source)
     assert destination
     logging.info('destination: %s', destination)
-    bondFacet = __getBondFacet(source, destination)
+    bondFacet = chooseBondFacet(ctx, source, destination)
+    assert bondFacet
     logging.info('chosen bond facet: %s', bondFacet.get_name())
     logging.info('Source: %s, destination: %s', source, destination)
     bond_descriptors = __getDescriptors(bondFacet, source, destination)
@@ -391,10 +386,11 @@ def top_down_bond_scout__category(ctx, codelet):
     category = codelet.arguments[0]
     source = __getScoutSource(ctx, category, formulas.localBondCategoryRelevance,
                               'bond')
-    destination = chooseNeighbor(source)
+    destination = chooseNeighbor(ctx, source)
     logging.info('source: %s, destination: %s', source, destination)
     assert destination
-    bondFacet = __getBondFacet(source, destination)
+    bondFacet = chooseBondFacet(ctx, source, destination)
+    assert bondFacet
     sourceDescriptor, destinationDescriptor = __getDescriptors(
         bondFacet, source, destination)
     forwardBond = sourceDescriptor.getBondCategory(destinationDescriptor)
@@ -421,10 +417,11 @@ def top_down_bond_scout__direction(ctx, codelet):
     direction = codelet.arguments[0]
     source = __getScoutSource(ctx,
         direction, formulas.localDirectionCategoryRelevance, 'bond')
-    destination = chooseDirectedNeighbor(source, direction)
+    destination = chooseDirectedNeighbor(ctx, source, direction)
     assert destination
     logging.info('to object: %s', destination)
-    bondFacet = __getBondFacet(source, destination)
+    bondFacet = chooseBondFacet(ctx, source, destination)
+    assert bondFacet
     sourceDescriptor, destinationDescriptor = __getDescriptors(
         bondFacet, source, destination)
     category = sourceDescriptor.getBondCategory(destinationDescriptor)
@@ -874,9 +871,9 @@ def bottom_up_correspondence_scout(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
     workspace = ctx.workspace
-    objectFromInitial = chooseUnmodifiedObject('interStringSalience',
+    objectFromInitial = chooseUnmodifiedObject(ctx, 'interStringSalience',
                                                workspace.initial.objects)
-    objectFromTarget = chooseUnmodifiedObject('interStringSalience',
+    objectFromTarget = chooseUnmodifiedObject(ctx, 'interStringSalience',
                                               workspace.target.objects)
     assert objectFromInitial.spansString() == objectFromTarget.spansString()
     # get the posible concept mappings
@@ -917,7 +914,7 @@ def important_object_correspondence_scout(ctx, codelet):
     slipnet = ctx.slipnet
     temperature = ctx.temperature
     workspace = ctx.workspace
-    objectFromInitial = chooseUnmodifiedObject('relativeImportance',
+    objectFromInitial = chooseUnmodifiedObject(ctx, 'relativeImportance',
                                                workspace.initial.objects)
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
     # choose descriptor by conceptual depth
@@ -934,7 +931,7 @@ def important_object_correspondence_scout(ctx, codelet):
             if description.descriptor == initialDescriptor:
                 targetCandidates += [objekt]
     assert targetCandidates
-    objectFromTarget = chooseUnmodifiedObject('interStringSalience',
+    objectFromTarget = chooseUnmodifiedObject(ctx, 'interStringSalience',
                                               targetCandidates)
     assert objectFromInitial.spansString() == objectFromTarget.spansString()
     # get the posible concept mappings
