@@ -1,4 +1,5 @@
 from conceptMapping import ConceptMapping
+from group import Group
 from letter import Letter
 from workspaceStructure import WorkspaceStructure
 import formulas
@@ -176,7 +177,6 @@ class Correspondence(WorkspaceStructure):
         for mapping in relevantMappings:
             if mapping.slippage():
                 self.accessoryConceptMappings += [mapping.symmetricVersion()]
-        from group import Group
         if isinstance(self.objectFromInitial, Group):
             if isinstance(self.objectFromTarget, Group):
                 bondMappings = formulas.getMappings(

@@ -1,5 +1,6 @@
 import logging
 
+from description import Description
 from workspaceObject import WorkspaceObject
 import formulas
 
@@ -40,7 +41,6 @@ class Group(WorkspaceObject):
         self.clampSalience = False
         self.name = ''
 
-        from description import Description  # gross
         if self.bondList and len(self.bondList):
             firstFacet = self.bondList[0].facet
             self.addBondDescription(
