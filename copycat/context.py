@@ -1,13 +1,18 @@
 import logging
+from coderack import Coderack
+from randomness import Randomness
+from slipnet import Slipnet
+from temperature import Temperature
+from workspace import Workspace
 
 
 class Context(object):
-    def __init__(self):
-        self.coderack = None
-        self.random = None
-        self.slipnet = None
-        self.temperature = None
-        self.workspace = None
+    def __init__(self, rng_seed=None):
+        self.coderack = Coderack(self)
+        self.random = Randomness(rng_seed)
+        self.slipnet = Slipnet()
+        self.temperature = Temperature()
+        self.workspace = Workspace(self)
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
@@ -45,7 +50,7 @@ class Context(object):
         answers[answer]['timesum'] += finalTime
 
     def run(self, initial, modified, target, iterations):
-        self.workspace.setStrings(initial, modified, target)
+        self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
         for i in xrange(iterations):
             self.runTrial(answers)
@@ -53,6 +58,3 @@ class Context(object):
             d['avgtemp'] = d.pop('tempsum') / d['count']
             d['avgtime'] = d.pop('timesum') / d['count']
         return answers
-
-
-context = Context()

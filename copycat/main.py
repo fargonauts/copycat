@@ -3,8 +3,7 @@
 import logging
 import sys
 
-import copycat
-
+from context import Context
 
 def main(program, args):
     """Run the program"""
@@ -18,6 +17,7 @@ def main(program, args):
         else:
             initial, modified, target = args
             iterations = 1
+        copycat = Context(rng_seed=42)
         answers = copycat.run(initial, modified, target, iterations)
         for answer, d in sorted(answers.iteritems(), key=lambda kv: kv[1]['avgtemp']):
             print '%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp'])

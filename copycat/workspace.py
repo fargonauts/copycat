@@ -16,10 +16,7 @@ def __adjustUnhappiness(values):
 
 class Workspace(object):
     def __init__(self, ctx):
-        #logging.debug('workspace.__init__()')
         self.ctx = ctx
-        self.setStrings('', '', '')
-        self.reset()
         self.totalUnhappiness = 0.0
         self.intraStringUnhappiness = 0.0
         self.interStringUnhappiness = 0.0
@@ -28,13 +25,13 @@ class Workspace(object):
         return '<Workspace trying %s:%s::%s:?>' % (
             self.initialString, self.modifiedString, self.targetString)
 
-    def setStrings(self, initial, modified, target):
+    def resetWithStrings(self, initial, modified, target):
         self.targetString = target
         self.initialString = initial
         self.modifiedString = modified
+        self.reset()
 
     def reset(self):
-        #logging.debug('workspace.reset()')
         self.foundAnswer = False
         self.changedObject = None
         self.objects = []
