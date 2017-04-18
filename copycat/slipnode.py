@@ -1,10 +1,5 @@
 import math
 import logging
-import random
-
-
-def full_activation():
-    return 100
 
 
 def jump_threshold():
@@ -65,11 +60,7 @@ class Slipnode(object):
     def fully_active(self):
         """Whether this node has full activation"""
         float_margin = 0.00001
-        return self.activation > full_activation() - float_margin
-
-    def activate_fully(self):
-        """Make this node fully active"""
-        self.activation = full_activation()
+        return self.activation > 100.0 - float_margin
 
     def bondDegreeOfAssociation(self):
         linkLength = self.intrinsicLinkLength
@@ -112,7 +103,8 @@ class Slipnode(object):
 
         If no linked node is found, return None
         """
-        if relation == self.slipnet.identity:
+        slipnet = self.slipnet
+        if relation == slipnet.identity:
             return self
         destinations = [l.destination
                         for l in self.outgoingLinks if l.label == relation]
@@ -125,9 +117,10 @@ class Slipnode(object):
 
         If it does not exist return None
         """
+        slipnet = self.slipnet
         result = None
         if self == destination:
-            result = self.slipnet.identity
+            result = slipnet.identity
         else:
             for link in self.outgoingLinks:
                 if link.destination == destination:
@@ -149,17 +142,14 @@ class Slipnode(object):
             self.activation += self.buffer
         self.activation = min(max(0, self.activation), 100)
 
-    def can_jump(self):
+    def jump(self, random):
         if self.activation <= jump_threshold():
-            return False
+            return
         if self.clamped:
-            return False
+            return
         value = (self.activation / 100.0) ** 3
-        return random.random() < value
-
-    def jump(self):
-        if self.can_jump():
-            self.activate_fully()
+        if random.coinFlip(value):
+            self.activation = 100.0
 
     def get_name(self):
         if len(self.name) == 1:

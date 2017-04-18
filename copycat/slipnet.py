@@ -32,7 +32,7 @@ class Slipnet(object):
         for node in self.initiallyClampedSlipnodes:
             node.clampHigh()
 
-    def update(self):
+    def update(self, random):
         logging.debug('slipnet.update()')
         self.numberOfUpdates += 1
         if self.numberOfUpdates == 50:
@@ -44,7 +44,7 @@ class Slipnet(object):
             node.spread_activation()
         for node in self.slipnodes:
             node.addBuffer()
-            node.jump()
+            node.jump(random)
             node.buffer = 0.0
 
     def isDistinguishingDescriptor(self, descriptor):

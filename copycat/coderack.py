@@ -1,9 +1,7 @@
 import math
 import logging
-import random
 
 import codeletMethods
-import formulas
 from bond import Bond
 from codelet import Codelet
 from correspondence import Correspondence
@@ -95,6 +93,7 @@ class Coderack(object):
         return result
 
     def howManyToPost(self, codeletName):
+        random = self.ctx.random
         workspace = self.ctx.workspace
         if codeletName == 'breaker' or 'description' in codeletName:
             return 1
@@ -117,9 +116,9 @@ class Coderack(object):
             number = workspace.numberOfUnreplacedObjects()
         if 'correspondence' in codeletName:
             number = workspace.numberOfUncorrespondingObjects()
-        if number < formulas.blur(2.0):
+        if number < random.sqrtBlur(2.0):
             return 1
-        if number < formulas.blur(4.0):
+        if number < random.sqrtBlur(4.0):
             return 2
         return 3
 
@@ -131,6 +130,7 @@ class Coderack(object):
             self.removeCodelet(oldCodelet)
 
     def postTopDownCodelets(self):
+        random = self.ctx.random
         slipnet = self.ctx.slipnet
         for node in slipnet.slipnodes:
             #logging.info('Trying slipnode: %s' % node.get_name())
@@ -141,7 +141,7 @@ class Coderack(object):
                 probability = self.probabilityOfPosting(codeletName)
                 howMany = self.howManyToPost(codeletName)
                 for _ in xrange(howMany):
-                    if not formulas.coinFlip(probability):
+                    if not random.coinFlip(probability):
                         continue
                     urgency = getUrgencyBin(
                         node.activation * node.conceptualDepth / 100.0)
@@ -164,6 +164,7 @@ class Coderack(object):
         self.__postBottomUpCodelets('breaker')
 
     def __postBottomUpCodelets(self, codeletName):
+        random = self.ctx.random
         temperature = self.ctx.temperature
         probability = self.probabilityOfPosting(codeletName)
         howMany = self.howManyToPost(codeletName)
@@ -173,7 +174,7 @@ class Coderack(object):
         if temperature.value() < 25.0 and 'translator' in codeletName:
             urgency = 5
         for _ in xrange(howMany):
-            if formulas.coinFlip(probability):
+            if random.coinFlip(probability):
                 codelet = Codelet(codeletName, urgency, self.codeletsRun)
                 self.post(codelet)
 
@@ -264,20 +265,13 @@ class Coderack(object):
     def chooseOldCodelet(self):
         # selects an old codelet to remove from the coderack
         # more likely to select lower urgency codelets
-        if not len(self.codelets):
-            return None
         urgencies = []
         for codelet in self.codelets:
             urgency = ((self.codeletsRun - codelet.birthdate) *
                        (7.5 - codelet.urgency))
             urgencies += [urgency]
-        threshold = random.random() * sum(urgencies)
-        sumOfUrgencies = 0.0
-        for i in xrange(len(self.codelets)):
-            sumOfUrgencies += urgencies[i]
-            if sumOfUrgencies > threshold:
-                return self.codelets[i]
-        return self.codelets[0]
+        random = self.ctx.random
+        return random.weighted_choice(self.codelets, urgencies)
 
     def postInitialCodelets(self):
         workspace = self.ctx.workspace
@@ -300,22 +294,12 @@ class Coderack(object):
         self.run(codelet)
 
     def chooseCodeletToRun(self):
+        random = self.ctx.random
         temperature = self.ctx.temperature
         assert self.codelets
         scale = (100.0 - temperature.value() + 10.0) / 15.0
-        urgsum = sum(codelet.urgency ** scale for codelet in self.codelets)
-        threshold = random.random() * urgsum
-        chosen = self.codelets[0]
-        urgencySum = 0.0
-
-        for codelet in self.codelets:
-            urgencySum += codelet.urgency ** scale
-            if urgencySum > threshold:
-                chosen = codelet
-                break
+        chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
-        logging.info('chosen codelet\n\t%s, urgency = %s',
-                     chosen.name, chosen.urgency)
         return chosen
 
     def run(self, codelet):

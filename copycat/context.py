@@ -3,10 +3,11 @@ import logging
 
 class Context(object):
     def __init__(self):
-        self.temperature = None
         self.coderack = None
-        self.workspace = None
+        self.random = None
         self.slipnet = None
+        self.temperature = None
+        self.workspace = None
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
@@ -15,7 +16,7 @@ class Context(object):
         if currentTime >= lastUpdate + 15:
             self.workspace.updateEverything()
             self.coderack.updateCodelets()
-            self.slipnet.update()
+            self.slipnet.update(self.random)
             self.temperature.update(self.workspace.getUpdatedTemperature())
             lastUpdate = currentTime
         logging.debug('Number of codelets: %d', len(self.coderack.codelets))

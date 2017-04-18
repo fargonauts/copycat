@@ -1,6 +1,5 @@
 import inspect
 import logging
-import random
 
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
@@ -37,7 +36,9 @@ def __showWhichStringObjectIsFrom(structure):
     #print 'object chosen = %s from %s string' % (structure, whence)
 
 
-def __getScoutSource(workspace, slipnode, relevanceMethod, typeName):
+def __getScoutSource(ctx, slipnode, relevanceMethod, typeName):
+    random = ctx.random
+    workspace = ctx.workspace
     initialRelevance = relevanceMethod(workspace.initial, slipnode)
     targetRelevance = relevanceMethod(workspace.target, slipnode)
     initialUnhappiness = workspace.initial.intraStringUnhappiness
@@ -47,11 +48,9 @@ def __getScoutSource(workspace, slipnode, relevanceMethod, typeName):
     logging.info('target : relevance = %d, unhappiness=%d',
                  targetRelevance, int(targetUnhappiness))
     string = workspace.initial
-    relevances = initialRelevance + targetRelevance
-    unhappinesses = initialUnhappiness + targetUnhappiness
-    randomized = random.random() * (relevances + unhappinesses)
     initials = initialRelevance + initialUnhappiness
-    if randomized > initials:
+    targets = targetRelevance + targetUnhappiness
+    if random.weighted_greater_than(targets, initials):
         string = workspace.target
         logging.info('target string selected: %s for %s',
                      workspace.target, typeName)
@@ -76,7 +75,9 @@ def __getDescriptors(bondFacet, source, destination):
 
 
 def __structureVsStructure(structure1, weight1, structure2, weight2):
+    """Return true if the first structure comes out stronger than the second."""
     ctx = structure1.ctx
+    random = ctx.random
     temperature = ctx.temperature
     structure1.updateStrength()
     structure2.updateStrength()
@@ -84,9 +85,7 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
         structure1.totalStrength * weight1)
     weightedStrength2 = temperature.getAdjustedValue(
         structure2.totalStrength * weight2)
-    rhs = (weightedStrength1 + weightedStrength2) * random.random()
-    logging.info('%d > %d', weightedStrength1, rhs)
-    return weightedStrength1 > rhs
+    return random.weighted_greater_than(weightedStrength1, weightedStrength2)
 
 
 def __fight(structure, structureWeight, incompatibles, incompatibleWeight):
@@ -115,21 +114,23 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 
 def __slippability(ctx, conceptMappings):
+    random = ctx.random
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
         probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
-        if formulas.coinFlip(probabilityOfSlippage):
+        if random.coinFlip(probabilityOfSlippage):
             return True
     return False
 
 
 @codelet('breaker')
 def breaker(ctx, codelet):
+    random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
     probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
-    if formulas.coinFlip(probabilityOfFizzle):
+    if random.coinFlip(probabilityOfFizzle):
         return
     # choose a structure at random
     structures = [s for s in workspace.structures if
@@ -146,18 +147,28 @@ def breaker(ctx, codelet):
     for structure in breakObjects:
         breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
-        if formulas.coinFlip(breakProbability):
+        if random.coinFlip(breakProbability):
             return
     for structure in breakObjects:
         structure.break_the_structure()
 
 
-def similarPropertyLinks(slip_node, temperature):
+def chooseRelevantDescriptionByActivation(ctx, workspaceObject):
+    random = ctx.random
+    descriptions = workspaceObject.relevantDescriptions()
+    weights = [description.descriptor.activation
+                   for description in descriptions]
+    return random.weighted_choice(descriptions, weights)
+
+
+def similarPropertyLinks(ctx, slip_node):
+    random = ctx.random
+    temperature = ctx.temperature
     result = []
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
         probability = temperature.getAdjustedProbability(association)
-        if formulas.coinFlip(probability):
+        if random.coinFlip(probability):
             result += [slip_link]
     return result
 
@@ -165,19 +176,21 @@ def similarPropertyLinks(slip_node, temperature):
 @codelet('bottom-up-description-scout')
 def bottom_up_description_scout(ctx, codelet):
     coderack = ctx.coderack
-    temperature = ctx.temperature
+    random = ctx.random
     workspace = ctx.workspace
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
-    description = formulas.chooseRelevantDescriptionByActivation(chosenObject)
+    # choose relevant description by activation
+    descriptions = chosenObject.relevantDescriptions()
+    weights = [d.descriptor.activation for d in descriptions]
+    description = random.weighted_choice(descriptions, weights)
     assert description
-    sliplinks = similarPropertyLinks(description.descriptor, temperature)
+    sliplinks = similarPropertyLinks(ctx, description.descriptor)
     assert sliplinks
-    values = [sliplink.degreeOfAssociation() * sliplink.destination.activation
+    weights = [sliplink.degreeOfAssociation() * sliplink.destination.activation
               for sliplink in sliplinks]
-    i = formulas.selectListPosition(values)
-    chosen = sliplinks[i]
+    chosen = random.weighted_choice(sliplinks, weights)
     chosenProperty = chosen.destination
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
                                 chosenProperty, codelet)
@@ -186,6 +199,7 @@ def bottom_up_description_scout(ctx, codelet):
 @codelet('top-down-description-scout')
 def top_down_description_scout(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     workspace = ctx.workspace
     descriptionType = codelet.arguments[0]
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
@@ -193,9 +207,8 @@ def top_down_description_scout(ctx, codelet):
     __showWhichStringObjectIsFrom(chosenObject)
     descriptions = chosenObject.getPossibleDescriptions(descriptionType)
     assert descriptions and len(descriptions)
-    values = [n.activation for n in descriptions]
-    i = formulas.selectListPosition(values)
-    chosenProperty = descriptions[i]
+    weights = [n.activation for n in descriptions]
+    chosenProperty = random.weighted_choice(descriptions, weights)
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
                                 chosenProperty, codelet)
 
@@ -203,13 +216,14 @@ def top_down_description_scout(ctx, codelet):
 @codelet('description-strength-tester')
 def description_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     temperature = ctx.temperature
     description = codelet.arguments[0]
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
     probability = temperature.getAdjustedProbability(strength / 100.0)
-    assert formulas.coinFlip(probability)
+    assert random.coinFlip(probability)
     coderack.newCodelet('description-builder', codelet, strength)
 
 
@@ -255,6 +269,7 @@ def bottom_up_bond_scout(ctx, codelet):
 @codelet('rule-scout')
 def rule_scout(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
     temperature = ctx.temperature
     workspace = ctx.workspace
@@ -292,15 +307,13 @@ def rule_scout(ctx, codelet):
                     newList += [node]
         objectList = newList  # surely this should be +=
                               # "union of this and distinguishing descriptors"
-    assert objectList and len(objectList)
+    assert objectList
     # use conceptual depth to choose a description
-    valueList = []
-    for node in objectList:
-        depth = node.conceptualDepth
-        value = temperature.getAdjustedValue(depth)
-        valueList += [value]
-    i = formulas.selectListPosition(valueList)
-    descriptor = objectList[i]
+    weights = [
+        temperature.getAdjustedValue(node.conceptualDepth)
+        for node in objectList
+    ]
+    descriptor = random.weighted_choice(objectList, weights)
     # choose the relation (change the letmost object to "successor" or "d"
     objectList = []
     if changed.replacement.relation:
@@ -308,13 +321,11 @@ def rule_scout(ctx, codelet):
     objectList += [changed.replacement.objectFromModified.getDescriptor(
         slipnet.letterCategory)]
     # use conceptual depth to choose a relation
-    valueList = []
-    for node in objectList:
-        depth = node.conceptualDepth
-        value = temperature.getAdjustedValue(depth)
-        valueList += [value]
-    i = formulas.selectListPosition(valueList)
-    relation = objectList[i]
+    weights = [
+        temperature.getAdjustedValue(node.conceptualDepth)
+        for node in objectList
+    ]
+    relation = random.weighted_choice(objectList, weights)
     coderack.proposeRule(slipnet.letterCategory, descriptor,
                          slipnet.letter, relation, codelet)
 
@@ -322,16 +333,18 @@ def rule_scout(ctx, codelet):
 @codelet('rule-strength-tester')
 def rule_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     temperature = ctx.temperature
     rule = codelet.arguments[0]
     rule.updateStrength()
     probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
-    if formulas.coinFlip(probability):
+    if random.coinFlip(probability):
         coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
 
 @codelet('replacement-finder')
 def replacement_finder(ctx, codelet):
+    random = ctx.random
     slipnet = ctx.slipnet
     workspace = ctx.workspace
     # choose random letter in initial string
@@ -374,10 +387,9 @@ def replacement_finder(ctx, codelet):
 def top_down_bond_scout__category(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
-    workspace = ctx.workspace
     logging.info('top_down_bond_scout__category')
     category = codelet.arguments[0]
-    source = __getScoutSource(workspace, category, formulas.localBondCategoryRelevance,
+    source = __getScoutSource(ctx, category, formulas.localBondCategoryRelevance,
                               'bond')
     destination = chooseNeighbor(source)
     logging.info('source: %s, destination: %s', source, destination)
@@ -406,9 +418,8 @@ def top_down_bond_scout__category(ctx, codelet):
 def top_down_bond_scout__direction(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
-    workspace = ctx.workspace
     direction = codelet.arguments[0]
-    source = __getScoutSource(workspace,
+    source = __getScoutSource(ctx,
         direction, formulas.localDirectionCategoryRelevance, 'bond')
     destination = chooseDirectedNeighbor(source, direction)
     assert destination
@@ -427,6 +438,7 @@ def top_down_bond_scout__direction(ctx, codelet):
 @codelet('bond-strength-tester')
 def bond_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     temperature = ctx.temperature
     bond = codelet.arguments[0]
     __showWhichStringObjectIsFrom(bond)
@@ -434,7 +446,7 @@ def bond_strength_tester(ctx, codelet):
     strength = bond.totalStrength
     probability = temperature.getAdjustedProbability(strength / 100.0)
     logging.info('bond strength = %d for %s', strength, bond)
-    assert formulas.coinFlip(probability)
+    assert random.coinFlip(probability)
     bond.facet.buffer = 100.0
     bond.sourceDescriptor.buffer = 100.0
     bond.destinationDescriptor.buffer = 100.0
@@ -489,12 +501,12 @@ def bond_builder(ctx, codelet):
 @codelet('top-down-group-scout--category')
 def top_down_group_scout__category(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
-    workspace = ctx.workspace
     groupCategory = codelet.arguments[0]
     category = groupCategory.getRelatedNode(slipnet.bondCategory)
     assert category
-    source = __getScoutSource(workspace, category, formulas.localBondCategoryRelevance,
+    source = __getScoutSource(ctx, category, formulas.localBondCategoryRelevance,
                               'group')
     assert source and not source.spansString()
     if source.leftmost:
@@ -502,11 +514,10 @@ def top_down_group_scout__category(ctx, codelet):
     elif source.rightmost:
         direction = slipnet.left
     else:
-        activations = [slipnet.left.activation, slipnet.right.activation]
-        if not formulas.selectListPosition(activations):
-            direction = slipnet.left
-        else:
-            direction = slipnet.right
+        direction = random.weighted_choice(
+            [slipnet.left, slipnet.right],
+            [slipnet.left.activation, slipnet.right.activation]
+        )
     if direction == slipnet.left:
         firstBond = source.leftBond
     else:
@@ -522,7 +533,7 @@ def top_down_group_scout__category(ctx, codelet):
                 group = Group(source.string, slipnet.samenessGroup,
                               None, slipnet.letterCategory, [source], [])
                 probability = group.singleLetterGroupProbability()
-                if formulas.coinFlip(probability):
+                if random.coinFlip(probability):
                     coderack.proposeSingleLetterGroup(source, codelet)
         return
     direction = firstBond.directionCategory
@@ -574,10 +585,10 @@ def top_down_group_scout__category(ctx, codelet):
 @codelet('top-down-group-scout--direction')
 def top_down_group_scout__direction(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
-    workspace = ctx.workspace
     direction = codelet.arguments[0]
-    source = __getScoutSource(workspace, direction,
+    source = __getScoutSource(ctx, direction,
                               formulas.localDirectionCategoryRelevance,
                               'direction')
     logging.info('source chosen = %s', source)
@@ -587,12 +598,10 @@ def top_down_group_scout__direction(ctx, codelet):
     elif source.rightmost:
         mydirection = slipnet.left
     else:
-        activations = [slipnet.left.activation]
-        activations += [slipnet.right.activation]
-        if not formulas.selectListPosition(activations):
-            mydirection = slipnet.left
-        else:
-            mydirection = slipnet.right
+        mydirection = random.weighted_choice(
+            [slipnet.left, slipnet.right],
+            [slipnet.left.activation, slipnet.right.activation]
+        )
     if mydirection == slipnet.left:
         firstBond = source.leftBond
     else:
@@ -669,9 +678,10 @@ def top_down_group_scout__direction(ctx, codelet):
 @codelet('group-scout--whole-string')
 def group_scout__whole_string(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
     workspace = ctx.workspace
-    if formulas.coinFlip():
+    if random.coinFlip():
         string = workspace.target
         logging.info('target string selected: %s', workspace.target)
     else:
@@ -713,6 +723,7 @@ def group_scout__whole_string(ctx, codelet):
 @codelet('group-strength-tester')
 def group_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
     temperature = ctx.temperature
     # update strength value of the group
@@ -721,7 +732,7 @@ def group_strength_tester(ctx, codelet):
     group.updateStrength()
     strength = group.totalStrength
     probability = temperature.getAdjustedProbability(strength / 100.0)
-    if formulas.coinFlip(probability):
+    if random.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
         group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
         if group.directionCategory:
@@ -821,29 +832,23 @@ def rule_builder(ctx, codelet):
     workspace.buildRule(rule)
 
 
-def __getCutOff(density):
-    if density > 0.8:
-        distribution = [5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    elif density > 0.6:
-        distribution = [2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    elif density > 0.4:
-        distribution = [1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0]
-    elif density > 0.2:
-        distribution = [1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0]
+def __getCutoffWeights(bondDensity):
+    if bondDensity > 0.8:
+        return [5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    elif bondDensity > 0.6:
+        return [2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    elif bondDensity > 0.4:
+        return [1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0, 1.0]
+    elif bondDensity > 0.2:
+        return [1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0, 1.0]
     else:
-        distribution = [1.0, 1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0]
-    stop = sum(distribution) * random.random()
-    total = 0.0
-    for i in xrange(len(distribution)):
-        total += distribution[i]
-        if total >= stop:
-            return i + 1
-    return len(distribution)
+        return [1.0, 1.0, 1.0, 2.0, 5.0, 150.0, 5.0, 2.0, 1.0, 1.0]
 
 
 @codelet('rule-translator')
 def rule_translator(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
     assert workspace.rule
@@ -854,9 +859,9 @@ def rule_translator(ctx, codelet):
                          len(workspace.target.bonds))
         nearlyTotalLength = len(workspace.initial) + len(workspace.target) - 2
         bondDensity = numberOfBonds / nearlyTotalLength
-        if bondDensity > 1.0:
-            bondDensity = 1.0
-    cutoff = __getCutOff(bondDensity) * 10.0
+        bondDensity = min(bondDensity, 1.0)
+    weights = __getCutoffWeights(bondDensity)
+    cutoff = 10.0 * random.weighted_choice(range(1, 11), weights)
     if cutoff >= temperature.actual_value:
         if workspace.rule.buildTranslatedRule():
             workspace.foundAnswer = True
@@ -905,24 +910,19 @@ def bottom_up_correspondence_scout(ctx, codelet):
                                    conceptMappings, flipTargetObject, codelet)
 
 
-def chooseSlipnodeByConceptualDepth(slip_nodes, temperature):
-    if not slip_nodes:
-        return None
-    depths = [temperature.getAdjustedValue(n.conceptualDepth) for n in slip_nodes]
-    i = formulas.selectListPosition(depths)
-    return slip_nodes[i]
-
-
 @codelet('important-object-correspondence-scout')
 def important_object_correspondence_scout(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     slipnet = ctx.slipnet
     temperature = ctx.temperature
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject('relativeImportance',
                                                workspace.initial.objects)
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
-    slipnode = chooseSlipnodeByConceptualDepth(descriptors, temperature)
+    # choose descriptor by conceptual depth
+    weights = [temperature.getAdjustedValue(n.conceptualDepth) for n in descriptors]
+    slipnode = random.weighted_choice(descriptors, weights)
     assert slipnode
     initialDescriptor = slipnode
     for mapping in workspace.slippages():
@@ -971,6 +971,7 @@ def important_object_correspondence_scout(ctx, codelet):
 @codelet('correspondence-strength-tester')
 def correspondence_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
     correspondence = codelet.arguments[0]
@@ -984,7 +985,7 @@ def correspondence_strength_tester(ctx, codelet):
     correspondence.updateStrength()
     strength = correspondence.totalStrength
     probability = temperature.getAdjustedProbability(strength / 100.0)
-    if formulas.coinFlip(probability):
+    if random.coinFlip(probability):
         # activate some concepts
         for mapping in correspondence.conceptMappings:
             mapping.initialDescriptionType.buffer = 100.0

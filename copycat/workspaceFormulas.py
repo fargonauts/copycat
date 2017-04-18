@@ -1,34 +1,29 @@
 import logging
 
-import formulas
 
-
-def __chooseObjectFromList(temperature, objects, attribute):
-    if not objects:
-        return None
+def __chooseObjectFromList(ctx, objects, attribute):
+    random = ctx.random
+    temperature = ctx.temperature
     weights = [
         temperature.getAdjustedValue(
             getattr(o, attribute)
         )
         for o in objects
     ]
-    i = formulas.selectListPosition(weights)
-    return objects[i]
+    return random.weighted_choice(objects, weights)
 
 
 def chooseUnmodifiedObject(attribute, inObjects):
     from context import context as ctx
-    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = [o for o in inObjects if o.string != workspace.modified]
     if not len(objects):
         print 'no objects available in initial or target strings'
-    return __chooseObjectFromList(temperature, objects, attribute)
+    return __chooseObjectFromList(ctx, objects, attribute)
 
 
 def chooseNeighbor(source):
     from context import context as ctx
-    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = []
     for objekt in workspace.objects:
@@ -38,7 +33,7 @@ def chooseNeighbor(source):
             objects += [objekt]
         elif source.leftIndex == objekt.rightIndex + 1:
             objects += [objekt]
-    return __chooseObjectFromList(temperature, objects, "intraStringSalience")
+    return __chooseObjectFromList(ctx, objects, "intraStringSalience")
 
 
 def chooseDirectedNeighbor(source, direction):
@@ -53,7 +48,6 @@ def chooseDirectedNeighbor(source, direction):
 
 def __chooseLeftNeighbor(source):
     from context import context as ctx
-    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = []
     for o in workspace.objects:
@@ -64,32 +58,29 @@ def __chooseLeftNeighbor(source):
             else:
                 logging.info('%s is not on left of %s', o, source)
     logging.info('Number of left objects: %s', len(objects))
-    return __chooseObjectFromList(temperature, objects, 'intraStringSalience')
+    return __chooseObjectFromList(ctx, objects, 'intraStringSalience')
 
 
 def __chooseRightNeighbor(source):
     from context import context as ctx
-    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = [o for o in workspace.objects
                if o.string == source.string
                and o.leftIndex == source.rightIndex + 1]
-    return __chooseObjectFromList(temperature, objects, 'intraStringSalience')
+    return __chooseObjectFromList(ctx, objects, 'intraStringSalience')
 
 
 def chooseBondFacet(source, destination):
     from context import context as ctx
+    random = ctx.random
     slipnet = ctx.slipnet
     sourceFacets = [d.descriptionType for d in source.descriptions
                     if d.descriptionType in slipnet.bondFacets]
     bondFacets = [d.descriptionType for d in destination.descriptions
                   if d.descriptionType in sourceFacets]
-    if not bondFacets:
-        return None
     supports = [__supportForDescriptionType(f, source.string)
                 for f in bondFacets]
-    i = formulas.selectListPosition(supports)
-    return bondFacets[i]
+    return random.weighted_choice(bondFacets, supports)
 
 
 def __supportForDescriptionType(descriptionType, string):

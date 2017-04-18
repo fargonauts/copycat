@@ -1,23 +1,4 @@
-import math
-import random
-
 from conceptMapping import ConceptMapping
-
-
-def selectListPosition(probabilities):
-    total = sum(probabilities)
-    #logging.info('total: %s' % total)
-    r = random.random()
-    stopPosition = total * r
-    #logging.info('stopPosition: %s' % stopPosition)
-    total = 0
-    i = 0
-    for probability in probabilities:
-        total += probability
-        if total > stopPosition:
-            return i
-        i += 1
-    return 0
 
 
 def weightedAverage(values):
@@ -29,27 +10,6 @@ def weightedAverage(values):
     if not totalWeights:
         return 0.0
     return total / totalWeights
-
-
-def coinFlip(chance=0.5):
-    return random.random() < chance
-
-
-def blur(value):
-    root = math.sqrt(value)
-    if coinFlip():
-        return value + root
-    return value - root
-
-
-def chooseRelevantDescriptionByActivation(workspaceObject):
-    descriptions = workspaceObject.relevantDescriptions()
-    if not descriptions:
-        return None
-    activations = [description.descriptor.activation
-                   for description in descriptions]
-    i = selectListPosition(activations)
-    return descriptions[i]
 
 
 def __relevantCategory(objekt, slipnode):

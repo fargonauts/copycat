@@ -1,16 +1,16 @@
-import logging
-
-from workspace import Workspace
+from coderack import Coderack
+from randomness import Randomness
 from slipnet import Slipnet
 from temperature import Temperature
-from coderack import Coderack
+from workspace import Workspace
 
 from context import context
 
 
+context.coderack = Coderack(context)
+context.random = Randomness(42)
 context.slipnet = Slipnet()
 context.temperature = Temperature()
-context.coderack = Coderack(context)
 context.workspace = Workspace(context)
 
 

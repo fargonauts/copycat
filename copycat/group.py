@@ -1,5 +1,4 @@
 import logging
-import random
 
 from workspaceObject import WorkspaceObject
 import formulas
@@ -73,9 +72,10 @@ class Group(WorkspaceObject):
 
     def add_length_description_category(self):
         #check whether or not to add length description category
+        random = self.ctx.random
         slipnet = self.ctx.slipnet
         probability = self.lengthDescriptionProbability()
-        if random.random() < probability:
+        if random.coinFlip(probability):
             length = len(self.objectList)
             if length < 6:
                 self.addDescription(slipnet.length,
