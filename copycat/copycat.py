@@ -5,13 +5,25 @@ from temperature import Temperature
 from workspace import Workspace
 
 
-class Context(object):
-    def __init__(self, rng_seed=None):
+class CopycatReporter(object):
+    def report_coderack(self, coderack):
+        pass
+
+    def report_slipnet(self, slipnet):
+        pass
+
+    def report_temperature(self, temperature):
+        pass
+
+
+class Copycat(object):
+    def __init__(self, rng_seed=None, reporter=None):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
         self.temperature = Temperature()
         self.workspace = Workspace(self)
+        self.reporter = reporter or CopycatReporter()
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
@@ -23,7 +35,10 @@ class Context(object):
             self.slipnet.update(self.random)
             self.temperature.update(self.workspace.getUpdatedTemperature())
             lastUpdate = currentTime
+            self.reporter.report_slipnet(self.slipnet)
         self.coderack.chooseAndRunCodelet()
+        self.reporter.report_coderack(self.coderack)
+        self.reporter.report_temperature(self.temperature)
         return lastUpdate
 
     def runTrial(self, answers):

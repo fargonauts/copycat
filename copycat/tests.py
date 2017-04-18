@@ -1,6 +1,6 @@
 import unittest
 
-from context import Context
+from copycat import Copycat
 
 
 def pnormaldist(p):
@@ -67,7 +67,7 @@ class TestCopycat(unittest.TestCase):
                     self.fail('No instances of expected key %s were produced! %r != %r' % (k, actual, expected))
 
     def run_testcase(self, initial, modified, target, iterations, expected):
-        actual = Context().run(initial, modified, target, iterations)
+        actual = Copycat().run(initial, modified, target, iterations)
         self.assertEqual(sum(a['count'] for a in actual.values()), iterations)
         self.assertProbabilitiesLookRoughlyLike(actual, expected)
 
