@@ -1,4 +1,3 @@
-import logging
 from coderack import Coderack
 from randomness import Randomness
 from slipnet import Slipnet
@@ -24,7 +23,6 @@ class Context(object):
             self.slipnet.update(self.random)
             self.temperature.update(self.workspace.getUpdatedTemperature())
             lastUpdate = currentTime
-        logging.debug('Number of codelets: %d', len(self.coderack.codelets))
         self.coderack.chooseAndRunCodelet()
         return lastUpdate
 
