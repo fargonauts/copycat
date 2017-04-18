@@ -274,6 +274,3 @@ class Slipnet(object):
             self.__addNonSlipLink(previous, item, label=self.successor)
             self.__addNonSlipLink(item, previous, label=self.predecessor)
             previous = item
-
-
-slipnet = Slipnet()

@@ -1,17 +1,18 @@
 import logging
 
-from workspace import workspace
-from slipnet import slipnet
-from temperature import temperature
+from workspace import Workspace
+from slipnet import Slipnet
+from temperature import Temperature
 from coderack import Coderack
 
 from context import context
 
 
-context.slipnet = slipnet
-context.temperature = temperature
+context.slipnet = Slipnet()
+context.temperature = Temperature()
 context.coderack = Coderack(context)
-context.workspace = workspace
+context.workspace = Workspace()
+
 
 def run(initial, modified, target, iterations):
     return context.run(initial, modified, target, iterations)

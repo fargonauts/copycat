@@ -148,7 +148,7 @@ class Workspace(object):
         if self.changedObject and self.changedObject.correspondence:
             result = [m for m in
                       self.changedObject.correspondence.conceptMappings]
-        for objekt in workspace.initial.objects:
+        for objekt in self.initial.objects:
             if objekt.correspondence:
                 for mapping in objekt.correspondence.slippages():
                     if not mapping.isNearlyContainedBy(result):
@@ -171,6 +171,3 @@ class Workspace(object):
             description.descriptor.buffer = 100.0
             if description not in self.structures:
                 self.structures += [description]
-
-
-workspace = Workspace()

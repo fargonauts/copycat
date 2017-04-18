@@ -27,6 +27,3 @@ class Temperature(object):
 
     def value(self):
         return 100.0 if self.clamped else self.actual_value
-
-
-temperature = Temperature()
