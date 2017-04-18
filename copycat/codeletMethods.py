@@ -77,11 +77,12 @@ def __getDescriptors(bondFacet, source, destination):
 
 def __structureVsStructure(structure1, weight1, structure2, weight2):
     ctx = structure1.ctx
+    temperature = ctx.temperature
     structure1.updateStrength()
     structure2.updateStrength()
-    weightedStrength1 = formulas.temperatureAdjustedValue(ctx,
+    weightedStrength1 = temperature.getAdjustedValue(
         structure1.totalStrength * weight1)
-    weightedStrength2 = formulas.temperatureAdjustedValue(ctx,
+    weightedStrength2 = temperature.getAdjustedValue(
         structure2.totalStrength * weight2)
     rhs = (weightedStrength1 + weightedStrength2) * random.random()
     logging.info('%d > %d', weightedStrength1, rhs)
@@ -114,10 +115,10 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 
 def __slippability(ctx, conceptMappings):
+    temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
-        probabilityOfSlippage = formulas.temperatureAdjustedProbability(ctx,
-            slippiness)
+        probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
         if formulas.coinFlip(probabilityOfSlippage):
             return True
     return False
@@ -143,7 +144,7 @@ def breaker(ctx, codelet):
                 breakObjects += [structure.source.group]
     # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
-        breakProbability = formulas.temperatureAdjustedProbability(ctx,
+        breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
         if formulas.coinFlip(breakProbability):
             return
@@ -191,11 +192,12 @@ def top_down_description_scout(ctx, codelet):
 @codelet('description-strength-tester')
 def description_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    temperature = ctx.temperature
     description = codelet.arguments[0]
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
-    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
+    probability = temperature.getAdjustedProbability(strength / 100.0)
     assert formulas.coinFlip(probability)
     coderack.newCodelet('description-builder', codelet, strength)
 
@@ -243,6 +245,7 @@ def bottom_up_bond_scout(ctx, codelet):
 def rule_scout(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    temperature = ctx.temperature
     workspace = ctx.workspace
     assert workspace.numberOfUnreplacedObjects() == 0
     changedObjects = [o for o in workspace.initial.objects if o.changed]
@@ -283,7 +286,7 @@ def rule_scout(ctx, codelet):
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = formulas.temperatureAdjustedValue(ctx, depth)
+        value = temperature.getAdjustedValue(depth)
         valueList += [value]
     i = formulas.selectListPosition(valueList)
     descriptor = objectList[i]
@@ -297,7 +300,7 @@ def rule_scout(ctx, codelet):
     valueList = []
     for node in objectList:
         depth = node.conceptualDepth
-        value = formulas.temperatureAdjustedValue(ctx, depth)
+        value = temperature.getAdjustedValue(depth)
         valueList += [value]
     i = formulas.selectListPosition(valueList)
     relation = objectList[i]
@@ -308,9 +311,10 @@ def rule_scout(ctx, codelet):
 @codelet('rule-strength-tester')
 def rule_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    temperature = ctx.temperature
     rule = codelet.arguments[0]
     rule.updateStrength()
-    probability = formulas.temperatureAdjustedProbability(ctx, rule.totalStrength / 100.0)
+    probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
     if formulas.coinFlip(probability):
         coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
 
@@ -412,11 +416,12 @@ def top_down_bond_scout__direction(ctx, codelet):
 @codelet('bond-strength-tester')
 def bond_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    temperature = ctx.temperature
     bond = codelet.arguments[0]
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
     strength = bond.totalStrength
-    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
+    probability = temperature.getAdjustedProbability(strength / 100.0)
     logging.info('bond strength = %d for %s', strength, bond)
     assert formulas.coinFlip(probability)
     bond.facet.buffer = 100.0
@@ -698,12 +703,13 @@ def group_scout__whole_string(ctx, codelet):
 def group_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    temperature = ctx.temperature
     # update strength value of the group
     group = codelet.arguments[0]
     __showWhichStringObjectIsFrom(group)
     group.updateStrength()
     strength = group.totalStrength
-    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
+    probability = temperature.getAdjustedProbability(strength / 100.0)
     if formulas.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
         group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
@@ -945,6 +951,7 @@ def important_object_correspondence_scout(ctx, codelet):
 @codelet('correspondence-strength-tester')
 def correspondence_strength_tester(ctx, codelet):
     coderack = ctx.coderack
+    temperature = ctx.temperature
     workspace = ctx.workspace
     correspondence = codelet.arguments[0]
     objectFromInitial = correspondence.objectFromInitial
@@ -956,7 +963,7 @@ def correspondence_strength_tester(ctx, codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
-    probability = formulas.temperatureAdjustedProbability(ctx, strength / 100.0)
+    probability = temperature.getAdjustedProbability(strength / 100.0)
     if formulas.coinFlip(probability):
         # activate some concepts
         for mapping in correspondence.conceptMappings:

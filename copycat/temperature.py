@@ -1,3 +1,4 @@
+import math
 
 class Temperature(object):
     def __init__(self):
@@ -27,3 +28,17 @@ class Temperature(object):
 
     def value(self):
         return 100.0 if self.clamped else self.actual_value
+
+    def getAdjustedValue(self, value):
+        return value ** (((100.0 - self.value()) / 30.0) + 0.5)
+
+    def getAdjustedProbability(self, value):
+        if value == 0 or value == 0.5 or self.value() == 0:
+            return value
+        if value < 0.5:
+            return 1.0 - self.getAdjustedProbability(1.0 - value)
+        coldness = 100.0 - self.value()
+        a = math.sqrt(coldness)
+        c = (10 - a) / 100
+        f = (c + 1) * value
+        return max(f, 0.5)
