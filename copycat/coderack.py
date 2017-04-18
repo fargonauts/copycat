@@ -197,7 +197,7 @@ class Coderack(object):
         The new codelet has urgency a function of
             the degree of conceptual-depth of the descriptions in the rule
         """
-        rule = Rule(facet, description, category, relation)
+        rule = Rule(self.ctx, facet, description, category, relation)
         rule.updateStrength()
         if description and relation:
             depths = description.conceptualDepth + relation.conceptualDepth
@@ -209,7 +209,7 @@ class Coderack(object):
 
     def proposeCorrespondence(self, initialObject, targetObject,
                               conceptMappings, flipTargetObject, oldCodelet):
-        correspondence = Correspondence(initialObject, targetObject,
+        correspondence = Correspondence(self.ctx, initialObject, targetObject,
                                         conceptMappings, flipTargetObject)
         for mapping in conceptMappings:
             mapping.initialDescriptionType.buffer = 100.0
@@ -256,7 +256,7 @@ class Coderack(object):
         bondFacet.buffer = 100.0
         sourceDescriptor.buffer = 100.0
         destinationDescriptor.buffer = 100.0
-        bond = Bond(source, destination, bondCategory, bondFacet,
+        bond = Bond(self.ctx, source, destination, bondCategory, bondFacet,
                     sourceDescriptor, destinationDescriptor)
         urgency = bondCategory.bondDegreeOfAssociation()
         self.newCodelet('bond-strength-tester', oldCodelet, urgency, bond)

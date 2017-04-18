@@ -351,7 +351,7 @@ def replacement_finder(ctx, codelet):
     else:
         relation = None
         logging.info('no relation found')
-    letterOfInitialString.replacement = Replacement(
+    letterOfInitialString.replacement = Replacement(ctx,
         letterOfInitialString, letterOfModifiedString, relation)
     if relation != slipnet.sameness:
         letterOfInitialString.changed = True
@@ -777,7 +777,7 @@ def group_builder(ctx, codelet):
                 destination = object1
             category = group.groupCategory.getRelatedNode(slipnet.bondCategory)
             facet = group.facet
-            newBond = Bond(source, destination, category, facet,
+            newBond = Bond(ctx, source, destination, category, facet,
                            source.getDescriptor(facet),
                            destination.getDescriptor(facet))
             newBond.buildBond()

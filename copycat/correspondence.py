@@ -5,9 +5,8 @@ import formulas
 
 
 class Correspondence(WorkspaceStructure):
-    def __init__(self, objectFromInitial, objectFromTarget,
+    def __init__(self, ctx, objectFromInitial, objectFromTarget,
                  conceptMappings, flipTargetObject):
-        from context import context as ctx
         WorkspaceStructure.__init__(self, ctx)
         self.objectFromInitial = objectFromInitial
         self.objectFromTarget = objectFromTarget

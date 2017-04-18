@@ -3,9 +3,8 @@ from workspaceStructure import WorkspaceStructure
 
 class Bond(WorkspaceStructure):
     # pylint: disable=too-many-arguments
-    def __init__(self, source, destination, bondCategory, bondFacet,
+    def __init__(self, ctx, source, destination, bondCategory, bondFacet,
                  sourceDescriptor, destinationDescriptor):
-        from context import context as ctx
         WorkspaceStructure.__init__(self, ctx)
         slipnet = self.ctx.slipnet
         self.source = source
@@ -31,7 +30,7 @@ class Bond(WorkspaceStructure):
 
     def flippedVersion(self):
         slipnet = self.ctx.slipnet
-        return Bond(
+        return Bond(self.ctx,
             self.destination, self.source,
             self.category.getRelatedNode(slipnet.opposite),
             self.facet, self.destinationDescriptor, self.sourceDescriptor)
@@ -198,7 +197,7 @@ def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
                 return None  # a different bond cannot be made here
             if bond.category == slipnet.sameness:
                 return None
-            bond = Bond(bond.destination, bond.source, bondCategory,
+            bond = Bond(bond.ctx, bond.destination, bond.source, bondCategory,
                         bondFacet, bond.destinationDescriptor,
                         bond.sourceDescriptor)
             result += [bond]

@@ -4,8 +4,7 @@ from workspaceStructure import WorkspaceStructure
 
 class Description(WorkspaceStructure):
     def __init__(self, workspaceObject, descriptionType, descriptor):
-        from context import context as ctx
-        WorkspaceStructure.__init__(self, ctx)
+        WorkspaceStructure.__init__(self, workspaceObject.ctx)
         self.object = workspaceObject
         self.string = workspaceObject.string
         self.descriptionType = descriptionType

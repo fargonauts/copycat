@@ -6,8 +6,7 @@ import formulas
 
 
 class Rule(WorkspaceStructure):
-    def __init__(self, facet, descriptor, category, relation):
-        from context import context as ctx
+    def __init__(self, ctx, facet, descriptor, category, relation):
         WorkspaceStructure.__init__(self, ctx)
         self.facet = facet
         self.descriptor = descriptor
