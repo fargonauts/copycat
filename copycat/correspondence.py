@@ -45,8 +45,7 @@ class Correspondence(WorkspaceStructure):
         return initialBond
 
     def getIncompatibleBond(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         initialBond = self.extract_initial_bond()
         if not initialBond:
             return None
@@ -68,8 +67,7 @@ class Correspondence(WorkspaceStructure):
         return None
 
     def getIncompatibleCorrespondences(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         return [o.correspondence for o in workspace.initial.objects
                 if o and self.incompatible(o.correspondence)]
 
@@ -102,8 +100,7 @@ class Correspondence(WorkspaceStructure):
         return False
 
     def support(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         if isinstance(self.objectFromInitial, Letter):
             if self.objectFromInitial.spansString():
                 return 100.0
@@ -166,8 +163,7 @@ class Correspondence(WorkspaceStructure):
         return False
 
     def buildCorrespondence(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         workspace.structures += [self]
         if self.objectFromInitial.correspondence:
             self.objectFromInitial.correspondence.breakCorrespondence()
@@ -202,8 +198,7 @@ class Correspondence(WorkspaceStructure):
         self.breakCorrespondence()
 
     def breakCorrespondence(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         workspace.structures.remove(self)
         self.objectFromInitial.correspondence = None
         self.objectFromTarget.correspondence = None

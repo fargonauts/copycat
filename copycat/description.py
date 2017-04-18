@@ -15,8 +15,7 @@ class Description(WorkspaceStructure):
 
     def __str__(self):
         s = 'description(%s) of %s' % (self.descriptor.get_name(), self.object)
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         if self.object.string == workspace.initial:
             s += ' in initial string'
         else:
@@ -31,8 +30,7 @@ class Description(WorkspaceStructure):
                                  self.descriptionType.activation) / 2
 
     def localSupport(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         described_like_self = 0
         for other in workspace.objects:
             if self.object == other:
@@ -55,8 +53,7 @@ class Description(WorkspaceStructure):
             self.object.descriptions += [self]
 
     def breakDescription(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         if self in workspace.structures:
             workspace.structures.remove(self)
         self.object.descriptions.remove(self)

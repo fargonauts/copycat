@@ -49,8 +49,7 @@ class WorkspaceObject(WorkspaceStructure):
         self.descriptions += [description]
 
     def addDescriptions(self, descriptions):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         copy = descriptions[:]  # in case we add to our own descriptions
         for description in copy:
             logging.info('might add: %s', description)
@@ -124,8 +123,7 @@ class WorkspaceObject(WorkspaceStructure):
 
     def getPossibleDescriptions(self, descriptionType):
         from group import Group  # gross, TODO FIXME
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         logging.info('getting possible descriptions for %s', self)
         descriptions = []
         for link in descriptionType.instanceLinks:
@@ -170,13 +168,11 @@ class WorkspaceObject(WorkspaceStructure):
         return objectOnMyRightIsRightmost and objectOnMyLeftIsLeftmost
 
     def distinguishingDescriptor(self, descriptor):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         return slipnet.isDistinguishingDescriptor(descriptor)
 
     def relevantDistinguishingDescriptors(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         return [d.descriptor
                 for d in self.relevantDescriptions()
                 if slipnet.isDistinguishingDescriptor(d.descriptor)]

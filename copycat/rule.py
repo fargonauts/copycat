@@ -2,7 +2,7 @@ import logging
 
 
 from workspaceStructure import WorkspaceStructure
-from formulas import weightedAverage
+import formulas
 
 
 class Rule(WorkspaceStructure):
@@ -24,8 +24,7 @@ class Rule(WorkspaceStructure):
         self.externalStrength = self.internalStrength
 
     def updateInternalStrength(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         if not (self.descriptor and self.relation):
             self.internalStrength = 0.0
             return
@@ -53,7 +52,7 @@ class Rule(WorkspaceStructure):
         weights = ((depthDifference, 12),
                    (averageDepth, 18),
                    (sharedDescriptorTerm, sharedDescriptorWeight))
-        self.internalStrength = weightedAverage(weights)
+        self.internalStrength = formulas.weightedAverage(weights)
         if self.internalStrength > 100.0:
             self.internalStrength = 100.0
 
@@ -81,8 +80,7 @@ class Rule(WorkspaceStructure):
             self.descriptor.buffer = 100.0
 
     def incompatibleRuleCorrespondence(self, correspondence):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         if not correspondence:
             return False
         # find changed object
@@ -97,8 +95,7 @@ class Rule(WorkspaceStructure):
                    for m in correspondence.conceptMappings)
 
     def __changeString(self, string):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         # applies the changes to self string ie. successor
         if self.facet == slipnet.length:
             if self.relation == slipnet.predecessor:
@@ -119,8 +116,7 @@ class Rule(WorkspaceStructure):
             return self.relation.name.lower()
 
     def buildTranslatedRule(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         slippages = workspace.slippages()
         self.category = self.category.applySlippages(slippages)
         self.facet = self.facet.applySlippages(slippages)

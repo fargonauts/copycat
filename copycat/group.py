@@ -9,10 +9,9 @@ class Group(WorkspaceObject):
     # pylint: disable=too-many-instance-attributes
     def __init__(self, string, groupCategory, directionCategory, facet,
                  objectList, bondList):
-        from context import context as ctx
-        slipnet = ctx.slipnet
         # pylint: disable=too-many-arguments
         WorkspaceObject.__init__(self, string)
+        slipnet = self.ctx.slipnet
         self.groupCategory = groupCategory
         self.directionCategory = directionCategory
         self.facet = facet
@@ -42,7 +41,7 @@ class Group(WorkspaceObject):
         self.clampSalience = False
         self.name = ''
 
-        from description import Description
+        from description import Description  # gross
         if self.bondList and len(self.bondList):
             firstFacet = self.bondList[0].facet
             self.addBondDescription(
@@ -74,8 +73,7 @@ class Group(WorkspaceObject):
 
     def add_length_description_category(self):
         #check whether or not to add length description category
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         probability = self.lengthDescriptionProbability()
         if random.random() < probability:
             length = len(self.objectList)
@@ -101,8 +99,7 @@ class Group(WorkspaceObject):
         self.bondDescriptions += [description]
 
     def singleLetterGroupProbability(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         numberOfSupporters = self.numberOfLocalSupportingGroups()
         if not numberOfSupporters:
             return 0.0
@@ -115,11 +112,10 @@ class Group(WorkspaceObject):
         support = self.localSupport() / 100.0
         activation = slipnet.length.activation / 100.0
         supportedActivation = (support * activation) ** exp
-        return formulas.temperatureAdjustedProbability(ctx, supportedActivation)
+        return formulas.temperatureAdjustedProbability(self.ctx, supportedActivation)
 
     def flippedVersion(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         flippedBonds = [b.flippedversion() for b in self.bondList]
         flippedGroup = self.groupCategory.getRelatedNode(slipnet.flipped)
         flippedDirection = self.directionCategory.getRelatedNode(
@@ -128,8 +124,7 @@ class Group(WorkspaceObject):
                      self.facet, self.objectList, flippedBonds)
 
     def buildGroup(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         workspace.objects += [self]
         workspace.structures += [self]
         self.string.objects += [self]
@@ -144,15 +139,14 @@ class Group(WorkspaceObject):
             description.descriptor.buffer = 100.0
 
     def lengthDescriptionProbability(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         length = len(self.objectList)
         if length > 5:
             return 0.0
         cubedlength = length ** 3
         fred = cubedlength * (100.0 - slipnet.length.activation) / 100.0
         probability = 0.5 ** fred
-        value = formulas.temperatureAdjustedProbability(ctx, probability)
+        value = formulas.temperatureAdjustedProbability(self.ctx, probability)
         if value < 0.06:
             value = 0.0  # otherwise 1/20 chance always
         return value
@@ -161,8 +155,7 @@ class Group(WorkspaceObject):
         self.breakGroup()
 
     def breakGroup(self):
-        from context import context as ctx
-        workspace = ctx.workspace
+        workspace = self.ctx.workspace
         while len(self.descriptions):
             description = self.descriptions[-1]
             description.breakDescription()
@@ -184,8 +177,7 @@ class Group(WorkspaceObject):
             self.rightBond.breakBond()
 
     def updateInternalStrength(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         relatedBondAssociation = self.groupCategory.getRelatedNode(
             slipnet.bondCategory).degreeOfAssociation()
         bondWeight = relatedBondAssociation ** 0.98
@@ -247,8 +239,7 @@ class Group(WorkspaceObject):
         return True
 
     def morePossibleDescriptions(self, node):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.ctx.slipnet
         result = []
         for i, number in enumerate(slipnet.numbers, 1):
             if node == number and len(self.objects) == i:
