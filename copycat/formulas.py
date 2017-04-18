@@ -70,28 +70,6 @@ def chooseRelevantDescriptionByActivation(workspaceObject):
     return descriptions[i]
 
 
-def similarPropertyLinks(slip_node):
-    from context import context as ctx
-    temperature = ctx.temperature
-    result = []
-    for slip_link in slip_node.propertyLinks:
-        association = slip_link.degreeOfAssociation() / 100.0
-        probability = temperature.getAdjustedProbability(association)
-        if coinFlip(probability):
-            result += [slip_link]
-    return result
-
-
-def chooseSlipnodeByConceptualDepth(slip_nodes):
-    from context import context as ctx
-    temperature = ctx.temperature
-    if not slip_nodes:
-        return None
-    depths = [temperature.getAdjustedValue(n.conceptualDepth) for n in slip_nodes]
-    i = selectListPosition(depths)
-    return slip_nodes[i]
-
-
 def __relevantCategory(objekt, slipnode):
     return objekt.rightBond and objekt.rightBond.category == slipnode
 

@@ -152,17 +152,28 @@ def breaker(ctx, codelet):
         structure.break_the_structure()
 
 
+def similarPropertyLinks(slip_node, temperature):
+    result = []
+    for slip_link in slip_node.propertyLinks:
+        association = slip_link.degreeOfAssociation() / 100.0
+        probability = temperature.getAdjustedProbability(association)
+        if formulas.coinFlip(probability):
+            result += [slip_link]
+    return result
+
+
 @codelet('bottom-up-description-scout')
 def bottom_up_description_scout(ctx, codelet):
     coderack = ctx.coderack
+    temperature = ctx.temperature
     workspace = ctx.workspace
     chosenObject = chooseUnmodifiedObject('totalSalience', workspace.objects)
     assert chosenObject
     __showWhichStringObjectIsFrom(chosenObject)
     description = formulas.chooseRelevantDescriptionByActivation(chosenObject)
     assert description
-    sliplinks = formulas.similarPropertyLinks(description.descriptor)
-    assert sliplinks and len(sliplinks)
+    sliplinks = similarPropertyLinks(description.descriptor, temperature)
+    assert sliplinks
     values = [sliplink.degreeOfAssociation() * sliplink.destination.activation
               for sliplink in sliplinks]
     i = formulas.selectListPosition(values)
@@ -894,15 +905,24 @@ def bottom_up_correspondence_scout(ctx, codelet):
                                    conceptMappings, flipTargetObject, codelet)
 
 
+def chooseSlipnodeByConceptualDepth(slip_nodes, temperature):
+    if not slip_nodes:
+        return None
+    depths = [temperature.getAdjustedValue(n.conceptualDepth) for n in slip_nodes]
+    i = formulas.selectListPosition(depths)
+    return slip_nodes[i]
+
+
 @codelet('important-object-correspondence-scout')
 def important_object_correspondence_scout(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    temperature = ctx.temperature
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject('relativeImportance',
                                                workspace.initial.objects)
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
-    slipnode = formulas.chooseSlipnodeByConceptualDepth(descriptors)
+    slipnode = chooseSlipnodeByConceptualDepth(descriptors, temperature)
     assert slipnode
     initialDescriptor = slipnode
     for mapping in workspace.slippages():
