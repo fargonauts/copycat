@@ -189,7 +189,7 @@ def bottom_up_description_scout(ctx, codelet):
     chosen = random.weighted_choice(sliplinks, weights)
     chosenProperty = chosen.destination
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
-                                chosenProperty, codelet)
+                                chosenProperty)
 
 
 @codelet('top-down-description-scout')
@@ -206,7 +206,7 @@ def top_down_description_scout(ctx, codelet):
     weights = [n.activation for n in descriptions]
     chosenProperty = random.weighted_choice(descriptions, weights)
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
-                                chosenProperty, codelet)
+                                chosenProperty)
 
 
 @codelet('description-strength-tester')
@@ -220,7 +220,7 @@ def description_strength_tester(ctx, codelet):
     strength = description.totalStrength
     probability = temperature.getAdjustedProbability(strength / 100.0)
     assert random.coinFlip(probability)
-    coderack.newCodelet('description-builder', codelet, strength)
+    coderack.newCodelet('description-builder', strength, [description])
 
 
 @codelet('description-builder')
@@ -260,7 +260,7 @@ def bottom_up_bond_scout(ctx, codelet):
         category = slipnet.sameness
     logging.info('proposing %s bond ', category.name)
     coderack.proposeBond(source, destination, category, bondFacet,
-                         sourceDescriptor, destinationDescriptor, codelet)
+                         sourceDescriptor, destinationDescriptor)
 
 
 @codelet('rule-scout')
@@ -275,7 +275,7 @@ def rule_scout(ctx, codelet):
     #assert len(changedObjects) < 2
     # if there are no changed objects, propose a rule with no changes
     if not changedObjects:
-        return coderack.proposeRule(None, None, None, None, codelet)
+        return coderack.proposeRule(None, None, None, None)
 
     changed = changedObjects[-1]
     # generate a list of distinguishing descriptions for the first object
@@ -324,7 +324,7 @@ def rule_scout(ctx, codelet):
     ]
     relation = random.weighted_choice(objectList, weights)
     coderack.proposeRule(slipnet.letterCategory, descriptor,
-                         slipnet.letter, relation, codelet)
+                         slipnet.letter, relation)
 
 
 @codelet('rule-strength-tester')
@@ -336,7 +336,7 @@ def rule_strength_tester(ctx, codelet):
     rule.updateStrength()
     probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
     if random.coinFlip(probability):
-        coderack.newCodelet('rule-builder', codelet, rule.totalStrength, rule)
+        coderack.newCodelet('rule-builder', rule.totalStrength, [rule])
 
 
 @codelet('replacement-finder')
@@ -405,11 +405,11 @@ def top_down_bond_scout__category(ctx, codelet):
     if category == forwardBond:
         coderack.proposeBond(source, destination, category,
                              bondFacet, sourceDescriptor,
-                             destinationDescriptor, codelet)
+                             destinationDescriptor)
     else:
         coderack.proposeBond(destination, source, category,
                              bondFacet, destinationDescriptor,
-                             sourceDescriptor, codelet)
+                             sourceDescriptor)
 
 
 @codelet('top-down-bond-scout--direction')
@@ -431,7 +431,7 @@ def top_down_bond_scout__direction(ctx, codelet):
     if category == slipnet.identity:
         category = slipnet.sameness
     coderack.proposeBond(source, destination, category, bondFacet,
-                         sourceDescriptor, destinationDescriptor, codelet)
+                         sourceDescriptor, destinationDescriptor)
 
 
 @codelet('bond-strength-tester')
@@ -450,7 +450,7 @@ def bond_strength_tester(ctx, codelet):
     bond.sourceDescriptor.buffer = 100.0
     bond.destinationDescriptor.buffer = 100.0
     logging.info("succeeded: posting bond-builder")
-    coderack.newCodelet('bond-builder', codelet, strength)
+    coderack.newCodelet('bond-builder', strength, [bond])
 
 
 @codelet('bond-builder')
@@ -533,7 +533,7 @@ def top_down_group_scout__category(ctx, codelet):
                               None, slipnet.letterCategory, [source], [])
                 probability = group.singleLetterGroupProbability()
                 if random.coinFlip(probability):
-                    coderack.proposeSingleLetterGroup(source, codelet)
+                    coderack.proposeSingleLetterGroup(source)
         return
     direction = firstBond.directionCategory
     search = True
@@ -578,7 +578,7 @@ def top_down_group_scout__category(ctx, codelet):
         objects += [source.rightBond.rightObject]
         source = source.rightBond.rightObject
     coderack.proposeGroup(objects, bonds, groupCategory,
-                          direction, bondFacet, codelet)
+                          direction, bondFacet)
 
 
 @codelet('top-down-group-scout--direction')
@@ -670,7 +670,7 @@ def top_down_group_scout__direction(ctx, codelet):
         objects += [source.rightBond.rightObject]
         source = source.rightBond.rightObject
     coderack.proposeGroup(objects, bonds, groupCategory,
-                          direction, bondFacet, codelet)
+                          direction, bondFacet)
 
 
 #noinspection PyStringFormat
@@ -698,7 +698,7 @@ def group_scout__whole_string(ctx, codelet):
         group = leftmost
         coderack.proposeGroup(group.objectList, group.bondList,
                               group.groupCategory, group.directionCategory,
-                              group.facet, codelet)
+                              group.facet)
         return
     bonds = []
     objects = [leftmost]
@@ -716,7 +716,7 @@ def group_scout__whole_string(ctx, codelet):
     assert bonds
     groupCategory = category.getRelatedNode(slipnet.groupCategory)
     coderack.proposeGroup(objects, bonds, groupCategory, directionCategory,
-                          bondFacet, codelet)
+                          bondFacet)
 
 
 @codelet('group-strength-tester')
@@ -736,7 +736,7 @@ def group_strength_tester(ctx, codelet):
         group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
         if group.directionCategory:
             group.directionCategory.buffer = 100.0
-        coderack.newCodelet('group-builder', codelet, strength)
+        coderack.newCodelet('group-builder', strength, [group])
 
 
 @codelet('group-builder')
@@ -906,7 +906,7 @@ def bottom_up_correspondence_scout(ctx, codelet):
             objectFromTarget.relevantDescriptions())
         flipTargetObject = True
     coderack.proposeCorrespondence(objectFromInitial, objectFromTarget,
-                                   conceptMappings, flipTargetObject, codelet)
+                                   conceptMappings, flipTargetObject)
 
 
 @codelet('important-object-correspondence-scout')
@@ -964,7 +964,7 @@ def important_object_correspondence_scout(ctx, codelet):
             objectFromTarget.relevantDescriptions())
         flipTargetObject = True
     coderack.proposeCorrespondence(objectFromInitial, objectFromTarget,
-                                   conceptMappings, flipTargetObject, codelet)
+                                   conceptMappings, flipTargetObject)
 
 
 @codelet('correspondence-strength-tester')
@@ -991,8 +991,8 @@ def correspondence_strength_tester(ctx, codelet):
             mapping.initialDescriptor.buffer = 100.0
             mapping.targetDescriptionType.buffer = 100.0
             mapping.targetDescriptor.buffer = 100.0
-        coderack.newCodelet('correspondence-builder', codelet,
-                            strength, correspondence)
+        coderack.newCodelet('correspondence-builder',
+                            strength, [correspondence])
 
 
 @codelet('correspondence-builder')

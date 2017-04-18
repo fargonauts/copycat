@@ -145,8 +145,7 @@ class Coderack(object):
                         continue
                     urgency = getUrgencyBin(
                         node.activation * node.conceptualDepth / 100.0)
-                    codelet = Codelet(codeletName, urgency, self.codeletsRun)
-                    codelet.arguments += [node]
+                    codelet = Codelet(codeletName, urgency, [node], self.codeletsRun)
                     logging.info('Post top down: %s, with urgency: %d',
                                  codelet.name, urgency)
                     self.post(codelet)
@@ -175,24 +174,20 @@ class Coderack(object):
             urgency = 5
         for _ in xrange(howMany):
             if random.coinFlip(probability):
-                codelet = Codelet(codeletName, urgency, self.codeletsRun)
+                codelet = Codelet(codeletName, urgency, [], self.codeletsRun)
                 self.post(codelet)
 
     def removeCodelet(self, codelet):
         self.codelets.remove(codelet)
 
-    def newCodelet(self, name, oldCodelet, strength, arguments=None):
+    def newCodelet(self, name, strength, arguments):
         #logging.debug('Posting new codelet called %s' % name)
         urgency = getUrgencyBin(strength)
-        newCodelet = Codelet(name, urgency, self.codeletsRun)
-        if arguments:
-            newCodelet.arguments = [arguments]
-        else:
-            newCodelet.arguments = oldCodelet.arguments
+        newCodelet = Codelet(name, urgency, arguments, self.codeletsRun)
         self.post(newCodelet)
 
     # pylint: disable=too-many-arguments
-    def proposeRule(self, facet, description, category, relation, oldCodelet):
+    def proposeRule(self, facet, description, category, relation):
         """Creates a proposed rule, and posts a rule-strength-tester codelet.
 
         The new codelet has urgency a function of
@@ -206,10 +201,10 @@ class Coderack(object):
             urgency = math.sqrt(depths) * 100.0
         else:
             urgency = 0
-        self.newCodelet('rule-strength-tester', oldCodelet, urgency, rule)
+        self.newCodelet('rule-strength-tester', urgency, [rule])
 
     def proposeCorrespondence(self, initialObject, targetObject,
-                              conceptMappings, flipTargetObject, oldCodelet):
+                              conceptMappings, flipTargetObject):
         correspondence = Correspondence(self.ctx, initialObject, targetObject,
                                         conceptMappings, flipTargetObject)
         for mapping in conceptMappings:
@@ -226,22 +221,22 @@ class Coderack(object):
         logging.info('urgency: %s, number: %d, bin: %d',
                      urgency, numberOfMappings, binn)
         self.newCodelet('correspondence-strength-tester',
-                        oldCodelet, urgency, correspondence)
+                        urgency, [correspondence])
 
-    def proposeDescription(self, objekt, type_, descriptor, oldCodelet):
+    def proposeDescription(self, objekt, type_, descriptor):
         description = Description(objekt, type_, descriptor)
         descriptor.buffer = 100.0
         urgency = type_.activation
         self.newCodelet('description-strength-tester',
-                        oldCodelet, urgency, description)
+                        urgency, [description])
 
-    def proposeSingleLetterGroup(self, source, codelet):
+    def proposeSingleLetterGroup(self, source):
         slipnet = self.ctx.slipnet
         self.proposeGroup([source], [], slipnet.samenessGroup, None,
-                          slipnet.letterCategory, codelet)
+                          slipnet.letterCategory)
 
     def proposeGroup(self, objects, bondList, groupCategory, directionCategory,
-                     bondFacet, oldCodelet):
+                     bondFacet):
         slipnet = self.ctx.slipnet
         bondCategory = groupCategory.getRelatedNode(slipnet.bondCategory)
         bondCategory.buffer = 100.0
@@ -250,17 +245,17 @@ class Coderack(object):
         group = Group(objects[0].string, groupCategory, directionCategory,
                       bondFacet, objects, bondList)
         urgency = bondCategory.bondDegreeOfAssociation()
-        self.newCodelet('group-strength-tester', oldCodelet, urgency, group)
+        self.newCodelet('group-strength-tester', urgency, [group])
 
     def proposeBond(self, source, destination, bondCategory, bondFacet,
-                    sourceDescriptor, destinationDescriptor, oldCodelet):
+                    sourceDescriptor, destinationDescriptor):
         bondFacet.buffer = 100.0
         sourceDescriptor.buffer = 100.0
         destinationDescriptor.buffer = 100.0
         bond = Bond(self.ctx, source, destination, bondCategory, bondFacet,
                     sourceDescriptor, destinationDescriptor)
         urgency = bondCategory.bondDegreeOfAssociation()
-        self.newCodelet('bond-strength-tester', oldCodelet, urgency, bond)
+        self.newCodelet('bond-strength-tester', urgency, [bond])
 
     def chooseOldCodelet(self):
         # selects an old codelet to remove from the coderack
@@ -283,7 +278,7 @@ class Coderack(object):
         ]
         for name in codeletsToPost:
             for _ in xrange(2 * len(workspace.objects)):
-                codelet = Codelet(name, 1, self.codeletsRun)
+                codelet = Codelet(name, 1, [], self.codeletsRun)
                 self.post(codelet)
 
     def chooseAndRunCodelet(self):
