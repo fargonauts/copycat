@@ -1,5 +1,4 @@
 import math
-import logging
 import random
 
 from conceptMapping import ConceptMapping
@@ -41,23 +40,6 @@ def blur(value):
     if coinFlip():
         return value + root
     return value - root
-
-
-def chooseObjectFromList(objects, attribute):
-    from context import context as ctx
-    temperature = ctx.temperature
-    if not objects:
-        return None
-    probabilities = []
-    for objekt in objects:
-        value = getattr(objekt, attribute)
-        probability = temperature.getAdjustedValue(value)
-        logging.info('Object: %s, value: %d, probability: %d',
-                     objekt, value, probability)
-        probabilities += [probability]
-    i = selectListPosition(probabilities)
-    logging.info('Selected: %d', i)
-    return objects[i]
 
 
 def chooseRelevantDescriptionByActivation(workspaceObject):

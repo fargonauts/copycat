@@ -3,17 +3,32 @@ import logging
 import formulas
 
 
+def __chooseObjectFromList(temperature, objects, attribute):
+    if not objects:
+        return None
+    weights = [
+        temperature.getAdjustedValue(
+            getattr(o, attribute)
+        )
+        for o in objects
+    ]
+    i = formulas.selectListPosition(weights)
+    return objects[i]
+
+
 def chooseUnmodifiedObject(attribute, inObjects):
     from context import context as ctx
+    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = [o for o in inObjects if o.string != workspace.modified]
     if not len(objects):
         print 'no objects available in initial or target strings'
-    return formulas.chooseObjectFromList(objects, attribute)
+    return __chooseObjectFromList(temperature, objects, attribute)
 
 
 def chooseNeighbor(source):
     from context import context as ctx
+    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = []
     for objekt in workspace.objects:
@@ -23,7 +38,7 @@ def chooseNeighbor(source):
             objects += [objekt]
         elif source.leftIndex == objekt.rightIndex + 1:
             objects += [objekt]
-    return formulas.chooseObjectFromList(objects, "intraStringSalience")
+    return __chooseObjectFromList(temperature, objects, "intraStringSalience")
 
 
 def chooseDirectedNeighbor(source, direction):
@@ -38,6 +53,7 @@ def chooseDirectedNeighbor(source, direction):
 
 def __chooseLeftNeighbor(source):
     from context import context as ctx
+    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = []
     for o in workspace.objects:
@@ -48,16 +64,17 @@ def __chooseLeftNeighbor(source):
             else:
                 logging.info('%s is not on left of %s', o, source)
     logging.info('Number of left objects: %s', len(objects))
-    return formulas.chooseObjectFromList(objects, 'intraStringSalience')
+    return __chooseObjectFromList(temperature, objects, 'intraStringSalience')
 
 
 def __chooseRightNeighbor(source):
     from context import context as ctx
+    temperature = ctx.temperature
     workspace = ctx.workspace
     objects = [o for o in workspace.objects
                if o.string == source.string
                and o.leftIndex == source.rightIndex + 1]
-    return formulas.chooseObjectFromList(objects, 'intraStringSalience')
+    return __chooseObjectFromList(temperature, objects, 'intraStringSalience')
 
 
 def chooseBondFacet(source, destination):
