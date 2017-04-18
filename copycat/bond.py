@@ -5,7 +5,8 @@ class Bond(WorkspaceStructure):
     # pylint: disable=too-many-arguments
     def __init__(self, source, destination, bondCategory, bondFacet,
                  sourceDescriptor, destinationDescriptor):
-        WorkspaceStructure.__init__(self)
+        from context import context as ctx
+        WorkspaceStructure.__init__(self, ctx)
         slipnet = self.ctx.slipnet
         self.source = source
         self.string = self.source.string

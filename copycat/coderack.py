@@ -4,7 +4,12 @@ import random
 
 import codeletMethods
 import formulas
+from bond import Bond
 from codelet import Codelet
+from correspondence import Correspondence
+from description import Description
+from group import Group
+from rule import Rule
 
 
 NUMBER_OF_BINS = 7
@@ -192,8 +197,6 @@ class Coderack(object):
         The new codelet has urgency a function of
             the degree of conceptual-depth of the descriptions in the rule
         """
-        from rule import Rule
-
         rule = Rule(facet, description, category, relation)
         rule.updateStrength()
         if description and relation:
@@ -206,8 +209,6 @@ class Coderack(object):
 
     def proposeCorrespondence(self, initialObject, targetObject,
                               conceptMappings, flipTargetObject, oldCodelet):
-        from correspondence import Correspondence
-
         correspondence = Correspondence(initialObject, targetObject,
                                         conceptMappings, flipTargetObject)
         for mapping in conceptMappings:
@@ -227,8 +228,6 @@ class Coderack(object):
                         oldCodelet, urgency, correspondence)
 
     def proposeDescription(self, objekt, type_, descriptor, oldCodelet):
-        from description import Description
-
         description = Description(objekt, type_, descriptor)
         descriptor.buffer = 100.0
         urgency = type_.activation
@@ -242,7 +241,6 @@ class Coderack(object):
 
     def proposeGroup(self, objects, bondList, groupCategory, directionCategory,
                      bondFacet, oldCodelet):
-        from group import Group
         slipnet = self.ctx.slipnet
         bondCategory = groupCategory.getRelatedNode(slipnet.bondCategory)
         bondCategory.buffer = 100.0
@@ -255,8 +253,6 @@ class Coderack(object):
 
     def proposeBond(self, source, destination, bondCategory, bondFacet,
                     sourceDescriptor, destinationDescriptor, oldCodelet):
-        from bond import Bond
-
         bondFacet.buffer = 100.0
         sourceDescriptor.buffer = 100.0
         destinationDescriptor.buffer = 100.0

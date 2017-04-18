@@ -7,8 +7,7 @@ def abstract_call(objekt, name):
 
 
 class WorkspaceStructure(object):
-    def __init__(self):
-        from context import context as ctx
+    def __init__(self, ctx):
         self.ctx = ctx
         self.string = None
         self.internalStrength = 0.0
