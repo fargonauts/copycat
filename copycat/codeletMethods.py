@@ -680,25 +680,20 @@ def group_scout__whole_string(ctx, codelet):
     random = ctx.random
     slipnet = ctx.slipnet
     workspace = ctx.workspace
-    if random.coinFlip():
-        string = workspace.target
-        logging.info('target string selected: %s', workspace.target)
-    else:
-        string = workspace.initial
-        logging.info('initial string selected: %s', workspace.initial)
+    string = random.choice([workspace.initial, workspace.target])
     # find leftmost object & the highest group to which it belongs
-    leftmost = None
-    for objekt in string.objects:
-        if objekt.leftmost:
-            leftmost = objekt
+    leftmost = next(o for o in string.objects if o.leftmost)
     while leftmost.group and leftmost.group.bondCategory == slipnet.sameness:
         leftmost = leftmost.group
     if leftmost.spansString():
         # the object already spans the string - propose this object
-        group = leftmost
-        coderack.proposeGroup(group.objectList, group.bondList,
-                              group.groupCategory, group.directionCategory,
-                              group.facet)
+        if isinstance(leftmost, Group):
+            group = leftmost
+            coderack.proposeGroup(group.objectList, group.bondList,
+                                  group.groupCategory, group.directionCategory,
+                                  group.facet)
+        else:
+            coderack.proposeSingleLetterGroup(leftmost)
         return
     bonds = []
     objects = [leftmost]
