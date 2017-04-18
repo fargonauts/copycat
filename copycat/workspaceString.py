@@ -1,12 +1,13 @@
 import logging
+from group import Group
 from letter import Letter
 
 
 class WorkspaceString(object):
-    def __init__(self, s):
-        from context import context as ctx
+    def __init__(self, ctx, s):
         slipnet = ctx.slipnet
         workspace = ctx.workspace
+        self.ctx = ctx
         self.string = s
         self.bonds = []
         self.objects = []
@@ -76,8 +77,6 @@ class WorkspaceString(object):
         self.intraStringUnhappiness = total / len(self.objects)
 
     def equivalentGroup(self, sought):
-        from group import Group
-
         for objekt in self.objects:
             if isinstance(objekt, Group):
                 if objekt.sameGroup(sought):

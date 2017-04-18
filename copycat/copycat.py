@@ -11,7 +11,7 @@ from context import context
 context.slipnet = Slipnet()
 context.temperature = Temperature()
 context.coderack = Coderack(context)
-context.workspace = Workspace()
+context.workspace = Workspace(context)
 
 
 def run(initial, modified, target, iterations):

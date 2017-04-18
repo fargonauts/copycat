@@ -12,8 +12,9 @@ def __adjustUnhappiness(values):
 
 
 class Workspace(object):
-    def __init__(self):
+    def __init__(self, ctx):
         #logging.debug('workspace.__init__()')
+        self.ctx = ctx
         self.setStrings('', '', '')
         self.reset()
         self.totalUnhappiness = 0.0
@@ -36,9 +37,9 @@ class Workspace(object):
         self.objects = []
         self.structures = []
         self.rule = None
-        self.initial = WorkspaceString(self.initialString)
-        self.modified = WorkspaceString(self.modifiedString)
-        self.target = WorkspaceString(self.targetString)
+        self.initial = WorkspaceString(self.ctx, self.initialString)
+        self.modified = WorkspaceString(self.ctx, self.modifiedString)
+        self.target = WorkspaceString(self.ctx, self.targetString)
 
     def assessUnhappiness(self):
         self.intraStringUnhappiness = __adjustUnhappiness(

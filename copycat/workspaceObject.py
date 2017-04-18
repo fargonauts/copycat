@@ -8,8 +8,7 @@ from workspaceStructure import WorkspaceStructure
 class WorkspaceObject(WorkspaceStructure):
     # pylint: disable=too-many-instance-attributes
     def __init__(self, workspaceString):
-        from context import context as ctx
-        WorkspaceStructure.__init__(self, ctx)
+        WorkspaceStructure.__init__(self, workspaceString.ctx)
         self.string = workspaceString
         self.descriptions = []
         self.extrinsicDescriptions = []
