@@ -1,5 +1,6 @@
 import math
 
+
 class Temperature(object):
     def __init__(self):
         self.reset()

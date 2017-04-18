@@ -2,11 +2,13 @@ import bisect
 import math
 import random
 
+
 def accumulate(iterable):
     total = 0
     for v in iterable:
         total += v
         yield total
+
 
 class Randomness(object):
     def __init__(self, seed=None):

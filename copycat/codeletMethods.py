@@ -14,6 +14,7 @@ from correspondence import Correspondence
 from workspaceFormulas import chooseUnmodifiedObject
 from workspaceFormulas import chooseBondFacet
 
+
 def codelet(name):
     """Decorator for otherwise-unused functions that are in fact used as codelet behaviors"""
     def wrap(f):
@@ -22,6 +23,7 @@ def codelet(name):
         f.codelet_name = name
         return f
     return wrap
+
 
 # some methods common to the codelets
 def __showWhichStringObjectIsFrom(structure):

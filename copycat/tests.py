@@ -1,8 +1,7 @@
-"""Run the copycat program"""
-
 import unittest
 
 from context import Context
+
 
 def pnormaldist(p):
     table = {
@@ -21,7 +20,8 @@ def pnormaldist(p):
         0.99999999: 5.7307,
         0.999999999: 6.1094,
     }
-    return max(v for k,v in table.iteritems() if k <= p)
+    return max(v for k, v in table.iteritems() if k <= p)
+
 
 def lower_bound_on_probability(hits, attempts, confidence=0.95):
     if attempts == 0:
@@ -32,6 +32,7 @@ def lower_bound_on_probability(hits, attempts, confidence=0.95):
     under_sqrt = (phat * (1 - phat) + zsqr / (4*attempts)) / attempts
     denominator = (1 + zsqr / attempts)
     return (phat + zsqr / (2*attempts) - z * (under_sqrt ** 0.5)) / denominator
+
 
 def upper_bound_on_probability(hits, attempts, confidence=0.95):
     misses = attempts - hits
@@ -130,6 +131,7 @@ class TestCopycat(unittest.TestCase):
             'kitteg': {'count': 96, 'avgtemp': 66},
             'kitten': {'count': 4, 'avgtemp': 68},
         })
+
 
 if __name__ == '__main__':
     unittest.main()
