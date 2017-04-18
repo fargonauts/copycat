@@ -26,10 +26,9 @@ def codelet(name):
 
 # some methods common to the codelets
 def __showWhichStringObjectIsFrom(structure):
-    from context import context as ctx
-    workspace = ctx.workspace
     if not structure:
         return
+    workspace = structure.ctx.workspace
     whence = 'other'
     if isinstance(structure, WorkspaceObject):
         whence = 'target'
@@ -38,9 +37,7 @@ def __showWhichStringObjectIsFrom(structure):
     #print 'object chosen = %s from %s string' % (structure, whence)
 
 
-def __getScoutSource(slipnode, relevanceMethod, typeName):
-    from context import context as ctx
-    workspace = ctx.workspace
+def __getScoutSource(workspace, slipnode, relevanceMethod, typeName):
     initialRelevance = relevanceMethod(workspace.initial, slipnode)
     targetRelevance = relevanceMethod(workspace.target, slipnode)
     initialUnhappiness = workspace.initial.intraStringUnhappiness
@@ -79,7 +76,7 @@ def __getDescriptors(bondFacet, source, destination):
 
 
 def __structureVsStructure(structure1, weight1, structure2, weight2):
-    from context import context as ctx
+    ctx = structure1.ctx
     structure1.updateStrength()
     structure2.updateStrength()
     weightedStrength1 = formulas.temperatureAdjustedValue(ctx,
@@ -116,8 +113,7 @@ def __fightIncompatibles(incompatibles, structure, name,
     return True
 
 
-def __slippability(conceptMappings):
-    from context import context as ctx
+def __slippability(ctx, conceptMappings):
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
         probabilityOfSlippage = formulas.temperatureAdjustedProbability(ctx,
@@ -363,9 +359,10 @@ def replacement_finder(ctx, codelet):
 def top_down_bond_scout__category(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    workspace = ctx.workspace
     logging.info('top_down_bond_scout__category')
     category = codelet.arguments[0]
-    source = __getScoutSource(category, formulas.localBondCategoryRelevance,
+    source = __getScoutSource(workspace, category, formulas.localBondCategoryRelevance,
                               'bond')
     destination = chooseNeighbor(source)
     logging.info('source: %s, destination: %s', source, destination)
@@ -394,8 +391,9 @@ def top_down_bond_scout__category(ctx, codelet):
 def top_down_bond_scout__direction(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    workspace = ctx.workspace
     direction = codelet.arguments[0]
-    source = __getScoutSource(
+    source = __getScoutSource(workspace,
         direction, formulas.localDirectionCategoryRelevance, 'bond')
     destination = chooseDirectedNeighbor(source, direction)
     assert destination
@@ -476,10 +474,11 @@ def bond_builder(ctx, codelet):
 def top_down_group_scout__category(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    workspace = ctx.workspace
     groupCategory = codelet.arguments[0]
     category = groupCategory.getRelatedNode(slipnet.bondCategory)
     assert category
-    source = __getScoutSource(category, formulas.localBondCategoryRelevance,
+    source = __getScoutSource(workspace, category, formulas.localBondCategoryRelevance,
                               'group')
     assert source and not source.spansString()
     if source.leftmost:
@@ -560,8 +559,9 @@ def top_down_group_scout__category(ctx, codelet):
 def top_down_group_scout__direction(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
+    workspace = ctx.workspace
     direction = codelet.arguments[0]
-    source = __getScoutSource(direction,
+    source = __getScoutSource(workspace, direction,
                               formulas.localDirectionCategoryRelevance,
                               'direction')
     logging.info('source chosen = %s', source)
@@ -862,7 +862,7 @@ def bottom_up_correspondence_scout(ctx, codelet):
         objectFromInitial, objectFromTarget,
         objectFromInitial.relevantDescriptions(),
         objectFromTarget.relevantDescriptions())
-    assert conceptMappings and __slippability(conceptMappings)
+    assert conceptMappings and __slippability(ctx, conceptMappings)
     #find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
     assert distinguishingMappings
@@ -916,7 +916,7 @@ def important_object_correspondence_scout(ctx, codelet):
         objectFromInitial, objectFromTarget,
         objectFromInitial.relevantDescriptions(),
         objectFromTarget.relevantDescriptions())
-    assert conceptMappings and __slippability(conceptMappings)
+    assert conceptMappings and __slippability(ctx, conceptMappings)
     #find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
     assert distinguishingMappings

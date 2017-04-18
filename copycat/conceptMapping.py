@@ -8,6 +8,7 @@ class ConceptMapping(object):
         # pylint: disable=too-many-arguments
         logging.info('make a map: %s-%s', initialDescriptionType.get_name(),
                      targetDescriptionType.get_name())
+        self.slipnet = initialDescriptionType.slipnet
         self.initialDescriptionType = initialDescriptionType
         self.targetDescriptionType = targetDescriptionType
         self.initialDescriptor = initialDescriptor
@@ -51,8 +52,7 @@ class ConceptMapping(object):
                 self.targetDescriptor.conceptualDepth) / 2.0
 
     def distinguishing(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
+        slipnet = self.slipnet
         if self.initialDescriptor == slipnet.whole:
             if self.targetDescriptor == slipnet.whole:
                 return False
@@ -141,11 +141,8 @@ class ConceptMapping(object):
         return False
 
     def slippage(self):
-        from context import context as ctx
-        slipnet = ctx.slipnet
-        if self.label != slipnet.sameness:
-            return self.label != slipnet.identity
-        return False
+        slipnet = self.slipnet
+        return self.label not in [slipnet.sameness, slipnet.identity]
 
     def symmetricVersion(self):
         if not self.slippage():
