@@ -1,3 +1,5 @@
+import logging
+
 from coderack import Coderack
 from randomness import Randomness
 from slipnet import Slipnet
@@ -5,7 +7,11 @@ from temperature import Temperature
 from workspace import Workspace
 
 
-class CopycatReporter(object):
+class Reporter(object):
+    """Do-nothing base class for defining new reporter types"""
+    def report_answer(self, answer):
+        pass
+
     def report_coderack(self, coderack):
         pass
 
@@ -23,7 +29,7 @@ class Copycat(object):
         self.slipnet = Slipnet()
         self.temperature = Temperature()
         self.workspace = Workspace(self)
-        self.reporter = reporter or CopycatReporter()
+        self.reporter = reporter or Reporter()
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
@@ -56,11 +62,20 @@ class Copycat(object):
             answer = None
         finalTemperature = self.temperature.last_unclamped_value
         finalTime = self.coderack.codeletsRun
-        print 'Answered %s (time %d, final temperature %.1f)' % (answer, finalTime, finalTemperature)
-        answers[answer] = answers.get(answer, {'count': 0, 'tempsum': 0, 'timesum': 0})
-        answers[answer]['count'] += 1
-        answers[answer]['tempsum'] += finalTemperature
-        answers[answer]['timesum'] += finalTime
+        logging.info('Answered %s (time %d, final temperature %.1f)' % (answer, finalTime, finalTemperature))
+        self.reporter.report_answer({
+            'answer': answer,
+            'temp': finalTemperature,
+            'time': finalTime,
+        })
+        d = answers.setdefault(answer, {
+            'count': 0,
+            'sumtemp': 0,
+            'sumtime': 0
+        })
+        d['count'] += 1
+        d['sumtemp'] += finalTemperature
+        d['sumtime'] += finalTime
 
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
@@ -68,6 +83,6 @@ class Copycat(object):
         for i in xrange(iterations):
             self.runTrial(answers)
         for answer, d in answers.iteritems():
-            d['avgtemp'] = d.pop('tempsum') / d['count']
-            d['avgtime'] = d.pop('timesum') / d['count']
+            d['avgtemp'] = d.pop('sumtemp') / d['count']
+            d['avgtime'] = d.pop('sumtime') / d['count']
         return answers

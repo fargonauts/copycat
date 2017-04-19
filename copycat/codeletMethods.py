@@ -35,7 +35,7 @@ def __showWhichStringObjectIsFrom(structure):
         whence = 'target'
         if structure.string == workspace.initial:
             whence = 'initial'
-    #print 'object chosen = %s from %s string' % (structure, whence)
+    logging.info('object chosen = %s from %s string' % (structure, whence))
 
 
 def __getScoutSource(ctx, slipnode, relevanceMethod, typeName):
@@ -740,7 +740,6 @@ def group_builder(ctx, codelet):
     workspace = ctx.workspace
     # update strength value of the group
     group = codelet.arguments[0]
-    #print '%s' % group
     __showWhichStringObjectIsFrom(group)
     equivalent = group.string.equivalentGroup(group)
     if equivalent:
@@ -756,7 +755,6 @@ def group_builder(ctx, codelet):
     if len(group.objectList) > 1:
         previous = group.objectList[0]
         for objekt in group.objectList[1:]:
-            #print 770
             leftBond = objekt.leftBond
             if leftBond:
                 if leftBond.leftObject == previous:
@@ -787,7 +785,6 @@ def group_builder(ctx, codelet):
     # create new bonds
     group.bondList = []
     for i in xrange(1, len(group.objectList)):
-        #print 803
         object1 = group.objectList[i - 1]
         object2 = group.objectList[i]
         if not object1.rightBond:

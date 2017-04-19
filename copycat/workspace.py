@@ -98,15 +98,10 @@ class Workspace(object):
         """A list of all objects in the workspace with >= 1 open bond slots"""
         objects = [o for o in self.objects
                    if o.string == self.initial or o.string == self.target]
-        #print 'A: %d' % len(objects)
         objects = [o for o in objects if not o.spansString()]
-        #print 'B: %d' % len(objects)
         objects = [o for o in objects
                    if (not o.leftBond and not o.leftmost) or
                    (not o.rightBond and not o.rightmost)]
-        #print 'C: %d' % len(objects)
-        #objects = [ o for o in objects if  ]
-        #print 'D: %d' % len(objects)
         return len(objects)
 
     def numberOfUngroupedObjects(self):
@@ -118,14 +113,14 @@ class Workspace(object):
         return len(objects)
 
     def numberOfUnreplacedObjects(self):
-        """A list of all unreplaced objects in the inital string"""
+        """A list of all unreplaced objects in the initial string"""
         objects = [o for o in self.objects
                    if o.string == self.initial and isinstance(o, Letter)]
         objects = [o for o in objects if not o.replacement]
         return len(objects)
 
     def numberOfUncorrespondingObjects(self):
-        """A list of all uncorresponded objects in the inital string"""
+        """A list of all uncorresponded objects in the initial string"""
         objects = [o for o in self.objects
                    if o.string == self.initial or o.string == self.target]
         objects = [o for o in objects if not o.correspondence]
