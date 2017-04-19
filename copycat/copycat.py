@@ -47,42 +47,43 @@ class Copycat(object):
         self.reporter.report_temperature(self.temperature)
         return lastUpdate
 
-    def runTrial(self, answers):
+    def runTrial(self):
         """Run a trial of the copycat algorithm"""
         self.coderack.reset()
         self.slipnet.reset()
         self.temperature.reset()
         self.workspace.reset()
         lastUpdate = float('-inf')
-        while not self.workspace.foundAnswer:
+        while self.workspace.finalAnswer is None:
             lastUpdate = self.mainLoop(lastUpdate)
-        if self.workspace.rule:
-            answer = self.workspace.rule.finalAnswer
-        else:
-            answer = None
-        finalTemperature = self.temperature.last_unclamped_value
-        finalTime = self.coderack.codeletsRun
-        logging.info('Answered %s (time %d, final temperature %.1f)' % (answer, finalTime, finalTemperature))
-        self.reporter.report_answer({
-            'answer': answer,
-            'temp': finalTemperature,
-            'time': finalTime,
-        })
-        d = answers.setdefault(answer, {
-            'count': 0,
-            'sumtemp': 0,
-            'sumtime': 0
-        })
-        d['count'] += 1
-        d['sumtemp'] += finalTemperature
-        d['sumtime'] += finalTime
+        answer = {
+            'answer': self.workspace.finalAnswer,
+            'temp': self.temperature.last_unclamped_value,
+            'time': self.coderack.codeletsRun,
+        }
+        self.reporter.report_answer(answer)
+        return answer
 
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
         for i in xrange(iterations):
-            self.runTrial(answers)
+            answer = self.runTrial()
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtemp': 0,
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtemp'] += answer['temp']
+            d['sumtime'] += answer['time']
+
         for answer, d in answers.iteritems():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
             d['avgtime'] = d.pop('sumtime') / d['count']
         return answers
+
+    def run_forever(self, initial, modified, target):
+        self.workspace.resetWithStrings(initial, modified, target)
+        while True:
+            self.runTrial()

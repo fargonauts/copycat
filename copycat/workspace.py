@@ -32,7 +32,7 @@ class Workspace(object):
         self.reset()
 
     def reset(self):
-        self.foundAnswer = False
+        self.finalAnswer = None
         self.changedObject = None
         self.objects = []
         self.structures = []

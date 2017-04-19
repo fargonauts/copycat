@@ -16,7 +16,7 @@ class Description(WorkspaceStructure):
     def __str__(self):
         s = 'description(%s) of %s' % (self.descriptor.get_name(), self.object)
         workspace = self.ctx.workspace
-        if self.object.string == workspace.initial:
+        if self.object.string == getattr(workspace, 'initial', None):
             s += ' in initial string'
         else:
             s += ' in target string'

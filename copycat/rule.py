@@ -99,9 +99,13 @@ class Rule(WorkspaceStructure):
         # applies the changes to self string ie. successor
         if self.facet == slipnet.length:
             if self.relation == slipnet.predecessor:
-                return string[0:-1]
-            if self.relation == slipnet.successor:
-                return string + string[0:1]
+                return string[:-1]
+            elif self.relation == slipnet.successor:
+                # This seems to be happening at the wrong level of abstraction.
+                # "Lengthening" is not an operation that makes sense on strings;
+                # it makes sense only on *groups*, and here we've lost the
+                # "groupiness" of this string. What gives?
+                return string + string[0]
             return string
         # apply character changes
         if self.relation == slipnet.predecessor:
@@ -123,24 +127,21 @@ class Rule(WorkspaceStructure):
         self.descriptor = self.descriptor.applySlippages(slippages)
         self.relation = self.relation.applySlippages(slippages)
         # generate the final string
-        self.finalAnswer = workspace.targetString
         changeds = [o for o in workspace.target.objects if
                     o.described(self.descriptor) and
                     o.described(self.category)]
-        changed = changeds and changeds[0] or None
-        logging.debug('changed object = %s', changed)
-        if changed:
-            left = changed.leftIndex
-            startString = ''
-            if left > 1:
-                startString = self.finalAnswer[0: left - 1]
+        if len(changeds) == 0:
+            return workspace.targetString
+        elif len(changeds) > 1:
+            logging.info("More than one letter changed. Sorry, I can't solve problems like this right now.")
+            return None
+        else:
+            changed = changeds[0]
+            logging.debug('changed object = %s', changed)
+            left = changed.leftIndex - 1
             right = changed.rightIndex
-            middleString = self.__changeString(
-                self.finalAnswer[left - 1: right])
-            if not middleString:
-                return False
-            endString = ''
-            if right < len(self.finalAnswer):
-                endString = self.finalAnswer[right:]
-            self.finalAnswer = startString + middleString + endString
-        return True
+            s = workspace.targetString
+            changed_middle = self.__changeString(s[left:right])
+            if changed_middle is None:
+                return None
+            return s[:left] + changed_middle + s[right:]

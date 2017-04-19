@@ -854,8 +854,9 @@ def rule_translator(ctx, codelet):
     weights = __getCutoffWeights(bondDensity)
     cutoff = 10.0 * random.weighted_choice(range(1, 11), weights)
     if cutoff >= temperature.actual_value:
-        if workspace.rule.buildTranslatedRule():
-            workspace.foundAnswer = True
+        result = workspace.rule.buildTranslatedRule()
+        if result is not None:
+            workspace.finalAnswer = result
         else:
             temperature.clampUntil(coderack.codeletsRun + 100)
 

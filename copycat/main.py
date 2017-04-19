@@ -1,11 +1,18 @@
 import logging
 import sys
 
-from copycat import Copycat
+from copycat import Copycat, Reporter
+
+
+class SimpleReporter(Reporter):
+    def report_answer(self, answer):
+        print 'Answered %s (time %d, final temperature %.1f)' % (
+            answer['answer'], answer['time'], answer['temp'],
+        )
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARN, format='%(message)s', filename='./copycat.log', filemode='w')
+    logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
 
     try:
         args = sys.argv[1:]
@@ -19,7 +26,7 @@ if __name__ == '__main__':
         print >>sys.stderr, 'Usage: %s initial modified target [iterations]' % sys.argv[0]
         sys.exit(1)
 
-    copycat = Copycat()
+    copycat = Copycat(reporter=SimpleReporter())
     answers = copycat.run(initial, modified, target, iterations)
 
     for answer, d in sorted(answers.iteritems(), key=lambda kv: kv[1]['avgtemp']):

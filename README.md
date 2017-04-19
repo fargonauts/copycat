@@ -14,8 +14,8 @@ J Alan Brogan writes:
 > from [Melanie Mitchell](https://en.wikipedia.org/wiki/Melanie_Mitchell)'s book
 > "[Analogy-Making as Perception](http://www.amazon.com/Analogy-Making-Perception-Computer-Melanie-Mitchell/dp/0262132893/ref=tmm_hrd_title_0?ie=UTF8&qid=1351269085&sr=1-3)".
 
-Cloning the repo
-----------------
+Running the command-line program
+--------------------------------
 
 To clone the repo locally, run these commands:
 
@@ -39,6 +39,25 @@ ppqqrs: 4 (avg time 439.0, avg temp 37.3)
 
 The first number indicates how many times Copycat chose that string as its answer; higher means "more obvious".
 The last number indicates the average final temperature of the workspace; lower means "more elegant".
+
+
+Running the `curses` interface
+------------------------------
+
+Follow the instructions to clone the repo as above, but then run `curses_main` instead of `main`:
+
+```
+$ git clone https://github.com/Quuxplusone/co.py.cat.git
+$ cd co.py.cat/copycat
+$ python curses_main.py abc abd ppqqrr
+```
+
+This script takes only three arguments.
+The first two are a pair of strings with some change, for example "abc" and "abd".
+The third is a string which the script should try to change analogously.
+The number of iterations is always implicitly "infinite".
+To kill the program, hit Ctrl+C.
+
 
 Installing the module
 ---------------------
