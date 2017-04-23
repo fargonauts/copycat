@@ -152,7 +152,6 @@ class Slipnet(object):
         opposites = [
             (self.first, self.last),
             (self.leftmost, self.rightmost),
-            (self.leftmost, self.rightmost),
             (self.left, self.right),
             (self.successor, self.predecessor),
             (self.successorGroup, self.predecessorGroup),
