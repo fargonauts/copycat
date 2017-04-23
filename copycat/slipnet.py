@@ -114,13 +114,10 @@ class Slipnet(object):
 
         # categories
         self.letterCategory = self.__addNode('letterCategory', 30.0)
-        self.stringPositionCategory = self.__addNode(
-            'stringPositionCategory', 70.0)
+        self.stringPositionCategory = self.__addNode('stringPositionCategory', 70.0)
         self.stringPositionCategory.codelets += ['top-down-description-scout']
-        self.alphabeticPositionCategory = self.__addNode(
-            'alphabeticPositionCategory', 80.0)
-        self.alphabeticPositionCategory.codelets += [
-            'top-down-description-scout']
+        self.alphabeticPositionCategory = self.__addNode('alphabeticPositionCategory', 80.0)
+        self.alphabeticPositionCategory.codelets += ['top-down-description-scout']
         self.directionCategory = self.__addNode('directionCategory', 70.0)
         self.bondCategory = self.__addNode('bondCategory', 80.0)
         self.groupCategory = self.__addNode('groupCategory', 80.0)
@@ -149,14 +146,17 @@ class Slipnet(object):
         # lengths
         for number in self.numbers:
             self.__addInstanceLink(self.length, number)
-        groups = [self.predecessorGroup, self.successorGroup,
-                  self.samenessGroup]
+        groups = [self.predecessorGroup, self.successorGroup, self.samenessGroup]
         for group in groups:
             self.__addNonSlipLink(group, self.length, length=95.0)
-        opposites = [(self.first, self.last), (self.leftmost, self.rightmost),
-                     (self.leftmost, self.rightmost), (self.left, self.right),
-                     (self.successor, self.predecessor),
-                     (self.successorGroup, self.predecessorGroup)]
+        opposites = [
+            (self.first, self.last),
+            (self.leftmost, self.rightmost),
+            (self.leftmost, self.rightmost),
+            (self.left, self.right),
+            (self.successor, self.predecessor),
+            (self.successorGroup, self.predecessorGroup),
+        ]
         for a, b in opposites:
             self.__addOppositeLink(a, b)
         # properties
@@ -188,24 +188,18 @@ class Slipnet(object):
             (self.groupCategory, self.samenessGroup),
             # bond facets
             (self.bondFacet, self.letterCategory),
-            (self.bondFacet, self.length)]
+            (self.bondFacet, self.length),
+        ]
         for a, b in links:
             self.__addInstanceLink(a, b)
         # link bonds to their groups
-        self.__addNonSlipLink(
-            self.sameness, self.samenessGroup, label=self.groupCategory,
-            length=30.0)
-        self.__addNonSlipLink(self.successor, self.successorGroup,
-                              label=self.groupCategory, length=60.0)
-        self.__addNonSlipLink(self.predecessor, self.predecessorGroup,
-                              label=self.groupCategory, length=60.0)
+        self.__addNonSlipLink(self.sameness, self.samenessGroup, label=self.groupCategory, length=30.0)
+        self.__addNonSlipLink(self.successor, self.successorGroup, label=self.groupCategory, length=60.0)
+        self.__addNonSlipLink(self.predecessor, self.predecessorGroup, label=self.groupCategory, length=60.0)
         # link bond groups to their bonds
-        self.__addNonSlipLink(self.samenessGroup, self.sameness,
-                              label=self.bondCategory, length=90.0)
-        self.__addNonSlipLink(self.successorGroup, self.successor,
-                              label=self.bondCategory, length=90.0)
-        self.__addNonSlipLink(self.predecessorGroup, self.predecessor,
-                              label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.samenessGroup, self.sameness, label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.successorGroup, self.successor, label=self.bondCategory, length=90.0)
+        self.__addNonSlipLink(self.predecessorGroup, self.predecessor, label=self.bondCategory, length=90.0)
         # letter category to length
         self.__addSlipLink(self.letterCategory, self.length, length=95.0)
         self.__addSlipLink(self.length, self.letterCategory, length=95.0)
