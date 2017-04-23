@@ -2,14 +2,13 @@
 
 from setuptools import setup
 
-readme = open('README.md').read()
-requirements = [l.strip() for l in open('requirements.txt').readlines()]
-
 setup(
     name='copycat',
     version='0.0.1',
     packages=['copycat'],
-    install_requires=[l.strip() for l in open('requirements.txt').readlines()],
+    install_requires=[
+        # pip requirements go here; at the moment there are none
+    ],
     package_data={'': ['LICENSE']},
 
     # metadata for upload to PyPI
