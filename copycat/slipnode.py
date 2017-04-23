@@ -12,14 +12,12 @@ class Slipnode(object):
         self.slipnet = slipnet
         self.name = name
         self.conceptualDepth = depth
-        self.usualConceptualDepth = depth
         self.intrinsicLinkLength = length
         self.shrunkLinkLength = length * 0.4
 
         self.activation = 0.0
         self.buffer = 0.0
         self.clamped = False
-        self.bondFacetFactor = 0.0
         self.categoryLinks = []
         self.instanceLinks = []
         self.propertyLinks = []
@@ -28,7 +26,6 @@ class Slipnode(object):
         self.incomingLinks = []
         self.outgoingLinks = []
         self.codelets = []
-        self.clampBondDegreeOfAssociation = False
 
     def __repr__(self):
         return '<Slipnode: %s>' % self.name
@@ -64,7 +61,7 @@ class Slipnode(object):
 
     def bondDegreeOfAssociation(self):
         linkLength = self.intrinsicLinkLength
-        if (not self.clampBondDegreeOfAssociation) and self.fully_active():
+        if self.fully_active():
             linkLength = self.shrunkLinkLength
         result = math.sqrt(100 - linkLength) * 11.0
         return min(100.0, result)

@@ -8,13 +8,13 @@ class Slipnet(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(self):
         logging.debug("Slipnet.__init__()")
-        self.initiallyClampedSlipnodes = []
         self.slipnodes = []
         self.sliplinks = []
         self.bondFacets = []
         self.numberOfUpdates = 0
         self.__addInitialNodes()
         self.__addInitialLinks()
+        self.reset()
 
     def __repr__(self):
         return '<slipnet>'
@@ -129,11 +129,11 @@ class Slipnet(object):
         self.bondFacets += [self.letterCategory]
         self.bondFacets += [self.length]
 
-        #
-        self.initiallyClampedSlipnodes += [self.letterCategory]
-        self.letterCategory.clamped = True
-        self.initiallyClampedSlipnodes += [self.stringPositionCategory]
-        self.stringPositionCategory.clamped = True
+        # some factors are considered "very relevant" a priori
+        self.initiallyClampedSlipnodes = [
+            self.letterCategory,
+            self.stringPositionCategory,
+        ]
 
     def __addInitialLinks(self):
         self.sliplinks = []
