@@ -1,3 +1,4 @@
+import argparse
 import logging
 import sys
 
@@ -14,20 +15,16 @@ class SimpleReporter(Reporter):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
 
-    try:
-        args = sys.argv[1:]
-        if len(args) == 4:
-            initial, modified, target = args[:-1]
-            iterations = int(args[-1])
-        else:
-            initial, modified, target = args
-            iterations = 1
-    except ValueError:
-        print >>sys.stderr, 'Usage: %s initial modified target [iterations]' % sys.argv[0]
-        sys.exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
+    parser.add_argument('--iterations', type=int, default=1, help='Run the given case this many times.')
+    parser.add_argument('initial', type=str, help='A...')
+    parser.add_argument('modified', type=str, help='...is to B...')
+    parser.add_argument('target', type=str, help='...as C is to... what?')
+    options = parser.parse_args()
 
-    copycat = Copycat(reporter=SimpleReporter())
-    answers = copycat.run(initial, modified, target, iterations)
+    copycat = Copycat(reporter=SimpleReporter(), rng_seed=options.seed)
+    answers = copycat.run(options.initial, options.modified, options.target, options.iterations)
 
     for answer, d in sorted(answers.iteritems(), key=lambda kv: kv[1]['avgtemp']):
         print '%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp'])
