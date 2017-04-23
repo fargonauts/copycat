@@ -1,6 +1,7 @@
 import curses
 from copycat import Reporter
 
+
 class CursesReporter(Reporter):
     def __init__(self, window):
         curses.curs_set(0)  # hide the cursor
@@ -98,7 +99,40 @@ class CursesReporter(Reporter):
         w.refresh()
 
     def report_slipnet(self, slipnet):
-        pass
+        w = self.slipnetWindow
+        pageHeight, pageWidth = w.getmaxyx()
+        w.erase()
+        w.addstr(1, 2, 'Total: %d slipnodes and %d sliplinks' % (
+            len(slipnet.slipnodes),
+            len(slipnet.sliplinks),
+        ))
+
+        def name_and_attr(node):
+            if node.activation == 100:
+                return (node.name.upper(), curses.A_STANDOUT)
+            if node.activation > 50:
+                return (node.name.upper(), curses.A_BOLD)
+            else:
+                return (node.name.lower(), curses.A_NORMAL)
+
+        for c, node in enumerate(slipnet.letters):
+            s, attr = name_and_attr(node)
+            w.addstr(2, 2 * c + 2, s, attr)
+        for c, node in enumerate(slipnet.numbers):
+            s, attr = name_and_attr(node)
+            w.addstr(3, 2 * c + 2, s, attr)
+        row = 4
+        column = 2
+        for node in slipnet.slipnodes:
+            if node not in slipnet.letters + slipnet.numbers:
+                s, attr = name_and_attr(node)
+                if column + len(s) > pageWidth - 1:
+                    row += 1
+                    column = 2
+                w.addstr(row, column, s, attr)
+                column += len(s) + 1
+        w.border()
+        w.refresh()
 
     def report_temperature(self, temperature):
         height = self.temperatureWindow.getmaxyx()[0]
