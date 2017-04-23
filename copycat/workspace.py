@@ -23,7 +23,8 @@ class Workspace(object):
 
     def __repr__(self):
         return '<Workspace trying %s:%s::%s:?>' % (
-            self.initialString, self.modifiedString, self.targetString)
+            self.initialString, self.modifiedString, self.targetString,
+        )
 
     def resetWithStrings(self, initial, modified, target):
         self.targetString = target
@@ -136,11 +137,10 @@ class Workspace(object):
     def slippages(self):
         result = []
         if self.changedObject and self.changedObject.correspondence:
-            result = [m for m in
-                      self.changedObject.correspondence.conceptMappings]
-        for objekt in self.initial.objects:
-            if objekt.correspondence:
-                for mapping in objekt.correspondence.slippages():
+            result = self.changedObject.correspondence.conceptMappings[:]
+        for o in self.initial.objects:
+            if o.correspondence:
+                for mapping in o.correspondence.slippages():
                     if not mapping.isNearlyContainedBy(result):
                         result += [mapping]
         return result

@@ -30,17 +30,20 @@ class Bond(WorkspaceStructure):
 
     def flippedVersion(self):
         slipnet = self.ctx.slipnet
-        return Bond(self.ctx,
+        return Bond(
+            self.ctx,
             self.destination, self.source,
             self.category.getRelatedNode(slipnet.opposite),
-            self.facet, self.destinationDescriptor, self.sourceDescriptor)
+            self.facet, self.destinationDescriptor, self.sourceDescriptor
+        )
 
     def __repr__(self):
         return '<Bond: %s>' % self.__str__()
 
     def __str__(self):
         return '%s bond between %s and %s' % (
-            self.category.name, self.leftObject, self.rightObject)
+            self.category.name, self.leftObject, self.rightObject,
+        )
 
     def buildBond(self):
         workspace = self.ctx.workspace
@@ -82,9 +85,10 @@ class Bond(WorkspaceStructure):
             else:
                 objekt = self.leftObject.correspondence.objectFromInitial
             if objekt.leftmost and objekt.rightBond:
-                if  (objekt.rightBond.directionCategory and
-                     objekt.rightBond.directionCategory !=
-                     self.directionCategory):
+                if (
+                    objekt.rightBond.directionCategory and
+                    objekt.rightBond.directionCategory != self.directionCategory
+                ):
                     incompatibles += [correspondence]
         if self.rightObject.rightmost and self.rightObject.correspondence:
             correspondence = self.rightObject.correspondence
@@ -93,9 +97,10 @@ class Bond(WorkspaceStructure):
             else:
                 objekt = self.rightObject.correspondence.objectFromInitial
             if objekt.rightmost and objekt.leftBond:
-                if  (objekt.leftBond.directionCategory and
-                     objekt.leftBond.directionCategory !=
-                     self.directionCategory):
+                if (
+                    objekt.leftBond.directionCategory and
+                    objekt.leftBond.directionCategory != self.directionCategory
+                ):
                     incompatibles += [correspondence]
         return incompatibles
 
@@ -160,9 +165,11 @@ class Bond(WorkspaceStructure):
                     if object1.beside(object2):
                         slotSum += 1.0
                         for bond in self.string.bonds:
-                            if  (bond != self and
-                                 self.sameCategories(bond) and
-                                 self.myEnds(object1, object2)):
+                            if (
+                                bond != self and
+                                self.sameCategories(bond) and
+                                self.myEnds(object1, object2)
+                            ):
                                 supportSum += 1.0
         try:
             return 100.0 * supportSum / slotSum
@@ -185,20 +192,23 @@ def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
     result = []
     for bond in bonds:
         slipnet = bond.ctx.slipnet
-        if  (bond.category == bondCategory and
-             bond.directionCategory == directionCategory):
+        if (
+            bond.category == bondCategory and
+            bond.directionCategory == directionCategory
+        ):
             result += [bond]
         else:
             # a modified bond might be made
-            if bondCategory == slipnet.sameness:
+            if bond.category == bondCategory:
                 return None  # a different bond cannot be made here
-            if  (bond.category == bondCategory or
-                 bond.directionCategory == directionCategory):
+            if bond.directionCategory == directionCategory:
                 return None  # a different bond cannot be made here
-            if bond.category == slipnet.sameness:
+            if slipnet.sameness in [bondCategory, bond.category]:
                 return None
-            bond = Bond(bond.ctx, bond.destination, bond.source, bondCategory,
-                        bondFacet, bond.destinationDescriptor,
-                        bond.sourceDescriptor)
+            bond = Bond(
+                bond.ctx, bond.destination, bond.source, bondCategory,
+                bondFacet, bond.destinationDescriptor,
+                bond.sourceDescriptor
+            )
             result += [bond]
     return result

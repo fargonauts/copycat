@@ -356,17 +356,18 @@ def replacement_finder(ctx, codelet):
     position = letterOfInitialString.leftIndex
     moreLetters = [o for o in workspace.modified.objects
                    if isinstance(o, Letter) and o.leftIndex == position]
-    letterOfModifiedString = moreLetters and moreLetters[0] or None
-    assert letterOfModifiedString
-    position -= 1
-    initialAscii = ord(workspace.initialString[position])
-    modifiedAscii = ord(workspace.modifiedString[position])
+    if not moreLetters:
+        return
+    letterOfModifiedString = moreLetters[0]
+    initialAscii = ord(workspace.initialString[position - 1])
+    modifiedAscii = ord(workspace.modifiedString[position - 1])
     diff = initialAscii - modifiedAscii
     if abs(diff) < 2:
         relations = {
             0: slipnet.sameness,
             -1: slipnet.successor,
-            1: slipnet.predecessor}
+            1: slipnet.predecessor
+        }
         relation = relations[diff]
         logging.info('Relation found: %s', relation.name)
     else:

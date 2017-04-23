@@ -1,5 +1,6 @@
 import logging
 
+
 def __chooseObjectFromList(ctx, objects, attribute):
     random = ctx.random
     temperature = ctx.temperature

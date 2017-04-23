@@ -22,7 +22,7 @@ class ConceptMapping(object):
             self.__str__(), self.initialDescriptor, self.targetDescriptor)
 
     def __str__(self):
-        return self.label and self.label.name or 'anonymous'
+        return self.label.name if self.label else 'anonymous'
 
     def slippability(self):
         association = self.__degreeOfAssociation()
@@ -125,9 +125,8 @@ class ConceptMapping(object):
         # means that letter->group supports letter->group, even though these
         # concept-mappings have no label.
 
-        if self.initialDescriptor == other.initialDescriptor:
-            if self.targetDescriptor == other.targetDescriptor:
-                return True
+        if self.sameDescriptors(other):
+            return True
         # if the descriptors are not related return false
         if not self.related(other):
             return False

@@ -7,22 +7,9 @@ from sliplink import Sliplink
 class Slipnet(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(self):
-        logging.debug("Slipnet.__init__()")
-        self.slipnodes = []
-        self.sliplinks = []
-        self.bondFacets = []
-        self.numberOfUpdates = 0
         self.__addInitialNodes()
         self.__addInitialLinks()
         self.reset()
-
-    def __repr__(self):
-        return '<slipnet>'
-
-    def setConceptualDepths(self, depth):
-        logging.debug('slipnet set all depths to %f', depth)
-        for node in self.slipnodes:
-            node.setConceptualDepth(depth)
 
     def reset(self):
         logging.debug('slipnet.reset()')
@@ -126,8 +113,10 @@ class Slipnet(object):
         self.bondFacet = self.__addNode('bondFacet', 90.0)
 
         # specify the descriptor types that bonds can form between
-        self.bondFacets += [self.letterCategory]
-        self.bondFacets += [self.length]
+        self.bondFacets = [
+            self.letterCategory,
+            self.length,
+        ]
 
         # some factors are considered "very relevant" a priori
         self.initiallyClampedSlipnodes = [

@@ -1,5 +1,3 @@
-import logging
-
 from coderack import Coderack
 from randomness import Randomness
 from slipnet import Slipnet

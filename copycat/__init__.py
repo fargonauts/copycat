@@ -1,1 +1,1 @@
-from copycat import Copycat
+from copycat import Copycat  # noqa

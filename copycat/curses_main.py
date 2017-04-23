@@ -1,7 +1,6 @@
 import argparse
 import curses
 import logging
-import sys
 
 from copycat import Copycat
 from curses_reporter import CursesReporter
