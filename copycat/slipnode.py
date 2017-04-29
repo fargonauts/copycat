@@ -72,11 +72,6 @@ class Slipnode(object):
             linkLength = self.shrunkLinkLength
         return 100.0 - linkLength
 
-    def update(self):
-        act = self.activation
-        self.oldActivation = act
-        self.buffer -= self.activation * (100.0 - self.conceptualDepth) / 100.0
-
     def linked(self, other):
         """Whether the other is among the outgoing links"""
         return any(l.points_at(other) for l in self.outgoingLinks)
@@ -129,6 +124,10 @@ class Slipnode(object):
             logging.info('Got no bond')
         return result
 
+    def update(self):
+        self.oldActivation = self.activation
+        self.buffer -= self.activation * (100.0 - self.conceptualDepth) / 100.0
+
     def spread_activation(self):
         if self.fully_active():
             for link in self.outgoingLinks:
@@ -140,9 +139,7 @@ class Slipnode(object):
         self.activation = min(max(0, self.activation), 100)
 
     def jump(self, random):
-        if self.activation <= jump_threshold():
-            return
-        if self.clamped:
+        if self.clamped or self.activation <= jump_threshold():
             return
         value = (self.activation / 100.0) ** 3
         if random.coinFlip(value):

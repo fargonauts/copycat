@@ -14,21 +14,16 @@ class WorkspaceString(object):
         self.letters = []
         self.length = len(s)
         self.intraStringUnhappiness = 0.0
-        if not self.length:
-            return
-        position = 0
 
-        for c in self.string.upper():
+        for position, c in enumerate(self.string.upper(), 1):
             value = ord(c) - ord('A')
-            letter = Letter(self, position + 1, self.length)
+            letter = Letter(self, position, self.length)
             letter.workspaceString = self
             letter.addDescription(slipnet.objectCategory, slipnet.letter)
-            letter.addDescription(slipnet.letterCategory,
-                                  slipnet.letters[value])
-            letter.describe(position + 1, self.length)
+            letter.addDescription(slipnet.letterCategory, slipnet.letters[value])
+            letter.describe(position, self.length)
             workspace.buildDescriptions(letter)
             self.letters += [letter]
-            position += 1
 
     def __repr__(self):
         return '<WorkspaceString: %s>' % self.string

@@ -196,9 +196,8 @@ class Coderack(object):
         rule = Rule(self.ctx, facet, description, category, relation)
         rule.updateStrength()
         if description and relation:
-            depths = description.conceptualDepth + relation.conceptualDepth
-            depths /= 200.0
-            urgency = math.sqrt(depths) * 100.0
+            averageDepth = (description.conceptualDepth + relation.conceptualDepth) / 2.0
+            urgency = 100.0 * math.sqrt(averageDepth / 100.0)
         else:
             urgency = 0
         self.newCodelet('rule-strength-tester', urgency, [rule])
