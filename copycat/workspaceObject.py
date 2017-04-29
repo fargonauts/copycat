@@ -1,5 +1,3 @@
-import logging
-
 from description import Description
 from formulas import weightedAverage
 from workspaceStructure import WorkspaceStructure
@@ -11,19 +9,14 @@ class WorkspaceObject(WorkspaceStructure):
         WorkspaceStructure.__init__(self, workspaceString.ctx)
         self.string = workspaceString
         self.descriptions = []
-        self.extrinsicDescriptions = []
-        self.incomingBonds = []
-        self.outgoingBonds = []
         self.bonds = []
         self.group = None
-        self.changed = None
+        self.changed = False
         self.correspondence = None
-        self.clampSalience = False
         self.rawImportance = 0.0
         self.relativeImportance = 0.0
         self.leftBond = None
         self.rightBond = None
-        self.newAnswerLetter = False
         self.name = ''
         self.replacement = None
         self.rightIndex = 0
@@ -45,19 +38,15 @@ class WorkspaceObject(WorkspaceStructure):
 
     def addDescription(self, descriptionType, descriptor):
         description = Description(self, descriptionType, descriptor)
-        logging.info("Adding description: %s to %s", description, self)
         self.descriptions += [description]
 
     def addDescriptions(self, descriptions):
         workspace = self.ctx.workspace
         copy = descriptions[:]  # in case we add to our own descriptions
         for description in copy:
-            logging.info('might add: %s', description)
             if not self.containsDescription(description):
                 self.addDescription(description.descriptionType,
                                     description.descriptor)
-            else:
-                logging.info("Won't add it")
         workspace.buildDescriptions(self)
 
     def __calculateIntraStringHappiness(self):
@@ -97,25 +86,23 @@ class WorkspaceObject(WorkspaceStructure):
         averageHappiness = (intraStringHappiness + interStringHappiness) / 2
         self.totalUnhappiness = 100.0 - averageHappiness
 
-        if self.clampSalience:
-            self.intraStringSalience = 100.0
-            self.interStringSalience = 100.0
-        else:
-            self.intraStringSalience = weightedAverage((
-                (self.relativeImportance, 0.2),
-                (self.intraStringUnhappiness, 0.8)))
-            self.interStringSalience = weightedAverage((
-                (self.relativeImportance, 0.8),
-                (self.interStringUnhappiness, 0.2)))
-        self.totalSalience = (self.intraStringSalience +
-                              self.interStringSalience) / 2.0
-        logging.info('Set salience of %s to %f = (%f + %f)/2',
-                     self.__str__(), self.totalSalience,
-                     self.intraStringSalience, self.interStringSalience)
+        self.intraStringSalience = weightedAverage((
+            (self.relativeImportance, 0.2),
+            (self.intraStringUnhappiness, 0.8)
+        ))
+        self.interStringSalience = weightedAverage((
+            (self.relativeImportance, 0.8),
+            (self.interStringUnhappiness, 0.2)
+        ))
+        self.totalSalience = (self.intraStringSalience + self.interStringSalience) / 2.0
 
     def isWithin(self, other):
         return (self.leftIndex >= other.leftIndex and
                 self.rightIndex <= other.rightIndex)
+
+    def isOutsideOf(self, other):
+        return (self.leftIndex > other.rightIndex or
+                self.rightIndex < other.leftIndex)
 
     def relevantDescriptions(self):
         return [d for d in self.descriptions
@@ -124,7 +111,6 @@ class WorkspaceObject(WorkspaceStructure):
     def getPossibleDescriptions(self, descriptionType):
         from group import Group  # gross, TODO FIXME
         slipnet = self.ctx.slipnet
-        logging.info('getting possible descriptions for %s', self)
         descriptions = []
         for link in descriptionType.instanceLinks:
             node = link.destination
@@ -138,10 +124,6 @@ class WorkspaceObject(WorkspaceStructure):
                         descriptions += [node]
             if node == slipnet.middle and self.middleObject():
                 descriptions += [node]
-        s = ''
-        for d in descriptions:
-            s = '%s, %s' % (s, d.get_name())
-        logging.info(s)
         return descriptions
 
     def containsDescription(self, sought):
@@ -179,10 +161,7 @@ class WorkspaceObject(WorkspaceStructure):
 
     def getDescriptor(self, descriptionType):
         """The description attached to this object of the description type."""
-        logging.info("\nIn %s, trying for type: %s",
-                     self, descriptionType.get_name())
         for description in self.descriptions:
-            logging.info("Trying description: %s", description)
             if description.descriptionType == descriptionType:
                 return description.descriptor
         return None

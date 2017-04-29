@@ -1,4 +1,3 @@
-import logging
 from group import Group
 from letter import Letter
 
@@ -32,19 +31,6 @@ class WorkspaceString(object):
         return '%s with %d letters, %d objects, %d bonds' % (
             self.string, len(self.letters), len(self.objects), len(self.bonds))
 
-    def log(self, heading):
-        s = '%s: %s - ' % (heading, self)
-        for l in self.letters:
-            s += ' %s' % l
-        s += '; '
-        for o in self.objects:
-            s += ' %s' % o
-        s += '; '
-        for b in self.bonds:
-            s += ' %s' % b
-        s += '.'
-        logging.info(s)
-
     def __len__(self):
         return len(self.string)
 
@@ -59,9 +45,6 @@ class WorkspaceString(object):
                 o.relativeImportance = 0.0
         else:
             for o in self.objects:
-                logging.info('object: %s, relative: %d = raw: %d / total: %d',
-                             o, o.relativeImportance * 1000, o.rawImportance,
-                             total)
                 o.relativeImportance = o.rawImportance / total
 
     def updateIntraStringUnhappiness(self):

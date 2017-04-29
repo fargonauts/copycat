@@ -1,5 +1,3 @@
-import logging
-
 from description import Description
 from workspaceObject import WorkspaceObject
 import formulas
@@ -29,16 +27,6 @@ class Group(WorkspaceObject):
 
         self.descriptions = []
         self.bondDescriptions = []
-        self.extrinsicDescriptions = []
-        self.outgoingBonds = []
-        self.incomingBonds = []
-        self.bonds = []
-        self.leftBond = None
-        self.rightBond = None
-        self.correspondence = None
-        self.changed = False
-        self.newAnswerLetter = False
-        self.clampSalience = False
         self.name = ''
 
         if self.bondList and len(self.bondList):
@@ -55,31 +43,26 @@ class Group(WorkspaceObject):
             letter = self.objectList[0].getDescriptor(self.facet)
             self.addDescription(self.facet, letter)
         if self.directionCategory:
-            self.addDescription(slipnet.directionCategory,
-                                self.directionCategory)
+            self.addDescription(slipnet.directionCategory, self.directionCategory)
         if self.spansString():
             self.addDescription(slipnet.stringPositionCategory, slipnet.whole)
-        elif self.leftIndex == 1:
-            self.addDescription(
-                slipnet.stringPositionCategory, slipnet.leftmost)
-        elif self.rightIndex == self.string.length:
-            self.addDescription(
-                slipnet.stringPositionCategory, slipnet.rightmost)
+        elif self.leftmost:
+            self.addDescription(slipnet.stringPositionCategory, slipnet.leftmost)
+        elif self.rightmost:
+            self.addDescription(slipnet.stringPositionCategory, slipnet.rightmost)
         elif self.middleObject():
-            self.addDescription(
-                slipnet.stringPositionCategory, slipnet.middle)
+            self.addDescription(slipnet.stringPositionCategory, slipnet.middle)
         self.add_length_description_category()
 
     def add_length_description_category(self):
-        #check whether or not to add length description category
+        # check whether or not to add length description category
         random = self.ctx.random
         slipnet = self.ctx.slipnet
         probability = self.lengthDescriptionProbability()
         if random.coinFlip(probability):
             length = len(self.objectList)
             if length < 6:
-                self.addDescription(slipnet.length,
-                                    slipnet.numbers[length - 1])
+                self.addDescription(slipnet.length, slipnet.numbers[length - 1])
 
     def __str__(self):
         s = self.string.__str__()
@@ -136,7 +119,6 @@ class Group(WorkspaceObject):
 
     def activateDescriptions(self):
         for description in self.descriptions:
-            logging.info('Activate: %s', description)
             description.descriptor.buffer = 100.0
 
     def lengthDescriptionProbability(self):
@@ -150,7 +132,7 @@ class Group(WorkspaceObject):
         probability = 0.5 ** fred
         value = temperature.getAdjustedProbability(probability)
         if value < 0.06:
-            value = 0.0  # otherwise 1/20 chance always
+            value = 0.0
         return value
 
     def break_the_structure(self):
@@ -214,12 +196,10 @@ class Group(WorkspaceObject):
     def numberOfLocalSupportingGroups(self):
         count = 0
         for objekt in self.string.objects:
-            if isinstance(objekt, Group):
-                if  (objekt.rightIndex < self.leftIndex or
-                     objekt.leftIndex > self.rightIndex):
-                    if  (objekt.groupCategory == self.groupCategory and
-                         objekt.directionCategory == self.directionCategory):
-                        count += 1
+            if isinstance(objekt, Group) and self.isOutsideOf(objekt):
+                if (objekt.groupCategory == self.groupCategory and
+                        objekt.directionCategory == self.directionCategory):
+                    count += 1
         return count
 
     def localDensity(self):

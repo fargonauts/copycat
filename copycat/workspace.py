@@ -1,5 +1,3 @@
-import logging
-
 import formulas
 from bond import Bond
 from correspondence import Correspondence
@@ -59,21 +57,24 @@ class Workspace(object):
         self.calculateTotalUnhappiness()
 
     def calculateIntraStringUnhappiness(self):
-        value = sum(o.relativeImportance * o.intraStringUnhappiness
-                  for o in self.objects) / 2.0
+        value = sum(
+            o.relativeImportance * o.intraStringUnhappiness
+            for o in self.objects
+        ) / 2.0
         self.intraStringUnhappiness = min(value, 100.0)
 
     def calculateInterStringUnhappiness(self):
-        value = sum(o.relativeImportance * o.interStringUnhappiness
-                  for o in self.objects) / 2.0
+        value = sum(
+            o.relativeImportance * o.interStringUnhappiness
+            for o in self.objects
+        ) / 2.0
         self.interStringUnhappiness = min(value, 100.0)
 
     def calculateTotalUnhappiness(self):
-        for o in self.objects:
-            logging.info("%s, totalUnhappiness: %d, relativeImportance: %d",
-                         o, o.totalUnhappiness, o.relativeImportance * 1000)
-        value = sum(o.relativeImportance * o.totalUnhappiness
-                  for o in self.objects) / 2.0
+        value = sum(
+            o.relativeImportance * o.totalUnhappiness
+            for o in self.objects
+        ) / 2.0
         self.totalUnhappiness = min(value, 100.0)
 
     def updateEverything(self):

@@ -1,13 +1,7 @@
-import logging
-
-
 class ConceptMapping(object):
     def __init__(self, initialDescriptionType, targetDescriptionType,
                  initialDescriptor, targetDescriptor,
                  initialObject, targetObject):
-        # pylint: disable=too-many-arguments
-        logging.info('make a map: %s-%s', initialDescriptionType.get_name(),
-                     targetDescriptionType.get_name())
         self.slipnet = initialDescriptionType.slipnet
         self.initialDescriptionType = initialDescriptionType
         self.targetDescriptionType = targetDescriptionType

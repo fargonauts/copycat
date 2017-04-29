@@ -133,10 +133,8 @@ class Coderack(object):
         random = self.ctx.random
         slipnet = self.ctx.slipnet
         for node in slipnet.slipnodes:
-            #logging.info('Trying slipnode: %s' % node.get_name())
             if node.activation != 100.0:
                 continue
-            #logging.info('using slipnode: %s' % node.get_name())
             for codeletName in node.codelets:
                 probability = self.probabilityOfPosting(codeletName)
                 howMany = self.howManyToPost(codeletName)
@@ -181,7 +179,6 @@ class Coderack(object):
         self.codelets.remove(codelet)
 
     def newCodelet(self, name, strength, arguments):
-        #logging.debug('Posting new codelet called %s' % name)
         urgency = getUrgencyBin(strength)
         newCodelet = Codelet(name, urgency, arguments, self.codeletsRun)
         self.post(newCodelet)

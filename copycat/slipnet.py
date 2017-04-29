@@ -1,5 +1,3 @@
-import logging
-
 from slipnode import Slipnode
 from sliplink import Sliplink
 
@@ -12,7 +10,6 @@ class Slipnet(object):
         self.reset()
 
     def reset(self):
-        logging.debug('slipnet.reset()')
         self.numberOfUpdates = 0
         for node in self.slipnodes:
             node.reset()
@@ -20,7 +17,6 @@ class Slipnet(object):
             node.clampHigh()
 
     def update(self, random):
-        logging.debug('slipnet.update()')
         self.numberOfUpdates += 1
         if self.numberOfUpdates == 50:
             for node in self.initiallyClampedSlipnodes:

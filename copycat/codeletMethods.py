@@ -311,7 +311,7 @@ def rule_scout(ctx, codelet):
         for node in objectList
     ]
     descriptor = random.weighted_choice(objectList, weights)
-    # choose the relation (change the letmost object to "successor" or "d"
+    # choose the relation (change the leftmost object to "successor" or "d"
     objectList = []
     if changed.replacement.relation:
         objectList += [changed.replacement.relation]
@@ -878,7 +878,7 @@ def bottom_up_correspondence_scout(ctx, codelet):
         objectFromInitial.relevantDescriptions(),
         objectFromTarget.relevantDescriptions())
     assert conceptMappings and __slippability(ctx, conceptMappings)
-    #find out if any are distinguishing
+    # find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
     assert distinguishingMappings
     # if both objects span the strings, check to see if the
@@ -936,7 +936,7 @@ def important_object_correspondence_scout(ctx, codelet):
         objectFromInitial.relevantDescriptions(),
         objectFromTarget.relevantDescriptions())
     assert conceptMappings and __slippability(ctx, conceptMappings)
-    #find out if any are distinguishing
+    # find out if any are distinguishing
     distinguishingMappings = [m for m in conceptMappings if m.distinguishing()]
     assert distinguishingMappings
     # if both objects span the strings, check to see if the

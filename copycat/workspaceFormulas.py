@@ -1,5 +1,3 @@
-import logging
-
 
 def __chooseObjectFromList(ctx, objects, attribute):
     random = ctx.random
@@ -16,8 +14,6 @@ def __chooseObjectFromList(ctx, objects, attribute):
 def chooseUnmodifiedObject(ctx, attribute, inObjects):
     workspace = ctx.workspace
     objects = [o for o in inObjects if o.string != workspace.modified]
-    if not objects:
-        logging.warning('no objects available in initial or target strings')
     return __chooseObjectFromList(ctx, objects, attribute)
 
 

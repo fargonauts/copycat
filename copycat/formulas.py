@@ -21,11 +21,10 @@ def __relevantDirection(objekt, slipnode):
 
 
 def __localRelevance(string, slipnode, relevance):
-    numberOfObjectsNotSpanning = numberOfMatches = 0.0
-    #logging.info("find relevance for a string: %s" % string);
+    numberOfObjectsNotSpanning = 0.0
+    numberOfMatches = 0.0
     for objekt in string.objects:
         if not objekt.spansString():
-            #logging.info('non spanner: %s' % objekt)
             numberOfObjectsNotSpanning += 1.0
             if relevance(objekt, slipnode):
                 numberOfMatches += 1.0
