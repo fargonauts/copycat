@@ -136,12 +136,14 @@ class Bond(WorkspaceStructure):
             self.externalStrength = strength
 
     def numberOfLocalSupportingBonds(self):
-        return len([b for b in self.string.bonds if
-                    b.string == self.source.string and
-                    self.leftObject.letterDistance(b.leftObject) != 0 and
-                    self.rightObject.letterDistance(b.rightObject) != 0 and
-                    self.category == b.category and
-                    self.directionCategory == b.directionCategory])
+        return sum(
+            1 for b in self.string.bonds if
+            b.string == self.source.string and
+            self.leftObject.letterDistance(b.leftObject) != 0 and
+            self.rightObject.letterDistance(b.rightObject) != 0 and
+            self.category == b.category and
+            self.directionCategory == b.directionCategory
+        )
 
     def sameCategories(self, other):
         return (self.category == other.category and

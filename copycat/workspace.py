@@ -51,11 +51,6 @@ class Workspace(object):
             o.relativeImportance * o.totalUnhappiness
             for o in self.objects)
 
-    def assessTemperature(self):
-        self.calculateIntraStringUnhappiness()
-        self.calculateInterStringUnhappiness()
-        self.calculateTotalUnhappiness()
-
     def calculateIntraStringUnhappiness(self):
         value = sum(
             o.relativeImportance * o.intraStringUnhappiness
@@ -88,13 +83,18 @@ class Workspace(object):
         self.target.updateIntraStringUnhappiness()
 
     def getUpdatedTemperature(self):
-        self.assessTemperature()
-        ruleWeakness = 100.0
+        self.calculateIntraStringUnhappiness()
+        self.calculateInterStringUnhappiness()
+        self.calculateTotalUnhappiness()
         if self.rule:
             self.rule.updateStrength()
             ruleWeakness = 100.0 - self.rule.totalStrength
-        values = ((self.totalUnhappiness, 0.8), (ruleWeakness, 0.2))
-        return formulas.weightedAverage(values)
+        else:
+            ruleWeakness = 100.0
+        return formulas.weightedAverage((
+            (self.totalUnhappiness, 0.8),
+            (ruleWeakness, 0.2)
+        ))
 
     def numberOfUnrelatedObjects(self):
         """A list of all objects in the workspace with >= 1 open bond slots"""
@@ -130,7 +130,7 @@ class Workspace(object):
 
     def numberOfBonds(self):
         """The number of bonds in the workspace"""
-        return len([o for o in self.structures if isinstance(o, Bond)])
+        return sum(1 for o in self.structures if isinstance(o, Bond))
 
     def correspondences(self):
         return [s for s in self.structures if isinstance(s, Correspondence)]

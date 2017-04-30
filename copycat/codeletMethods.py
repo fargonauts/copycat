@@ -347,11 +347,7 @@ def replacement_finder(ctx, codelet):
     # choose random letter in initial string
     letters = [o for o in workspace.initial.objects if isinstance(o, Letter)]
     letterOfInitialString = random.choice(letters)
-    logging.info('selected letter in initial string = %s',
-                 letterOfInitialString)
     if letterOfInitialString.replacement:
-        logging.info("Replacement already found for %s, so fizzling",
-                     letterOfInitialString)
         return
     position = letterOfInitialString.leftIndex
     moreLetters = [o for o in workspace.modified.objects
@@ -369,16 +365,13 @@ def replacement_finder(ctx, codelet):
             1: slipnet.predecessor
         }
         relation = relations[diff]
-        logging.info('Relation found: %s', relation.name)
     else:
         relation = None
-        logging.info('no relation found')
     letterOfInitialString.replacement = Replacement(ctx,
         letterOfInitialString, letterOfModifiedString, relation)
     if relation != slipnet.sameness:
         letterOfInitialString.changed = True
         workspace.changedObject = letterOfInitialString
-    logging.info('building replacement')
 
 
 @codelet('top-down-bond-scout--category')
