@@ -74,12 +74,6 @@ class Coderack(object):
         workspace = self.ctx.workspace
         if codeletName == 'breaker':
             return 1.0
-        if 'description' in codeletName:
-            result = (temperature.value() / 100.0) ** 2
-        else:
-            result = workspace.intraStringUnhappiness / 100.0
-        if 'correspondence' in codeletName:
-            result = workspace.interStringUnhappiness / 100.0
         if 'replacement' in codeletName:
             if workspace.numberOfUnreplacedObjects() > 0:
                 return 1.0
@@ -88,9 +82,11 @@ class Coderack(object):
             if not workspace.rule:
                 return 1.0
             return workspace.rule.totalWeakness() / 100.0
-        if 'translator' in codeletName:
-            assert False
-        return result
+        if 'correspondence' in codeletName:
+            return workspace.interStringUnhappiness / 100.0
+        if 'description' in codeletName:
+            return (temperature.value() / 100.0) ** 2
+        return workspace.intraStringUnhappiness / 100.0
 
     def howManyToPost(self, codeletName):
         random = self.ctx.random
