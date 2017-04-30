@@ -1,5 +1,4 @@
 import math
-import logging
 
 
 def jump_threshold():
@@ -43,10 +42,6 @@ class Slipnode(object):
 
     def unclamped(self):
         return not self.clamped
-
-    def setConceptualDepth(self, depth):
-        logging.info('set depth to %s for %s', depth, self.name)
-        self.conceptualDepth = depth
 
     def category(self):
         if not len(self.categoryLinks):
@@ -110,19 +105,13 @@ class Slipnode(object):
         If it does not exist return None
         """
         slipnet = self.slipnet
-        result = None
         if self == destination:
-            result = slipnet.identity
+            return slipnet.identity
         else:
             for link in self.outgoingLinks:
                 if link.destination == destination:
-                    result = link.label
-                    break
-        if result:
-            logging.info('Got bond: %s', result.name)
-        else:
-            logging.info('Got no bond')
-        return result
+                    return link.label
+        return None
 
     def update(self):
         self.oldActivation = self.activation
