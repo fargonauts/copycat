@@ -24,8 +24,6 @@ class Coderack(object):
     def __init__(self, ctx):
         self.ctx = ctx
         self.reset()
-        self.runCodelets = {}
-        self.postings = {}
         self.methods = {}
 
         for name in dir(codeletMethods):
@@ -119,7 +117,6 @@ class Coderack(object):
         return 3
 
     def post(self, codelet):
-        self.postings[codelet.name] = self.postings.get(codelet.name, 0) + 1
         self.codelets += [codelet]
         if len(self.codelets) > 100:
             oldCodelet = self.chooseOldCodelet()
@@ -292,7 +289,6 @@ class Coderack(object):
     def run(self, codelet):
         methodName = codelet.name
         self.codeletsRun += 1
-        self.runCodelets[methodName] = self.runCodelets.get(methodName, 0) + 1
         method = self.methods[methodName]
         try:
             method(self.ctx, codelet)
