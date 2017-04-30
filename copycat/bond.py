@@ -189,28 +189,27 @@ class Bond(WorkspaceStructure):
     def set_source(self, value):
         self.source = value
 
-
-def possibleGroupBonds(bondCategory, directionCategory, bondFacet, bonds):
-    result = []
-    for bond in bonds:
-        slipnet = bond.ctx.slipnet
-        if (
-            bond.category == bondCategory and
-            bond.directionCategory == directionCategory
-        ):
-            result += [bond]
-        else:
-            # a modified bond might be made
-            if bond.category == bondCategory:
-                return None  # a different bond cannot be made here
-            if bond.directionCategory == directionCategory:
-                return None  # a different bond cannot be made here
-            if slipnet.sameness in [bondCategory, bond.category]:
-                return None
-            bond = Bond(
-                bond.ctx, bond.destination, bond.source, bondCategory,
-                bondFacet, bond.destinationDescriptor,
-                bond.sourceDescriptor
-            )
-            result += [bond]
-    return result
+    def possibleGroupBonds(self, bonds):
+        result = []
+        slipnet = self.ctx.slipnet
+        for bond in bonds:
+            if (
+                bond.category == self.category and
+                bond.directionCategory == self.directionCategory
+            ):
+                result += [bond]
+            else:
+                # a modified bond might be made
+                if bond.category == self.category:
+                    return []  # a different bond cannot be made here
+                if bond.directionCategory == self.directionCategory:
+                    return []  # a different bond cannot be made here
+                if slipnet.sameness in [self.category, bond.category]:
+                    return []
+                bond = Bond(
+                    bond.ctx, bond.destination, bond.source, self.category,
+                    self.facet, bond.destinationDescriptor,
+                    bond.sourceDescriptor
+                )
+                result += [bond]
+        return result

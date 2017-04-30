@@ -9,7 +9,6 @@ from letter import Letter
 from replacement import Replacement
 from group import Group
 from bond import Bond
-from bond import possibleGroupBonds
 from correspondence import Correspondence
 from workspaceFormulas import chooseUnmodifiedObject
 from workspaceFormulas import chooseBondFacet
@@ -698,14 +697,13 @@ def group_scout__whole_string(ctx, codelet):
     assert leftmost.rightmost
     # choose a random bond from list
     chosenBond = random.choice(bonds)
+    bonds = chosenBond.possibleGroupBonds(bonds)
+    assert bonds
     category = chosenBond.category
+    groupCategory = category.getRelatedNode(slipnet.groupCategory)
     directionCategory = chosenBond.directionCategory
     bondFacet = chosenBond.facet
-    bonds = possibleGroupBonds(category, directionCategory, bondFacet, bonds)
-    assert bonds
-    groupCategory = category.getRelatedNode(slipnet.groupCategory)
-    coderack.proposeGroup(objects, bonds, groupCategory, directionCategory,
-                          bondFacet)
+    coderack.proposeGroup(objects, bonds, groupCategory, directionCategory, bondFacet)
 
 
 @codelet('group-strength-tester')
