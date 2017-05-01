@@ -4,14 +4,13 @@ import logging
 import formulas
 from workspaceFormulas import chooseDirectedNeighbor
 from workspaceFormulas import chooseNeighbor
+from workspaceFormulas import chooseUnmodifiedObject
 from workspaceObject import WorkspaceObject
 from letter import Letter
 from replacement import Replacement
 from group import Group
 from bond import Bond
 from correspondence import Correspondence
-from workspaceFormulas import chooseUnmodifiedObject
-from workspaceFormulas import chooseBondFacet
 
 
 def codelet(name):
@@ -234,6 +233,34 @@ def description_builder(ctx, codelet):
         description.build()
 
 
+def __supportForDescriptionType(ctx, descriptionType, string):
+    workspace = ctx.workspace
+    described_count = 0
+    total = 0
+    for o in workspace.objects:
+        if o.string == string:
+            total += 1
+            described_count += sum(1 for d in o.descriptions if d.descriptionType == descriptionType)
+    string_support = described_count / float(total)
+    return (descriptionType.activation + string_support) / 2
+
+
+def __chooseBondFacet(ctx, source, destination):
+    random = ctx.random
+    slipnet = ctx.slipnet
+
+    # specify the descriptor types that bonds can form between
+    b = [
+        slipnet.letterCategory,
+        slipnet.length,
+    ]
+
+    sourceFacets = [d.descriptionType for d in source.descriptions if d.descriptionType in b]
+    bondFacets = [d.descriptionType for d in destination.descriptions if d.descriptionType in sourceFacets]
+    supports = [__supportForDescriptionType(ctx, f, source.string) for f in bondFacets]
+    return random.weighted_choice(bondFacets, supports)
+
+
 @codelet('bottom-up-bond-scout')
 def bottom_up_bond_scout(ctx, codelet):
     coderack = ctx.coderack
@@ -244,7 +271,7 @@ def bottom_up_bond_scout(ctx, codelet):
     destination = chooseNeighbor(ctx, source)
     assert destination
     logging.info('destination: %s', destination)
-    bondFacet = chooseBondFacet(ctx, source, destination)
+    bondFacet = __chooseBondFacet(ctx, source, destination)
     assert bondFacet
     logging.info('chosen bond facet: %s', bondFacet.get_name())
     logging.info('Source: %s, destination: %s', source, destination)
@@ -384,7 +411,7 @@ def top_down_bond_scout__category(ctx, codelet):
     destination = chooseNeighbor(ctx, source)
     logging.info('source: %s, destination: %s', source, destination)
     assert destination
-    bondFacet = chooseBondFacet(ctx, source, destination)
+    bondFacet = __chooseBondFacet(ctx, source, destination)
     assert bondFacet
     sourceDescriptor, destinationDescriptor = __getDescriptors(
         bondFacet, source, destination)
@@ -415,7 +442,7 @@ def top_down_bond_scout__direction(ctx, codelet):
     destination = chooseDirectedNeighbor(ctx, source, direction)
     assert destination
     logging.info('to object: %s', destination)
-    bondFacet = chooseBondFacet(ctx, source, destination)
+    bondFacet = __chooseBondFacet(ctx, source, destination)
     assert bondFacet
     sourceDescriptor, destinationDescriptor = __getDescriptors(
         bondFacet, source, destination)

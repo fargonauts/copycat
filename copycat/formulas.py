@@ -12,21 +12,13 @@ def weightedAverage(values):
     return total / totalWeights
 
 
-def __relevantCategory(objekt, slipnode):
-    return objekt.rightBond and objekt.rightBond.category == slipnode
-
-
-def __relevantDirection(objekt, slipnode):
-    return objekt.rightBond and objekt.rightBond.directionCategory == slipnode
-
-
-def __localRelevance(string, slipnode, relevance):
+def __localRelevance(string, isRelevant):
     numberOfObjectsNotSpanning = 0.0
     numberOfMatches = 0.0
-    for objekt in string.objects:
-        if not objekt.spansString():
+    for o in string.objects:
+        if not o.spansString():
             numberOfObjectsNotSpanning += 1.0
-            if relevance(objekt, slipnode):
+            if isRelevant(o):
                 numberOfMatches += 1.0
     if numberOfObjectsNotSpanning == 1:
         return 100.0 * numberOfMatches
@@ -34,13 +26,17 @@ def __localRelevance(string, slipnode, relevance):
 
 
 def localBondCategoryRelevance(string, category):
+    def isRelevant(o):
+        return o.rightBond and o.rightBond.category == category
     if len(string.objects) == 1:
         return 0.0
-    return __localRelevance(string, category, __relevantCategory)
+    return __localRelevance(string, isRelevant)
 
 
 def localDirectionCategoryRelevance(string, direction):
-    return __localRelevance(string, direction, __relevantDirection)
+    def isRelevant(o):
+        return o.rightBond and o.rightBond.directionCategory == direction
+    return __localRelevance(string, isRelevant)
 
 
 def getMappings(objectFromInitial, objectFromTarget,
@@ -49,8 +45,8 @@ def getMappings(objectFromInitial, objectFromTarget,
     for initial in initialDescriptions:
         for target in targetDescriptions:
             if initial.descriptionType == target.descriptionType:
-                if  (initial.descriptor == target.descriptor or
-                     initial.descriptor.slipLinked(target.descriptor)):
+                if (initial.descriptor == target.descriptor or
+                        initial.descriptor.slipLinked(target.descriptor)):
                     mapping = ConceptMapping(
                         initial.descriptionType,
                         target.descriptionType,

@@ -108,12 +108,6 @@ class Slipnet(object):
         self.objectCategory = self.__addNode('objectCategory', 90.0)
         self.bondFacet = self.__addNode('bondFacet', 90.0)
 
-        # specify the descriptor types that bonds can form between
-        self.bondFacets = [
-            self.letterCategory,
-            self.length,
-        ]
-
         # some factors are considered "very relevant" a priori
         self.initiallyClampedSlipnodes = [
             self.letterCategory,
