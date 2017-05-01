@@ -19,6 +19,8 @@ class Reporter(object):
     def report_temperature(self, temperature):
         pass
 
+    def report_workspace(self, workspace):
+        pass
 
 class Copycat(object):
     def __init__(self, rng_seed=None, reporter=None):
@@ -43,6 +45,7 @@ class Copycat(object):
         self.coderack.chooseAndRunCodelet()
         self.reporter.report_coderack(self.coderack)
         self.reporter.report_temperature(self.temperature)
+        self.reporter.report_workspace(self.workspace)
         return lastUpdate
 
     def runTrial(self):

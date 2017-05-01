@@ -138,7 +138,7 @@ class Workspace(object):
     def slippages(self):
         result = []
         if self.changedObject and self.changedObject.correspondence:
-            result = self.changedObject.correspondence.conceptMappings[:]
+            result += self.changedObject.correspondence.conceptMappings
         for o in self.initial.objects:
             if o.correspondence:
                 for mapping in o.correspondence.slippages():
@@ -147,13 +147,15 @@ class Workspace(object):
         return result
 
     def buildRule(self, rule):
-        if self.rule:
+        if self.rule is not None:
             self.structures.remove(self.rule)
         self.rule = rule
         self.structures += [rule]
         rule.activateRuleDescriptions()
 
     def breakRule(self):
+        if self.rule is not None:
+            self.structures.remove(self.rule)
         self.rule = None
 
     def buildDescriptions(self, objekt):

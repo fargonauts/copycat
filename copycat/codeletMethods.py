@@ -837,7 +837,7 @@ def rule_builder(ctx, codelet):
     rule.updateStrength()
     assert rule.totalStrength
     # fight against other rules
-    if workspace.rule:
+    if workspace.rule is not None:
         assert __structureVsStructure(rule, 1.0, workspace.rule, 1.0)
     workspace.buildRule(rule)
 
