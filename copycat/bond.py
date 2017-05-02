@@ -21,11 +21,7 @@ class Bond(WorkspaceStructure):
         self.sourceDescriptor = sourceDescriptor
         self.destinationDescriptor = destinationDescriptor
         self.category = bondCategory
-
-        self.destinationIsOnRight = self.destination == self.rightObject
-        self.bidirectional = (self.sourceDescriptor ==
-                              self.destinationDescriptor)
-        if self.bidirectional:
+        if (self.sourceDescriptor == self.destinationDescriptor):
             self.directionCategory = None
 
     def flippedVersion(self):
