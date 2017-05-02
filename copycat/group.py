@@ -140,25 +140,26 @@ class Group(WorkspaceObject):
 
     def breakGroup(self):
         workspace = self.ctx.workspace
+        if self.correspondence:
+            self.correspondence.breakCorrespondence()
+        if self.group:
+            self.group.breakGroup()
+        if self.leftBond:
+            self.leftBond.breakBond()
+        if self.rightBond:
+            self.rightBond.breakBond()
+
         while len(self.descriptions):
             description = self.descriptions[-1]
             description.breakDescription()
-        for objekt in self.objectList:
-            objekt.group = None
-        if self.group:
-            self.group.breakGroup()
+        for o in self.objectList:
+            o.group = None
         if self in workspace.structures:
             workspace.structures.remove(self)
         if self in workspace.objects:
             workspace.objects.remove(self)
         if self in self.string.objects:
             self.string.objects.remove(self)
-        if self.correspondence:
-            self.correspondence.breakCorrespondence()
-        if self.leftBond:
-            self.leftBond.breakBond()
-        if self.rightBond:
-            self.rightBond.breakBond()
 
     def updateInternalStrength(self):
         slipnet = self.ctx.slipnet
