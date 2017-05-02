@@ -220,14 +220,6 @@ class Group(WorkspaceObject):
             return False
         return True
 
-    def morePossibleDescriptions(self, node):
-        slipnet = self.ctx.slipnet
-        result = []
-        for i, number in enumerate(slipnet.numbers, 1):
-            if node == number and len(self.objects) == i:
-                result += [node]
-        return result
-
     def distinguishingDescriptor(self, descriptor):
         """Whether no other object of the same type has the same descriptor"""
         if not WorkspaceObject.distinguishingDescriptor(self, descriptor):
