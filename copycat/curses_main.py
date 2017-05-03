@@ -10,8 +10,9 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
     parser.add_argument('--focus-on-slipnet', action='store_true', help='Show the slipnet and coderack, instead of the workspace.')
+    parser.add_argument('--fps', type=float, default=None, help='Aim for this many frames per second.')
+    parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
     parser.add_argument('initial', type=str, help='A...')
     parser.add_argument('modified', type=str, help='...is to B...')
     parser.add_argument('target', type=str, help='...as C is to... what?')
@@ -23,6 +24,7 @@ if __name__ == '__main__':
             reporter=CursesReporter(
                 window,
                 focus_on_slipnet=options.focus_on_slipnet,
+                fps_goal=options.fps,
             ),
             rng_seed=options.seed,
         )

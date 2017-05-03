@@ -27,6 +27,9 @@ class SafeSubwindow(object):
     def border(self):
         self.w.border()
 
+    def derwin(self, h, w, y, x):
+        return self.w.derwin(h, w, y, x)
+
     def erase(self):
         self.w.erase()
 
@@ -48,7 +51,7 @@ class SafeSubwindow(object):
 
 
 class CursesReporter(Reporter):
-    def __init__(self, window, focus_on_slipnet=False):
+    def __init__(self, window, focus_on_slipnet=False, fps_goal=None):
         curses.curs_set(0)  # hide the cursor
         curses.noecho()  # hide keypresses
         height, width = window.getmaxyx()
@@ -59,15 +62,21 @@ class CursesReporter(Reporter):
         answersHeight = 5
         coderackHeight = height - upperHeight - answersHeight
         self.focusOnSlipnet = focus_on_slipnet
+        self.fpsGoal = fps_goal
         self.temperatureWindow = SafeSubwindow(window, height, 5, 0, 0)
         self.upperWindow = SafeSubwindow(window, upperHeight, width-5, 0, 5)
         self.coderackWindow = SafeSubwindow(window, coderackHeight, width-5, upperHeight, 5)
         self.answersWindow = SafeSubwindow(window, answersHeight, width-5, upperHeight + coderackHeight, 5)
-        for w in [self.temperatureWindow, self.upperWindow, self.answersWindow]:
+        self.fpsWindow = SafeSubwindow(self.answersWindow, 3, 9, answersHeight - 3, width - 14)
+        for w in [self.temperatureWindow, self.upperWindow, self.answersWindow, self.fpsWindow]:
             w.erase()
             w.border()
             w.refresh()
         self.answers = {}
+        self.fpsTicks = 0
+        self.fpsSince = time.time()
+        self.fpsMeasured = 100  # just a made-up number at first
+        self.fpsDelay = 0
 
     def do_keyboard_shortcuts(self):
         w = self.temperatureWindow  # just a random window
@@ -79,11 +88,18 @@ class CursesReporter(Reporter):
             while ordch not in [ord('P'), ord('p'), 27, ord('Q'), ord('q')]:
                 time.sleep(0.1)
                 ordch = w.getch()
+            self.fpsTicks = 0
+            self.fpsSince = time.time()
             w.erase()
             w.border()
             w.refresh()
         if ordch in [27, ord('Q'), ord('q')]:
             raise KeyboardInterrupt()
+        if ordch in [ord('F')]:
+            self.fpsGoal = (self.fpsGoal or self.fpsMeasured) * 1.25
+        if ordch in [ord('f')]:
+            self.fpsGoal = (self.fpsGoal or self.fpsMeasured) * 0.8
+
 
     def report_answer(self, answer):
         d = self.answers.setdefault(answer['answer'], {
@@ -122,7 +138,31 @@ class CursesReporter(Reporter):
                 w.addnstr(i+1, 2, represent(d), columnWidth)
         w.refresh()
 
+    def depict_fps(self):
+        w = self.fpsWindow
+        now = time.time()
+        elapsed = now - self.fpsSince
+        fps = self.fpsTicks / elapsed
+        if self.fpsGoal is not None:
+            seconds_of_work_per_frame = (elapsed / self.fpsTicks) - self.fpsDelay
+            desired_time_working_per_second = self.fpsGoal * seconds_of_work_per_frame
+            if desired_time_working_per_second < 1.0:
+                self.fpsDelay = (1.0 - desired_time_working_per_second) / fps
+            else:
+                self.fpsDelay = 0
+        w.addstr(1, 1, 'FPS:%3d' % fps, curses.A_NORMAL)
+        w.refresh()
+        self.fpsSince = now
+        self.fpsTicks = 0
+        self.fpsMeasured = fps
+
     def report_coderack(self, coderack):
+        self.fpsTicks += 1  # for the purposes of FPS calculation
+        if self.fpsDelay:
+            time.sleep(self.fpsDelay)
+        if time.time() > self.fpsSince + 1.200:
+            self.depict_fps()
+
         NUMBER_OF_BINS = 7
 
         # Combine duplicate codelets for printing.
