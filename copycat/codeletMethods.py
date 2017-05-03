@@ -267,6 +267,7 @@ def bottom_up_bond_scout(ctx, codelet):
     slipnet = ctx.slipnet
     workspace = ctx.workspace
     source = chooseUnmodifiedObject(ctx, 'intraStringSalience', workspace.objects)
+    assert source is not None
     __showWhichStringObjectIsFrom(source)
     destination = chooseNeighbor(ctx, source)
     assert destination
@@ -372,14 +373,13 @@ def replacement_finder(ctx, codelet):
     workspace = ctx.workspace
     # choose random letter in initial string
     letters = [o for o in workspace.initial.objects if isinstance(o, Letter)]
+    assert letters
     letterOfInitialString = random.choice(letters)
-    if letterOfInitialString.replacement:
-        return
+    assert not letterOfInitialString.replacement
     position = letterOfInitialString.leftIndex
     moreLetters = [o for o in workspace.modified.objects
                    if isinstance(o, Letter) and o.leftIndex == position]
-    if not moreLetters:
-        return
+    assert moreLetters
     letterOfModifiedString = moreLetters[0]
     initialAscii = ord(workspace.initialString[position - 1])
     modifiedAscii = ord(workspace.modifiedString[position - 1])
@@ -702,7 +702,8 @@ def group_scout__whole_string(ctx, codelet):
     workspace = ctx.workspace
     string = random.choice([workspace.initial, workspace.target])
     # find leftmost object & the highest group to which it belongs
-    leftmost = next(o for o in string.objects if o.leftmost)
+    leftmost = next((o for o in string.objects if o.leftmost), None)
+    assert leftmost is not None
     while leftmost.group and leftmost.group.bondCategory == slipnet.sameness:
         leftmost = leftmost.group
     if leftmost.spansString():
@@ -862,11 +863,10 @@ def rule_translator(ctx, codelet):
     temperature = ctx.temperature
     workspace = ctx.workspace
     assert workspace.rule
-    if len(workspace.initial) == 1 and len(workspace.target) == 1:
+    if len(workspace.initial) + len(workspace.target) <= 2:
         bondDensity = 1.0
     else:
-        numberOfBonds = (len(workspace.initial.bonds) +
-                         len(workspace.target.bonds))
+        numberOfBonds = len(workspace.initial.bonds) + len(workspace.target.bonds)
         nearlyTotalLength = len(workspace.initial) + len(workspace.target) - 2
         bondDensity = numberOfBonds / nearlyTotalLength
         bondDensity = min(bondDensity, 1.0)
@@ -887,8 +887,10 @@ def bottom_up_correspondence_scout(ctx, codelet):
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject(ctx, 'interStringSalience',
                                                workspace.initial.objects)
+    assert objectFromInitial is not None
     objectFromTarget = chooseUnmodifiedObject(ctx, 'interStringSalience',
                                               workspace.target.objects)
+    assert objectFromTarget is not None
     assert objectFromInitial.spansString() == objectFromTarget.spansString()
     # get the posible concept mappings
     conceptMappings = formulas.getMappings(
@@ -930,6 +932,7 @@ def important_object_correspondence_scout(ctx, codelet):
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject(ctx, 'relativeImportance',
                                                workspace.initial.objects)
+    assert objectFromInitial is not None
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
     # choose descriptor by conceptual depth
     weights = [temperature.getAdjustedValue(n.conceptualDepth) for n in descriptors]

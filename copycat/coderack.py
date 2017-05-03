@@ -259,14 +259,20 @@ class Coderack(object):
 
     def postInitialCodelets(self):
         workspace = self.ctx.workspace
-        logging.info("posting initial codelets")
-        codeletsToPost = [
-            'bottom-up-bond-scout',
-            'replacement-finder',
-            'bottom-up-correspondence-scout',
-        ]
-        for name in codeletsToPost:
-            for _ in xrange(2 * len(workspace.objects)):
+        n = len(workspace.objects)
+        if n == 0:
+            # The most pathological case.
+            codeletsToPost = [
+                ('rule-scout', 1),
+            ]
+        else:
+            codeletsToPost = [
+                ('bottom-up-bond-scout', 2 * n),
+                ('replacement-finder', 2 * n),
+                ('bottom-up-correspondence-scout', 2 * n),
+            ]
+        for name, count in codeletsToPost:
+            for _ in xrange(count):
                 codelet = Codelet(name, 1, [], self.codeletsRun)
                 self.post(codelet)
 

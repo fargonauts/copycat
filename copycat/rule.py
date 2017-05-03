@@ -26,7 +26,7 @@ class Rule(WorkspaceStructure):
     def updateInternalStrength(self):
         workspace = self.ctx.workspace
         if not (self.descriptor and self.relation):
-            self.internalStrength = 0.0
+            self.internalStrength = 50.0
             return
         averageDepth = (self.descriptor.conceptualDepth +
                         self.relation.conceptualDepth) / 2.0
@@ -121,6 +121,8 @@ class Rule(WorkspaceStructure):
 
     def buildTranslatedRule(self):
         workspace = self.ctx.workspace
+        if not (self.descriptor and self.relation):
+            return workspace.targetString
         slippages = workspace.slippages()
         self.category = self.category.applySlippages(slippages)
         self.facet = self.facet.applySlippages(slippages)

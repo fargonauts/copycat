@@ -370,7 +370,6 @@ class CursesReporter(Reporter):
 
         for string in [workspace.initial, workspace.modified, workspace.target]:
             row += 1
-            maxImportance = max(o.relativeImportance for o in group_and_letter_objects if o.string == string)
             letters_in_string = sorted(
                 (o for o in letter_objects if o.string == string),
                 key=lambda o: o.leftIndex,
@@ -379,6 +378,8 @@ class CursesReporter(Reporter):
                 (o for o in group_objects if o.string == string),
                 key=lambda o: o.leftIndex,
             )
+            if groups_in_string or letters_in_string:
+                maxImportance = max(o.relativeImportance for o in groups_in_string + letters_in_string)
             bonds_in_string = sorted(
                 (b for b in bond_structures if b.string == string),
                 key=lambda b: b.leftObject.rightIndex,
