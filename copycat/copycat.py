@@ -22,6 +22,7 @@ class Reporter(object):
     def report_workspace(self, workspace):
         pass
 
+
 class Copycat(object):
     def __init__(self, rng_seed=None, reporter=None):
         self.coderack = Coderack(self)
