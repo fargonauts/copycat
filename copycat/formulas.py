@@ -1,4 +1,4 @@
-from conceptMapping import ConceptMapping
+from .conceptMapping import ConceptMapping
 
 
 def weightedAverage(values):

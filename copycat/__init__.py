@@ -1,1 +1,1 @@
-from copycat import Copycat, Reporter  # noqa
+from .copycat import Copycat, Reporter  # noqa

@@ -1,13 +1,13 @@
 import curses
 import time
 
-from copycat import Reporter
-from bond import Bond
-from correspondence import Correspondence
-from description import Description
-from group import Group
-from letter import Letter
-from rule import Rule
+from .copycat import Reporter
+from .bond import Bond
+from .correspondence import Correspondence
+from .description import Description
+from .group import Group
+from .letter import Letter
+from .rule import Rule
 
 
 class SafeSubwindow(object):
@@ -122,7 +122,7 @@ class CursesReporter(Reporter):
                 d['answer'], d['count'], d['avgtime'], d['avgtemp'],
             )
 
-        answersToPrint = sorted(self.answers.itervalues(), key=fitness, reverse=True)
+        answersToPrint = sorted(iter(self.answers.values()), key=fitness, reverse=True)
 
         w = self.answersWindow
         pageWidth = w.getmaxyx()[1]
@@ -175,7 +175,7 @@ class CursesReporter(Reporter):
         # Sort the most common and highest-urgency codelets to the top.
         entries = sorted(
             (count, key[0], key[1])
-            for key, count in counts.iteritems()
+            for key, count in counts.items()
         )
 
         # Figure out how we'd like to render each codelet's name.
@@ -193,10 +193,10 @@ class CursesReporter(Reporter):
         w.erase()
         for u, string in printable_entries:
             # Find the highest point on the page where we could place this entry.
-            start_column = (u - 1) * columnWidth
+            start_column = int((u - 1) * columnWidth)
             end_column = start_column + len(string)
             for r in range(pageHeight):
-                if all(w.is_vacant(r, c) for c in xrange(start_column, end_column+20)):
+                if all(w.is_vacant(r, c) for c in range(start_column, end_column+20)):
                     w.addstr(r, start_column, string)
                     break
         w.refresh()
@@ -308,7 +308,7 @@ class CursesReporter(Reporter):
         else:
             w.addstr(firstrow, column, '\\', curses.A_NORMAL)
             w.addstr(lastrow, column, '/', curses.A_NORMAL)
-            for r in xrange(firstrow + 1, lastrow):
+            for r in range(firstrow + 1, lastrow):
                 w.addstr(r, column, '|', curses.A_NORMAL)
 
     def report_workspace(self, workspace):
@@ -410,12 +410,12 @@ class CursesReporter(Reporter):
                 end = endrow_for_group[group]
                 # Place this group's graphical depiction.
                 depiction_width = 3 + self.length_of_workspace_object_depiction(group, description_structures)
-                for firstcolumn in xrange(max_column, 1000):
+                for firstcolumn in range(max_column, 1000):
                     lastcolumn = firstcolumn + depiction_width
                     okay = all(
                         w.is_vacant(r, c)
-                        for c in xrange(firstcolumn, lastcolumn + 1)
-                        for r in xrange(start, end + 1)
+                        for c in range(firstcolumn, lastcolumn + 1)
+                        for r in range(start, end + 1)
                     )
                     if okay:
                         self.depict_grouping_brace(w, start, end, firstcolumn + 1)

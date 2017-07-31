@@ -1,8 +1,8 @@
 import logging
 
 
-from workspaceStructure import WorkspaceStructure
-import formulas
+from .workspaceStructure import WorkspaceStructure
+from . import formulas
 
 
 class Rule(WorkspaceStructure):

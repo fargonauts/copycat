@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 import argparse
 import curses
 import logging
 
 from copycat import Copycat
-from curses_reporter import CursesReporter
+from copycat.curses_reporter import CursesReporter
 
 
 if __name__ == '__main__':

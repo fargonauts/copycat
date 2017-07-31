@@ -1,13 +1,13 @@
 import math
 import logging
 
-import codeletMethods
-from bond import Bond
-from codelet import Codelet
-from correspondence import Correspondence
-from description import Description
-from group import Group
-from rule import Rule
+from . import codeletMethods
+from .bond import Bond
+from .codelet import Codelet
+from .correspondence import Correspondence
+from .description import Description
+from .group import Group
+from .rule import Rule
 
 
 NUMBER_OF_BINS = 7
@@ -131,7 +131,7 @@ class Coderack(object):
             for codeletName in node.codelets:
                 probability = self.probabilityOfPosting(codeletName)
                 howMany = self.howManyToPost(codeletName)
-                for _ in xrange(howMany):
+                for _ in range(howMany):
                     if not random.coinFlip(probability):
                         continue
                     urgency = getUrgencyBin(
@@ -163,7 +163,7 @@ class Coderack(object):
             urgency = 1
         if temperature.value() < 25.0 and 'translator' in codeletName:
             urgency = 5
-        for _ in xrange(howMany):
+        for _ in range(howMany):
             if random.coinFlip(probability):
                 codelet = Codelet(codeletName, urgency, [], self.codeletsRun)
                 self.post(codelet)
@@ -272,7 +272,7 @@ class Coderack(object):
                 ('bottom-up-correspondence-scout', 2 * n),
             ]
         for name, count in codeletsToPost:
-            for _ in xrange(count):
+            for _ in range(count):
                 codelet = Codelet(name, 1, [], self.codeletsRun)
                 self.post(codelet)
 

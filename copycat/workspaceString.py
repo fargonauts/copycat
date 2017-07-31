@@ -1,5 +1,5 @@
-from group import Group
-from letter import Letter
+from .group import Group
+from .letter import Letter
 
 
 class WorkspaceString(object):

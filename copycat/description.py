@@ -1,4 +1,4 @@
-from workspaceStructure import WorkspaceStructure
+from .workspaceStructure import WorkspaceStructure
 
 
 class Description(WorkspaceStructure):

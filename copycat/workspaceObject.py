@@ -1,6 +1,6 @@
-from description import Description
-from formulas import weightedAverage
-from workspaceStructure import WorkspaceStructure
+from .description import Description
+from .formulas import weightedAverage
+from .workspaceStructure import WorkspaceStructure
 
 
 class WorkspaceObject(WorkspaceStructure):
@@ -109,7 +109,7 @@ class WorkspaceObject(WorkspaceStructure):
                 if d.descriptionType.fully_active()]
 
     def getPossibleDescriptions(self, descriptionType):
-        from group import Group  # gross, TODO FIXME
+        from .group import Group  # gross, TODO FIXME
         slipnet = self.ctx.slipnet
         descriptions = []
         for link in descriptionType.instanceLinks:

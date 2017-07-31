@@ -1,8 +1,8 @@
-from conceptMapping import ConceptMapping
-from group import Group
-from letter import Letter
-from workspaceStructure import WorkspaceStructure
-import formulas
+from .conceptMapping import ConceptMapping
+from .group import Group
+from .letter import Letter
+from .workspaceStructure import WorkspaceStructure
+from . import formulas
 
 
 class Correspondence(WorkspaceStructure):
@@ -143,8 +143,8 @@ class Correspondence(WorkspaceStructure):
     def internallyCoherent(self):
         """Whether any pair of distinguishing mappings support each other"""
         mappings = self.relevantDistinguishingConceptMappings()
-        for i in xrange(len(mappings)):
-            for j in xrange(len(mappings)):
+        for i in range(len(mappings)):
+            for j in range(len(mappings)):
                 if i != j:
                     if mappings[i].supports(mappings[j]):
                         return True
