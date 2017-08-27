@@ -1,8 +1,8 @@
-import formulas
-from bond import Bond
-from correspondence import Correspondence
-from letter import Letter
-from workspaceString import WorkspaceString
+from . import formulas
+from .bond import Bond
+from .correspondence import Correspondence
+from .letter import Letter
+from .workspaceString import WorkspaceString
 
 
 def __adjustUnhappiness(values):

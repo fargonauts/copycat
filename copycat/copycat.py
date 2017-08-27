@@ -1,8 +1,8 @@
-from coderack import Coderack
-from randomness import Randomness
-from slipnet import Slipnet
-from temperature import Temperature
-from workspace import Workspace
+from .coderack import Coderack
+from .randomness import Randomness
+from .slipnet import Slipnet
+from .temperature import Temperature
+from .workspace import Workspace
 
 
 class Reporter(object):
@@ -69,7 +69,7 @@ class Copycat(object):
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
-        for i in xrange(iterations):
+        for i in range(iterations):
             answer = self.runTrial()
             d = answers.setdefault(answer['answer'], {
                 'count': 0,
@@ -80,7 +80,7 @@ class Copycat(object):
             d['sumtemp'] += answer['temp']
             d['sumtime'] += answer['time']
 
-        for answer, d in answers.iteritems():
+        for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
             d['avgtime'] = d.pop('sumtime') / d['count']
         return answers

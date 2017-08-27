@@ -1,4 +1,4 @@
-from workspaceObject import WorkspaceObject
+from .workspaceObject import WorkspaceObject
 
 
 class Letter(WorkspaceObject):

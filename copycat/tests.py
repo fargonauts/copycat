@@ -1,6 +1,6 @@
 import unittest
 
-from copycat import Copycat
+from .copycat import Copycat
 
 
 def pnormaldist(p):
@@ -20,7 +20,7 @@ def pnormaldist(p):
         0.99999999: 5.7307,
         0.999999999: 6.1094,
     }
-    return max(v for k, v in table.iteritems() if k <= p)
+    return max(v for k, v in table.items() if k <= p)
 
 
 def lower_bound_on_probability(hits, attempts, confidence=0.95):
@@ -44,11 +44,11 @@ class TestCopycat(unittest.TestCase):
         self.longMessage = True  # new in Python 2.7
 
     def assertProbabilitiesLookRoughlyLike(self, actual, expected):
-        actual_count = 0.0 + sum(d['count'] for d in actual.values())
-        expected_count = 0.0 + sum(d['count'] for d in expected.values())
+        actual_count = 0.0 + sum(d['count'] for d in list(actual.values()))
+        expected_count = 0.0 + sum(d['count'] for d in list(expected.values()))
         self.assertGreater(actual_count, 1)
         self.assertGreater(expected_count, 1)
-        for k in set(actual.keys() + expected.keys()):
+        for k in set(list(actual.keys()) + list(expected.keys())):
             if k not in expected:
                 self.fail('Key %s was produced but not expected! %r != %r' % (k, actual, expected))
             expected_probability = expected[k]['count'] / expected_count
@@ -56,10 +56,10 @@ class TestCopycat(unittest.TestCase):
                 actual_lo = lower_bound_on_probability(actual[k]['count'], actual_count)
                 actual_hi = upper_bound_on_probability(actual[k]['count'], actual_count)
                 if not (actual_lo <= expected_probability <= actual_hi):
-                    print 'Failed (%s <= %s <= %s)' % (actual_lo, expected_probability, actual_hi)
+                    print('Failed (%s <= %s <= %s)' % (actual_lo, expected_probability, actual_hi))
                     self.fail('Count ("obviousness" metric) seems way off! %r != %r' % (actual, expected))
                 if abs(actual[k]['avgtemp'] - expected[k]['avgtemp']) >= 10.0 + (10.0 / actual[k]['count']):
-                    print 'Failed (%s - %s >= %s)' % (actual[k]['avgtemp'], expected[k]['avgtemp'], 10.0 + (10.0 / actual[k]['count']))
+                    print('Failed (%s - %s >= %s)' % (actual[k]['avgtemp'], expected[k]['avgtemp'], 10.0 + (10.0 / actual[k]['count'])))
                     self.fail('Temperature ("elegance" metric) seems way off! %r != %r' % (actual, expected))
             else:
                 actual_hi = upper_bound_on_probability(0, actual_count)
@@ -68,7 +68,7 @@ class TestCopycat(unittest.TestCase):
 
     def run_testcase(self, initial, modified, target, iterations, expected):
         actual = Copycat().run(initial, modified, target, iterations)
-        self.assertEqual(sum(a['count'] for a in actual.values()), iterations)
+        self.assertEqual(sum(a['count'] for a in list(actual.values())), iterations)
         self.assertProbabilitiesLookRoughlyLike(actual, expected)
 
     def test_simple_cases(self):

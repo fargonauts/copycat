@@ -1,4 +1,4 @@
-import formulas
+from . import formulas
 
 
 class WorkspaceStructure(object):

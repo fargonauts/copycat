@@ -1,5 +1,5 @@
-from slipnode import Slipnode
-from sliplink import Sliplink
+from .slipnode import Slipnode
+from .sliplink import Sliplink
 
 
 class Slipnet(object):

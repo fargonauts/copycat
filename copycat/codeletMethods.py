@@ -1,16 +1,16 @@
 import inspect
 import logging
 
-import formulas
-from workspaceFormulas import chooseDirectedNeighbor
-from workspaceFormulas import chooseNeighbor
-from workspaceFormulas import chooseUnmodifiedObject
-from workspaceObject import WorkspaceObject
-from letter import Letter
-from replacement import Replacement
-from group import Group
-from bond import Bond
-from correspondence import Correspondence
+from . import formulas
+from .workspaceFormulas import chooseDirectedNeighbor
+from .workspaceFormulas import chooseNeighbor
+from .workspaceFormulas import chooseUnmodifiedObject
+from .workspaceObject import WorkspaceObject
+from .letter import Letter
+from .replacement import Replacement
+from .group import Group
+from .bond import Bond
+from .correspondence import Correspondence
 
 
 def codelet(name):
@@ -804,7 +804,7 @@ def group_builder(ctx, codelet):
         incompatible.break_the_structure()
     # create new bonds
     group.bondList = []
-    for i in xrange(1, len(group.objectList)):
+    for i in range(1, len(group.objectList)):
         object1 = group.objectList[i - 1]
         object2 = group.objectList[i]
         if not object1.rightBond:
@@ -871,7 +871,7 @@ def rule_translator(ctx, codelet):
         bondDensity = numberOfBonds / nearlyTotalLength
         bondDensity = min(bondDensity, 1.0)
     weights = __getCutoffWeights(bondDensity)
-    cutoff = 10.0 * random.weighted_choice(range(1, 11), weights)
+    cutoff = 10.0 * random.weighted_choice(list(range(1, 11)), weights)
     if cutoff >= temperature.actual_value:
         result = workspace.rule.buildTranslatedRule()
         if result is not None:

@@ -1,6 +1,6 @@
-from description import Description
-from workspaceObject import WorkspaceObject
-import formulas
+from .description import Description
+from .workspaceObject import WorkspaceObject
+from . import formulas
 
 
 class Group(WorkspaceObject):
