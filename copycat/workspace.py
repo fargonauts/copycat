@@ -82,6 +82,7 @@ class Workspace(object):
         self.initial.updateIntraStringUnhappiness()
         self.target.updateIntraStringUnhappiness()
 
+    #TODO: use entropy
     def getUpdatedTemperature(self):
         self.calculateIntraStringUnhappiness()
         self.calculateInterStringUnhappiness()

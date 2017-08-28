@@ -75,8 +75,10 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
     temperature = ctx.temperature
     structure1.updateStrength()
     structure2.updateStrength()
+    #TODO: use entropy
     weightedStrength1 = temperature.getAdjustedValue(
         structure1.totalStrength * weight1)
+    #TODO: use entropy
     weightedStrength2 = temperature.getAdjustedValue(
         structure2.totalStrength * weight2)
     return random.weighted_greater_than(weightedStrength1, weightedStrength2)
@@ -112,6 +114,7 @@ def __slippability(ctx, conceptMappings):
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
+        #TODO: use entropy
         probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
         if random.coinFlip(probabilityOfSlippage):
             return True
@@ -123,6 +126,7 @@ def breaker(ctx, codelet):
     random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
+    #TODO: use entropy
     probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
     if random.coinFlip(probabilityOfFizzle):
         return
@@ -139,6 +143,7 @@ def breaker(ctx, codelet):
                 breakObjects += [structure.source.group]
     # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
+        #TODO: use entropy
         breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
         if random.coinFlip(breakProbability):
@@ -161,6 +166,7 @@ def similarPropertyLinks(ctx, slip_node):
     result = []
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
+        #TODO:use entropy
         probability = temperature.getAdjustedProbability(association)
         if random.coinFlip(probability):
             result += [slip_link]
@@ -216,6 +222,7 @@ def description_strength_tester(ctx, codelet):
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
+    #TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     assert random.coinFlip(probability)
     coderack.newCodelet('description-builder', strength, [description])
@@ -361,6 +368,7 @@ def rule_strength_tester(ctx, codelet):
     temperature = ctx.temperature
     rule = codelet.arguments[0]
     rule.updateStrength()
+    #TODO: use entropy
     probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
     if random.coinFlip(probability):
         coderack.newCodelet('rule-builder', rule.totalStrength, [rule])
@@ -463,6 +471,7 @@ def bond_strength_tester(ctx, codelet):
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
     strength = bond.totalStrength
+    #Todo: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     logging.info('bond strength = %d for %s', strength, bond)
     assert random.coinFlip(probability)
@@ -745,6 +754,7 @@ def group_strength_tester(ctx, codelet):
     __showWhichStringObjectIsFrom(group)
     group.updateStrength()
     strength = group.totalStrength
+    #TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     if random.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
@@ -872,6 +882,7 @@ def rule_translator(ctx, codelet):
         bondDensity = min(bondDensity, 1.0)
     weights = __getCutoffWeights(bondDensity)
     cutoff = 10.0 * random.weighted_choice(list(range(1, 11)), weights)
+    #TODO: use entropy
     if cutoff >= temperature.actual_value:
         result = workspace.rule.buildTranslatedRule()
         if result is not None:
@@ -928,6 +939,7 @@ def important_object_correspondence_scout(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
     slipnet = ctx.slipnet
+    #TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject(ctx, 'relativeImportance',
@@ -998,6 +1010,7 @@ def correspondence_strength_tester(ctx, codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
+    #TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     if random.coinFlip(probability):
         # activate some concepts
