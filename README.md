@@ -5,6 +5,8 @@ co.py.cat
 
 I am planning to use this codebase, or Joseph A. Hager's, to implement a variation of Copycat that uses Entropy instead of Temperature and still preserves the parallel terraced scan in full form.  If the change is viable, I plan to write a paper on that.  For the general idea, please see pages 41 and 42 of the [*Information Sciences*](https://github.com/Alex-Linhares/FARGlexandria/blob/master/Literature/Chess-Capyblanca-2014-Linhares-Information%20Sciences.pdf) paper on [Capyblanca](https://github.com/Alex-Linhares/FARGlexandria).  
 
+**If you would like to help research and publish a paper, please let me know.**
+
 Please see also [FARGlexandria](https://github.com/Alex-Linhares/FARGlexandria), a repository with all FARG projects (and help if you have some of the missing info there, especially about Letter Spirit and George!)
 
 -------------------------------
