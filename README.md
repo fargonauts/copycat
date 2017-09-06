@@ -82,3 +82,10 @@ $ python
 ```
 
 The result of `run` is a dict containing the same information as was printed by `main.py` above.
+
+
+
+Questions
+---------
+
+1. Why are codelets **NOT** implemented through lambda?  
