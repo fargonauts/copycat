@@ -27,11 +27,11 @@ def lower_bound_on_probability(hits, attempts, confidence=0.95):
     if attempts == 0:
         return 0
     z = pnormaldist(confidence)
-    zsqr = z*z
+    zsqr = z * z
     phat = 1.0 * hits / attempts
-    under_sqrt = (phat * (1 - phat) + zsqr / (4*attempts)) / attempts
+    under_sqrt = (phat * (1 - phat) + zsqr / (4 * attempts)) / attempts
     denominator = (1 + zsqr / attempts)
-    return (phat + zsqr / (2*attempts) - z * (under_sqrt ** 0.5)) / denominator
+    return (phat + zsqr / (2 * attempts) - z * (under_sqrt ** 0.5)) / denominator
 
 
 def upper_bound_on_probability(hits, attempts, confidence=0.95):

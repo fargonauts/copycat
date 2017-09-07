@@ -4,11 +4,13 @@ import logging
 
 from copycat import Copycat, Reporter
 
+
 class SimpleReporter(Reporter):
     def report_answer(self, answer):
         print('Answered %s (time %d, final temperature %.1f)' % (
             answer['answer'], answer['time'], answer['temp'],
         ))
+
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
@@ -26,6 +28,7 @@ def main():
 
     for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
         print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
+
 
 if __name__ == '__main__':
     main()
