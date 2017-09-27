@@ -29,6 +29,8 @@ from copycat import Copycat, Reporter
 
 
 class SimpleReporter(Reporter):
+    """Reports results from a single run."""
+
     def report_answer(self, answer):
         print('Answered %s (time %d, final temperature %.1f)' % (
             answer['answer'], answer['time'], answer['temp'],
