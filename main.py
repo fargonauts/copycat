@@ -35,7 +35,7 @@ final temperature of the workspace; lower means "more elegant".
 import argparse
 import logging
 
-from copycat import Copycat, Reporter
+from copycat import Copycat, Reporter, plot_answers
 
 
 class SimpleReporter(Reporter):
@@ -55,6 +55,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
     parser.add_argument('--iterations', type=int, default=1, help='Run the given case this many times.')
+    parser.add_argument('--plot', action='store_true', help='Plot a bar graph of answer distribution')
     parser.add_argument('initial', type=str, help='A...')
     parser.add_argument('modified', type=str, help='...is to B...')
     parser.add_argument('target', type=str, help='...as C is to... what?')
@@ -66,6 +67,8 @@ def main():
     for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
         print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
 
+    if options.plot:
+        plot_answers(answers)
 
 if __name__ == '__main__':
     main()
