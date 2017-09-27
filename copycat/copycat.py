@@ -3,6 +3,7 @@ from .randomness import Randomness
 from .slipnet import Slipnet
 from .temperature import Temperature
 from .workspace import Workspace
+from .gui import GUI
 
 
 class Reporter(object):
@@ -24,13 +25,15 @@ class Reporter(object):
 
 
 class Copycat(object):
-    def __init__(self, rng_seed=None, reporter=None):
+    def __init__(self, rng_seed=None, reporter=None, showgui=True):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
         self.temperature = Temperature()
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
+        self.showgui = showgui
+        self.gui = GUI('Copycat')
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
@@ -47,6 +50,9 @@ class Copycat(object):
         self.reporter.report_coderack(self.coderack)
         self.reporter.report_temperature(self.temperature)
         self.reporter.report_workspace(self.workspace)
+
+        if self.showgui:
+            self.gui.update()
         return lastUpdate
 
     def runTrial(self):
