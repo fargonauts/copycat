@@ -12,10 +12,20 @@ script should try to change analogously. The fourth (which defaults to "1") is
 a number of iterations. One can also specify a defined seed falue for the
 random number generator.
 
-The above might produce output such as
+The above might produce output such as these runs:
 
-    ppqqss: 6 (avg time 869.0, avg temp 23.4)
-    ppqqrs: 4 (avg time 439.0, avg temp 37.3)
+    iiijjjlll: 670 (avg time 1108.5, avg temp 23.6)
+    iiijjjd: 2 (avg time 1156.0, avg temp 35.0)
+    iiijjjkkl: 315 (avg time 1194.4, avg temp 35.5)
+    iiijjjkll: 8 (avg time 2096.8, avg temp 44.1)
+    iiijjjkkd: 5 (avg time 837.2, avg temp 48.0)
+
+    wyz: 5 (avg time 2275.2, avg temp 14.9)
+    xyd: 982 (avg time 2794.4, avg temp 17.5)
+    yyz: 7 (avg time 2731.9, avg temp 25.1)
+    dyz: 2 (avg time 3320.0, avg temp 27.1)
+    xyy: 2 (avg time 4084.5, avg temp 31.1)
+    xyz: 2 (avg time 1873.5, avg temp 52.1)
 
 The first number indicates how many times Copycat chose that string as its
 answer; higher means "more obvious". The last number indicates the average
@@ -32,12 +42,14 @@ class SimpleReporter(Reporter):
     """Reports results from a single run."""
 
     def report_answer(self, answer):
+        """Self-explanatory code."""
         print('Answered %s (time %d, final temperature %.1f)' % (
             answer['answer'], answer['time'], answer['temp'],
         ))
 
 
 def main():
+    """Program's main entrance point.  Self-explanatory code."""
     logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
 
     parser = argparse.ArgumentParser()
