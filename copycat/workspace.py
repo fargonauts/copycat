@@ -1,3 +1,6 @@
+"""Workspace module."""
+
+
 from . import formulas
 from .bond import Bond
 from .correspondence import Correspondence
@@ -14,6 +17,7 @@ def __adjustUnhappiness(values):
 
 class Workspace(object):
     def __init__(self, ctx):
+        """To initialize the workspace."""
         self.ctx = ctx
         self.totalUnhappiness = 0.0
         self.intraStringUnhappiness = 0.0
@@ -82,7 +86,7 @@ class Workspace(object):
         self.initial.updateIntraStringUnhappiness()
         self.target.updateIntraStringUnhappiness()
 
-    #TODO: use entropy
+    # TODO: use entropy
     def getUpdatedTemperature(self):
         self.calculateIntraStringUnhappiness()
         self.calculateInterStringUnhappiness()
