@@ -1010,7 +1010,7 @@ def correspondence_strength_tester(ctx, codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
-    #TODO: use entropy
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     if random.coinFlip(probability):
         # activate some concepts
@@ -1064,8 +1064,8 @@ def correspondence_builder(ctx, codelet):
     # if there is an incompatible bond then fight against it
     initial = correspondence.objectFromInitial
     target = correspondence.objectFromTarget
-    if  (initial.leftmost or initial.rightmost and
-         target.leftmost or target.rightmost):
+    if (initial.leftmost or initial.rightmost and
+            target.leftmost or target.rightmost):
         # search for the incompatible bond
         incompatibleBond = correspondence.getIncompatibleBond()
         if incompatibleBond:

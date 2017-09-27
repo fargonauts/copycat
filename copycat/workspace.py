@@ -44,6 +44,16 @@ class Workspace(object):
         self.modified = WorkspaceString(self.ctx, self.modifiedString)
         self.target = WorkspaceString(self.ctx, self.targetString)
 
+    '''
+    # TODO: Initial part of refactoring in this method
+    def getAssessedUnhappiness(self, unhappiness):
+        o.Unhappiness = __adjustUnhappiness(
+            o.relativeImportance * o.Unhappiness
+            for o in self.objects)
+        pass
+    '''
+
+    # TODO: Extract method?
     def assessUnhappiness(self):
         self.intraStringUnhappiness = __adjustUnhappiness(
             o.relativeImportance * o.intraStringUnhappiness
@@ -55,6 +65,7 @@ class Workspace(object):
             o.relativeImportance * o.totalUnhappiness
             for o in self.objects)
 
+    # TODO: these 3 methods seem to be the same... are they?  If so, Extract method.
     def calculateIntraStringUnhappiness(self):
         value = sum(
             o.relativeImportance * o.intraStringUnhappiness
@@ -102,7 +113,7 @@ class Workspace(object):
         ))
 
     def numberOfUnrelatedObjects(self):
-        """A list of all objects in the workspace with >= 1 open bond slots"""
+        """Computes the number of all objects in the workspace with >= 1 open bond slots."""
         objects = [o for o in self.objects
                    if o.string == self.initial or o.string == self.target]
         objects = [o for o in objects if not o.spansString()]
@@ -120,21 +131,21 @@ class Workspace(object):
         return len(objects)
 
     def numberOfUnreplacedObjects(self):
-        """A list of all unreplaced objects in the initial string"""
+        """A list of all unreplaced objects in the initial string."""
         objects = [o for o in self.objects
                    if o.string == self.initial and isinstance(o, Letter)]
         objects = [o for o in objects if not o.replacement]
         return len(objects)
 
     def numberOfUncorrespondingObjects(self):
-        """A list of all uncorresponded objects in the initial string"""
+        """A list of all uncorresponded objects in the initial string."""
         objects = [o for o in self.objects
                    if o.string == self.initial or o.string == self.target]
         objects = [o for o in objects if not o.correspondence]
         return len(objects)
 
     def numberOfBonds(self):
-        """The number of bonds in the workspace"""
+        """The number of bonds in the workspace."""
         return sum(1 for o in self.structures if isinstance(o, Bond))
 
     def correspondences(self):

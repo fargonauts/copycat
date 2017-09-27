@@ -83,7 +83,7 @@ class Coderack(object):
         if 'correspondence' in codeletName:
             return workspace.interStringUnhappiness / 100.0
         if 'description' in codeletName:
-            #TODO: use entropy
+            # TODO: use entropy
             return (temperature.value() / 100.0) ** 2
         return workspace.intraStringUnhappiness / 100.0
 
@@ -163,7 +163,7 @@ class Coderack(object):
         if codeletName == 'breaker':
             urgency = 1
 
-        #TODO: use entropy
+        # TODO: use entropy
         if temperature.value() < 25.0 and 'translator' in codeletName:
             urgency = 5
         for _ in range(howMany):
@@ -290,8 +290,8 @@ class Coderack(object):
         random = self.ctx.random
         temperature = self.ctx.temperature
         assert self.codelets
-        
-        #TODO: use entropy
+
+        # TODO: use entropy
         scale = (100.0 - temperature.value() + 10.0) / 15.0
         chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
