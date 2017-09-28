@@ -171,7 +171,12 @@ class Temperature(object):
         iijjll: 59 (avg time 797.4, avg temp 19.8)
         iijjkl: 41 (avg time 696.1, avg temp 28.5)
 
+        My guess is that some code is prefering to find groups in the
+        opposite form that it likes finding the "symmetry/opposite"
+        concepts of the xyz problem.
 
+        Sould compare & contrast the unhappiness and relevance of both
+        the opposite/symmetry codelets and the grouping/chunking codelets.
 
 
         Need to play with this more... and WTF is f anyways?
