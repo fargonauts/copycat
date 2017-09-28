@@ -49,6 +49,7 @@ class GUI(object):
     def __init__(self, title):
         self.root = tk.Tk()
         self.root.title(title)
+        self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
         self.app.pack(side='top', fill='both', expand=True)
 
