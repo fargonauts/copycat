@@ -177,6 +177,37 @@ class Temperature(object):
 
         Sould compare & contrast the unhappiness and relevance of both
         the opposite/symmetry codelets and the grouping/chunking codelets.
+        My hunch is the sameness group code: something there that
+        interacts with Temperature is wicked, and should be relatively
+        easy to find the error.
+
+        Here's why:  the following run was done on (1-entropy(f)):
+
+        mrrlll: 77 (avg time 2195.7, avg temp 41.4)
+        mrrd: 2 (avg time 1698.0, avg temp 42.6)
+        mrrkkl: 20 (avg time 1317.8, avg temp 46.6)
+        mrrkkd: 1 (avg time 1835.0, avg temp 48.6)
+
+
+        If (1-entropy(f)) binds the system into a tight corridor of possibilities,
+        then why does it easily get the samenessGroup right?  If this is right,
+        then running just entropy(f) should have big trouble with samenessGroup.
+        Let's see:
+
+        nrrkkk: 11 (avg time 3637.8, avg temp 64.6)
+        drrkkk: 3 (avg time 5921.3, avg temp 66.2)
+        mrrkkd: 7 (avg time 6771.3, avg temp 74.6)
+        mrrkkl: 79 (avg time 3723.0, avg temp 74.9)
+
+        So there we are: the system is unable to find that change samenessGroup
+        to next letterCategory, so there ought to be something very different
+        in the code that:
+
+        * Interacts with Temperature (things like unhappiness, relevance, depth,
+        urgency, and whatever else interacts with T)
+        * something very close to samenessGroup... sameGroup, sameness,
+        sameNeighbors, etc... is encoded in a form that is *directly opposite*
+        to other concepts/categories/codlets, etc.  
 
 
         Need to play with this more... and WTF is f anyways?
@@ -189,4 +220,4 @@ class Temperature(object):
         a = math.sqrt(coldness)
         c = (10 - a) / 100
         f = (c + 1) * value
-        return (1 - (-f * math.log2(f)))  # max(f, 0.0000)
+        return (0 + (-f * math.log2(f)))  # max(f, 0.0000)
