@@ -8,12 +8,16 @@ import tkinter.ttk as ttk
 from tkinter import scrolledtext
 from tkinter import filedialog
 
-
-
 class MainApplication(ttk.Frame):
+    MAX_COLUMNS = 10
+    MAX_ROWS    = 4
+
     def __init__(self, parent, *args, **kwargs):
         ttk.Frame.__init__(self, parent, *args, **kwargs)
         self.widgets = dict()
+        self.slipnodes = []
+        self.slipwidgets = []
+
         self.parent = parent
         self.create_widgets()
         self.columnconfigure(0, weight=1)
@@ -29,27 +33,20 @@ class MainApplication(ttk.Frame):
         temp_label.grid(column=9, row=0, rowspan=1, sticky=tk.E)
         self.widgets['temp'] = temp_label
 
-        example_net = [
-                ('left', 100),
-                ('right', 100),
-                ('a', 10),
-                ('b', 9),
-                ('rightmost', 100)
-                ]
-
-        MAX_COLUMNS = 10
-        MAX_ROWS    = 4
-
+    def update_slipnodes(self, slipnodes):
+        for widget in self.slipwidgets:
+            widget.grid_forget()
+        self.slipnodes = [(node.name, round(node.activation, 2)) for node in slipnodes]
         row = 0
-        for i, (name, amount) in enumerate(example_net):
-            column = i % MAX_COLUMNS
+        for i, (name, amount) in enumerate(self.slipnodes):
+            column = i % MainApplication.MAX_COLUMNS
             if column == 0:
                 row += 1
-            if row + 1 >= MAX_ROWS:
+            if row + 1 >= MainApplication.MAX_ROWS:
                 break
             l = tk.Label(self, text='{}\n({})'.format(name, amount))
-            l.grid(column=column, row=row, sticky=tk.SE)
-            self.widgets[str(column) + ',' + str(row)] = l
+            l.grid(column=column, row=row+4, sticky=tk.SE)
+            self.slipwidgets.append(l)
 
 class GUI(object):
     def __init__(self, title):
@@ -62,5 +59,4 @@ class GUI(object):
         self.root.update_idletasks()
         self.root.update()
         self.app.widgets['temp']['text'] = 'Temp:({})'.format(temp)
-        print(slipnodes)
-        time.sleep(.01)
+        self.app.update_slipnodes(slipnodes)

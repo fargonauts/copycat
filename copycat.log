@@ -1,33 +1,3 @@
-object chosen = j from target string
-destination: k
-chosen bond facet: letterCategory
-Source: j, destination: k
-source descriptor: J
-destination descriptor: K
-proposing successor bond 
-object chosen = i from target string
-destination: j
-chosen bond facet: letterCategory
-Source: i, destination: j
-source descriptor: I
-destination descriptor: J
-proposing successor bond 
-object chosen = j from target string
-destination: i
-chosen bond facet: letterCategory
-Source: j, destination: i
-source descriptor: J
-destination descriptor: I
-proposing predecessor bond 
-object chosen = predecessor bond between i and j from other string
-bond strength = 48 for predecessor bond between i and j
-urgency: 100.0, number: 1, bin: 7
-object chosen = successor bond between i and j from other string
-bond strength = 48 for successor bond between i and j
-object chosen = successor bond between j and k from other string
-bond strength = 48 for successor bond between j and k
-succeeded: posting bond-builder
-urgency: 100.0, number: 1, bin: 7
 urgency: 100.0, number: 1, bin: 7
 object chosen = a from initial string
 destination: b
@@ -36,9 +6,6 @@ Source: a, destination: b
 source descriptor: A
 destination descriptor: B
 proposing successor bond 
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
-urgency: 100.0, number: 1, bin: 7
 object chosen = b from initial string
 destination: a
 chosen bond facet: letterCategory
@@ -47,14 +14,92 @@ source descriptor: B
 destination descriptor: A
 proposing predecessor bond 
 urgency: 23.200000000000003, number: 1, bin: 2
-object chosen = successor bond between j and k from other string
+object chosen = j from target string
+destination: i
+chosen bond facet: letterCategory
+Source: j, destination: i
+source descriptor: J
+destination descriptor: I
+proposing predecessor bond 
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+urgency: 100.0, number: 1, bin: 7
+object chosen = successor bond between a and b from other string
+bond strength = 48 for successor bond between a and b
+succeeded: posting bond-builder
+object chosen = predecessor bond between b and c from other string
+bond strength = 48 for predecessor bond between b and c
+urgency: 100.0, number: 1, bin: 7
+object chosen = i from target string
+destination: j
+chosen bond facet: letterCategory
+Source: i, destination: j
+source descriptor: I
+destination descriptor: J
+proposing successor bond 
+object chosen = predecessor bond between i and j from other string
+bond strength = 48 for predecessor bond between i and j
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+object chosen = j from target string
+object chosen = b from initial string
+destination: c
+chosen bond facet: letterCategory
+Source: b, destination: c
+source descriptor: B
+destination descriptor: C
+proposing successor bond 
+object chosen = predecessor bond between a and b from other string
+bond strength = 48 for predecessor bond between a and b
+object chosen = a from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: a, destination: b
+source descriptor: A
+destination descriptor: B
+proposing successor bond 
+object chosen = predecessor bond between b and c from other string
+bond strength = 48 for predecessor bond between b and c
+object chosen = successor bond between a and b from other string
 number of incompatibleBonds: 0
 no incompatible bonds
 no incompatible groups
-building bond successor bond between j and k
-object chosen = predecessor bond between a and b from other string
-bond strength = 48 for predecessor bond between a and b
+building bond successor bond between a and b
+urgency: 100.0, number: 1, bin: 7
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = successor bond between a and b from other string
+bond strength = 91 for successor bond between a and b
+succeeded: posting bond-builder
+urgency: 100.0, number: 1, bin: 7
 object chosen = c from initial string
+object chosen = successor bond between b and c from other string
+bond strength = 94 for successor bond between b and c
+succeeded: posting bond-builder
+object chosen = successor bond between a and b from other string
+already exists: activate descriptors & Fizzle
+object chosen = j from target string
+urgency: 100.0, number: 1, bin: 7
+object chosen = successor bond between b and c from other string
+number of incompatibleBonds: 0
+no incompatible bonds
+no incompatible groups
+building bond successor bond between b and c
+object chosen = j from target string
 object chosen = a from initial string
 destination: b
 chosen bond facet: letterCategory
@@ -63,249 +108,71 @@ source descriptor: A
 destination descriptor: B
 proposing successor bond 
 object chosen = successor bond between a and b from other string
-bond strength = 48 for successor bond between a and b
+bond strength = 96 for successor bond between a and b
 succeeded: posting bond-builder
-Post top down: top-down-description-scout, with urgency: 5
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
 posting bottom up codelets
 object chosen = successor bond between a and b from other string
-bond strength = 91 for successor bond between a and b
-succeeded: posting bond-builder
-object chosen = c from initial string
-object chosen = j from target string
-destination: k
-chosen bond facet: letterCategory
-Source: j, destination: k
-source descriptor: J
-destination descriptor: K
-proposing successor bond 
-object chosen = b from initial string
-destination: a
-chosen bond facet: letterCategory
-Source: b, destination: a
-source descriptor: B
-destination descriptor: A
-proposing predecessor bond 
-object chosen = predecessor bond between a and b from other string
-bond strength = 48 for predecessor bond between a and b
-urgency: 100.0, number: 1, bin: 7
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
-urgency: 100.0, number: 1, bin: 7
-initial : relevance = 0, unhappiness=100
-target : relevance = 50, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 1 bonds for bond
-urgency: 100.0, number: 1, bin: 7
-object chosen = successor bond between j and k from other string
-bond strength = 91 for successor bond between j and k
-succeeded: posting bond-builder
-object chosen = b from initial string
-initial : relevance = 0, unhappiness=100
-target : relevance = 50, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 1 bonds for bond
-to object: j
-object chosen = j from target string
-destination: k
-chosen bond facet: letterCategory
-Source: j, destination: k
-source descriptor: J
-destination descriptor: K
-proposing successor bond 
-initial : relevance = 0, unhappiness=100
-target : relevance = 50, unhappiness=89
-initial string selected: abc with 3 letters, 3 objects, 0 bonds for direction
-source chosen = a
-no firstBond
-no firstBond2
-urgency: 100.0, number: 1, bin: 7
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-bond-scout--category, with urgency: 4
-posting bottom up codelets
-object chosen = successor bond between a and b from other string
-number of incompatibleBonds: 0
-no incompatible bonds
-no incompatible groups
-building bond successor bond between a and b
-object chosen = successor bond between j and k from other string
 already exists: activate descriptors & Fizzle
-top_down_bond_scout__category
-initial : relevance = 50, unhappiness=100
-target : relevance = 50, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 1 bonds for bond
-source: i, destination: j
 object chosen = successor bond between i and j from other string
-bond strength = 94 for successor bond between i and j
+bond strength = 91 for successor bond between i and j
 succeeded: posting bond-builder
-object chosen = successor bond between a and b from other string
-already exists: activate descriptors & Fizzle
-object chosen = a from initial string
-object chosen = i from target string
-destination: j
-chosen bond facet: letterCategory
-Source: i, destination: j
-source descriptor: I
-destination descriptor: J
-proposing successor bond 
-Post top down: top-down-bond-scout--category, with urgency: 4
-posting bottom up codelets
-object chosen = c from initial string
-initial : relevance = 50, unhappiness=89
-target : relevance = 50, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 1 bonds for direction
-source chosen = k
-firstBond: successor bond between j and k
-possible group: successor bond between j and k
-trying from k to successor
-proposing group from j to k
-object chosen = j from target string
-destination: i
-chosen bond facet: letterCategory
-Source: j, destination: i
-source descriptor: J
-destination descriptor: I
-proposing predecessor bond 
-top_down_bond_scout__category
-initial : relevance = 50, unhappiness=89
-target : relevance = 50, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 1 bonds for bond
-source: k, destination: j
-object chosen = c from initial string
-destination: b
-chosen bond facet: letterCategory
-Source: c, destination: b
-source descriptor: C
-destination descriptor: B
-proposing predecessor bond 
-object chosen = j from target string
+initial : relevance = 100, unhappiness=78
+target : relevance = 0, unhappiness=100
+initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
+initial : relevance = 100, unhappiness=78
+target : relevance = 0, unhappiness=100
+initial string selected: abc with 3 letters, 3 objects, 2 bonds for direction
+source chosen = b
+firstBond: successor bond between a and b
+possible group: successor bond between a and b
+trying from b to successor
+proposing group from a to c
+object chosen = group[0:2] == abc from initial string
 object chosen = successor bond between i and j from other string
 number of incompatibleBonds: 0
 no incompatible bonds
 no incompatible groups
 building bond successor bond between i and j
-initial : relevance = 50, unhappiness=89
-target : relevance = 100, unhappiness=89
-target string selected: ijk with 3 letters, 3 objects, 2 bonds for direction
-source chosen = k
-firstBond: successor bond between j and k
-possible group: successor bond between j and k
-trying from k to successor
-proposing group from i to k
-urgency: 100.0, number: 1, bin: 7
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
-urgency: 100.0, number: 1, bin: 7
-initial : relevance = 50, unhappiness=89
-target : relevance = 100, unhappiness=78
-target string selected: ijk with 3 letters, 3 objects, 2 bonds for group
-object chosen = group[0:2] == ijk from target string
-urgency: 100.0, number: 1, bin: 7
-object chosen = group[0:2] == ijk from target string
-no incompatible bonds
-no incompatible Groups
-building group
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-object chosen = i from target string
-object chosen = predecessor bond between i and j from other string
-bond strength = 48 for predecessor bond between i and j
-object chosen = successor bond between i and j from other string
-bond strength = 96 for successor bond between i and j
-succeeded: posting bond-builder
-object chosen = group[0:2] == ijk from target string
-object chosen = group[0:2] == ijk from target string
-object chosen = group[1:2] == jk from target string
+initial : relevance = 100, unhappiness=78
+target : relevance = 50, unhappiness=100
+target string selected: ijk with 3 letters, 3 objects, 1 bonds for direction
+source chosen = j
+no firstBond
+firstBond2: successor bond between i and j
+possible group: successor bond between i and j
+trying from j to successor
+proposing group from i to j
 Post top down: top-down-bond-scout--direction, with urgency: 3
 Post top down: top-down-group-scout--direction, with urgency: 3
 Post top down: top-down-group-scout--direction, with urgency: 3
 Post top down: top-down-group-scout--direction, with urgency: 3
 Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
 posting bottom up codelets
-object chosen = successor bond between i and j from other string
-already exists: activate descriptors & Fizzle
-initial : relevance = 50, unhappiness=89
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 1 bonds for bond
-to object: b
-object chosen = predecessor bond between b and c from other string
-bond strength = 48 for predecessor bond between b and c
-succeeded: posting bond-builder
-object chosen = c from initial string
-object chosen = successor bond between a and b from other string
-bond strength = 91 for successor bond between a and b
-succeeded: posting bond-builder
 top_down_bond_scout__category
-initial : relevance = 50, unhappiness=89
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 1 bonds for bond
-source: b, destination: c
-object chosen = group[0:2] == ijk from target string
-already exists...activate descriptors & fizzle
-object chosen = successor bond between a and b from other string
-already exists: activate descriptors & Fizzle
-object chosen = b from initial string
-destination: a
-chosen bond facet: letterCategory
-Source: b, destination: a
-source descriptor: B
-destination descriptor: A
-proposing predecessor bond 
-object chosen = c from initial string
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-posting bottom up codelets
-object chosen = successor bond between b and c from other string
-bond strength = 94 for successor bond between b and c
-succeeded: posting bond-builder
-object chosen = group[0:2] == ijk from target string
-object chosen = successor bond between b and c from other string
-number of incompatibleBonds: 0
-no incompatible bonds
-no incompatible groups
-building bond successor bond between b and c
-urgency: 100.0, number: 1, bin: 7
-object chosen = successor bond between i and j from other string
-bond strength = 96 for successor bond between i and j
-succeeded: posting bond-builder
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-initial : relevance = 100, unhappiness=89
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for group
-top_down_bond_scout__category
-initial : relevance = 100, unhappiness=89
-target : relevance = 100, unhappiness=15
+initial : relevance = 100, unhappiness=78
+target : relevance = 50, unhappiness=89
 initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
 source: b, destination: a
+object chosen = successor bond between a and b from other string
+bond strength = 96 for successor bond between a and b
+succeeded: posting bond-builder
+object chosen = group[0:1] == ij from target string
+object chosen = group[0:2] == abc from initial string
+initial : relevance = 100, unhappiness=78
+target : relevance = 50, unhappiness=89
+target string selected: ijk with 3 letters, 3 objects, 1 bonds for direction
+source chosen = i
+firstBond: successor bond between i and j
+possible group: successor bond between i and j
+trying from i to successor
+proposing group from i to j
+object chosen = group[0:1] == ij from target string
 urgency: 100.0, number: 1, bin: 7
-urgency: 100.0, number: 1, bin: 7
-object chosen = a from initial string
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
 object chosen = c from initial string
 destination: b
 chosen bond facet: letterCategory
@@ -313,134 +180,25 @@ Source: c, destination: b
 source descriptor: C
 destination descriptor: B
 proposing predecessor bond 
-object chosen = j from target string
-object chosen = predecessor bond between b and c from other string
-bond strength = 48 for predecessor bond between b and c
-succeeded: posting bond-builder
-object chosen = successor bond between a and b from other string
-bond strength = 96 for successor bond between a and b
-succeeded: posting bond-builder
-top_down_bond_scout__category
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
-source: k, destination: j
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
-object chosen = successor bond between a and b from other string
-already exists: activate descriptors & Fizzle
-object chosen = group[0:2] == abc from initial string
-object chosen = successor bond between i and j from other string
-already exists: activate descriptors & Fizzle
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-object chosen = group[0:2] == abc from initial string
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
-top_down_bond_scout__category
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
-source: j, destination: k
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for direction
-source chosen = k
-firstBond: successor bond between j and k
-possible group: successor bond between j and k
-trying from k to successor
-proposing group from i to k
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for group
-top_down_bond_scout__category
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
-source: c, destination: b
-object chosen = group[0:2] == ijk from target string
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-bond-scout--category, with urgency: 4
-Post top down: top-down-group-scout--category, with urgency: 4
-posting bottom up codelets
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for group
-object chosen = group[0:2] == abc from initial string
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-object chosen = predecessor bond between a and b from other string
-bond strength = 48 for predecessor bond between a and b
-succeeded: posting bond-builder
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for direction
-source chosen = i
-firstBond: successor bond between i and j
-possible group: successor bond between i and j
-trying from i to successor
-proposing group from i to k
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for group
-urgency: 100.0, number: 1, bin: 7
-object chosen = group[0:2] == abc from initial string
-initial : relevance = 100, unhappiness=78
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
-to object: b
-object chosen = successor bond between a and b from other string
-bond strength = 96 for successor bond between a and b
-succeeded: posting bond-builder
-object chosen = group[0:2] == abc from initial string
+object chosen = group[0:1] == ij from target string
 no incompatible bonds
 no incompatible Groups
 building group
-Post top down: top-down-bond-scout--direction, with urgency: 3
-Post top down: top-down-group-scout--direction, with urgency: 3
-Post top down: top-down-description-scout, with urgency: 5
-posting bottom up codelets
-object chosen = group[0:2] == ijk from target string
-urgency: 100.0, number: 2, bin: 7
 object chosen = successor bond between a and b from other string
 already exists: activate descriptors & Fizzle
-top_down_bond_scout__category
-initial : relevance = 100, unhappiness=15
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
-source: k, destination: j
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-object chosen = successor bond between b and c from other string
-bond strength = 96 for successor bond between b and c
-succeeded: posting bond-builder
-initial : relevance = 100, unhappiness=15
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for direction
-source chosen = k
-firstBond: successor bond between j and k
-possible group: successor bond between j and k
-trying from k to successor
-proposing group from i to k
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+posting bottom up codelets
+object chosen = group[0:2] == abc from initial string
+object chosen = predecessor bond between b and c from other string
+bond strength = 48 for predecessor bond between b and c
+initial : relevance = 100, unhappiness=78
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 3 objects, 2 bonds for group
 object chosen = b from initial string
 destination: c
 chosen bond facet: letterCategory
@@ -448,49 +206,317 @@ Source: b, destination: c
 source descriptor: B
 destination descriptor: C
 proposing successor bond 
-object chosen = group[0:2] == ijk from target string
-already exists...activate descriptors & fizzle
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-Post top down: top-down-group-scout--category, with urgency: 4
-posting bottom up codelets
 object chosen = group[0:2] == abc from initial string
-already exists...activate descriptors & fizzle
 top_down_bond_scout__category
-initial : relevance = 100, unhappiness=15
-target : relevance = 100, unhappiness=15
-target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
-source: k, destination: j
-object chosen = b from initial string
-object chosen = group[0:2] == ijk from target string
-object chosen = successor bond between j and k from other string
-bond strength = 96 for successor bond between j and k
-succeeded: posting bond-builder
-initial : relevance = 100, unhappiness=15
-target : relevance = 100, unhappiness=15
-initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
-object chosen = group[0:2] == abc from initial string
-object chosen = group[0:2] == ijk from target string
-object chosen = group[0:2] == abc from initial string
-already exists...activate descriptors & fizzle
-object chosen = group[0:2] == ijk from target string
-already exists...activate descriptors & fizzle
+initial : relevance = 100, unhappiness=78
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 3 objects, 2 bonds for bond
+source: b, destination: c
+initial : relevance = 100, unhappiness=78
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for direction
+source chosen = i
+firstBond: successor bond between i and j
+possible group: successor bond between i and j
+trying from i to successor
+proposing group from i to j
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-description-scout, with urgency: 5
 posting bottom up codelets
+object chosen = group[0:1] == ij from target string
+object chosen = k from target string
+destination: group[0:1] == ij
 object chosen = group[0:2] == abc from initial string
-object chosen = successor bond between j and k from other string
-already exists: activate descriptors & Fizzle
-object chosen = group[0:2] == abc from initial string
-object chosen = group[0:2] == abc from initial string
-already exists...activate descriptors & fizzle
-object chosen = group[0:2] == ijk from target string
-already exists...activate descriptors & fizzle
+no incompatible bonds
+no incompatible Groups
+building group
 object chosen = successor bond between b and c from other string
 bond strength = 96 for successor bond between b and c
 succeeded: posting bond-builder
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+initial : relevance = 100, unhappiness=78
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for direction
+source chosen = b
+firstBond: successor bond between a and b
+possible group: successor bond between a and b
+trying from b to successor
+proposing group from a to c
+object chosen = group[0:1] == ij from target string
+initial : relevance = 100, unhappiness=78
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
+object chosen = group[0:2] == abc from initial string
+object chosen = i from target string
+object chosen = group[0:2] == abc from initial string
+object chosen = successor bond between b and c from other string
+bond strength = 96 for successor bond between b and c
+succeeded: posting bond-builder
+object chosen = group[0:2] == abc from initial string
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
 object chosen = successor bond between b and c from other string
 already exists: activate descriptors & Fizzle
-object chosen = group[0:2] == ijk from target string
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for group
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: group[0:1] == ij, destination: k
+object chosen = group[0:1] == ij from target string
+destination: k
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+object chosen = successor bond between b and c from other string
+already exists: activate descriptors & Fizzle
+object chosen = group[0:2] == abc from initial string
 already exists...activate descriptors & fizzle
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for direction
+source chosen = k
+no firstBond
+no firstBond2
+object chosen = group[0:2] == abc from initial string
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = group[0:1] == ij from target string
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for direction
+source chosen = group[0:1] == ij
+no firstBond
+no firstBond2
+urgency: 100.0, number: 1, bin: 7
+object chosen = group[0:1] == ij from target string
+destination: k
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: group[0:1] == ij, destination: k
+object chosen = group[0:1] == ij from target string
+urgency: 100.0, number: 1, bin: 7
+object chosen = group[0:2] == abc from initial string
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+posting bottom up codelets
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: k, destination: group[0:1] == ij
+object chosen = group[0:2] == abc from initial string
+object chosen = group[0:2] == abc from initial string
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for direction
+source chosen = j
+no firstBond
+firstBond2: successor bond between i and j
+possible group: successor bond between i and j
+trying from j to successor
+proposing group from i to j
+object chosen = group[0:1] == ij from target string
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+object chosen = group[0:2] == abc from initial string
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for direction
+source chosen = a
+firstBond: successor bond between a and b
+possible group: successor bond between a and b
+trying from a to successor
+proposing group from a to c
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+object chosen = group[0:2] == abc from initial string
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: k, destination: group[0:1] == ij
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+to object: k
+object chosen = j from target string
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: k, destination: group[0:1] == ij
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+source: a, destination: b
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 33, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 1 bonds for bond
+source: group[0:1] == ij, destination: k
+object chosen = group[0:1] == ij from target string
+object chosen = successor bond between j and k from other string
+bond strength = 94 for successor bond between j and k
+succeeded: posting bond-builder
+object chosen = successor bond between j and k from other string
+number of incompatibleBonds: 0
+no incompatible bonds
+no incompatible groups
+building bond successor bond between j and k
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=82
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for group
+urgency: 100.0, number: 1, bin: 7
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+to object: b
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=82
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+source: c, destination: b
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+posting bottom up codelets
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for direction
+source chosen = b
+firstBond: successor bond between b and c
+possible group: successor bond between b and c
+trying from b to successor
+proposing group from a to c
+object chosen = successor bond between a and b from other string
+bond strength = 96 for successor bond between a and b
+succeeded: posting bond-builder
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for group
+object chosen = successor bond between a and b from other string
+bond strength = 96 for successor bond between a and b
+succeeded: posting bond-builder
+object chosen = group[0:2] == abc from initial string
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
+source: group[0:1] == ij, destination: k
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
+to object: k
+object chosen = successor bond between b and c from other string
+bond strength = 96 for successor bond between b and c
+succeeded: posting bond-builder
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+source: c, destination: b
+object chosen = group[0:2] == ijk from target string
+object chosen = group[0:2] == abc from initial string
+object chosen = successor bond between b and c from other string
+bond strength = 96 for successor bond between b and c
+succeeded: posting bond-builder
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--category, with urgency: 4
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+object chosen = successor bond between a and b from other string
+already exists: activate descriptors & Fizzle
+object chosen = successor bond between b and c from other string
+already exists: activate descriptors & Fizzle
+object chosen = j from target string
+object chosen = group[0:2] == abc from initial string
+object chosen = group[0:2] == abc from initial string
+already exists...activate descriptors & fizzle
+initial : relevance = 100, unhappiness=15
+target : relevance = 66, unhappiness=78
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
+object chosen = successor bond between a and b from other string
+already exists: activate descriptors & Fizzle
+object chosen = group[0:2] == ijk from target string
+no incompatible bonds
+won fight with group[0:1] == ij
+won fight with group[0:1] == ij
+broke the Groups
+building group
+Post top down: top-down-bond-scout--direction, with urgency: 3
+Post top down: top-down-group-scout--direction, with urgency: 3
+Post top down: top-down-bond-scout--category, with urgency: 4
+Post top down: top-down-group-scout--category, with urgency: 4
+posting bottom up codelets
+object chosen = successor bond between b and c from other string
+already exists: activate descriptors & Fizzle
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+source: a, destination: b
+object chosen = successor bond between a and b from other string
+bond strength = 96 for successor bond between a and b
+succeeded: posting bond-builder
 initial : relevance = 100, unhappiness=15
 target : relevance = 100, unhappiness=15
 target string selected: ijk with 3 letters, 4 objects, 2 bonds for direction
@@ -499,11 +525,78 @@ firstBond: successor bond between i and j
 possible group: successor bond between i and j
 trying from i to successor
 proposing group from i to k
+object chosen = group[0:2] == ijk from target string
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+to object: c
+object chosen = group[0:2] == ijk from target string
+already exists...activate descriptors & fizzle
+object chosen = a from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: a, destination: b
+source descriptor: A
+destination descriptor: B
+proposing successor bond 
+object chosen = successor bond between b and c from other string
+bond strength = 96 for successor bond between b and c
+succeeded: posting bond-builder
+object chosen = successor bond between a and b from other string
+bond strength = 96 for successor bond between a and b
+succeeded: posting bond-builder
+object chosen = successor bond between a and b from other string
+already exists: activate descriptors & Fizzle
+object chosen = successor bond between a and b from other string
+already exists: activate descriptors & Fizzle
 object chosen = successor bond between b and c from other string
 already exists: activate descriptors & Fizzle
-object chosen = group[0:2] == abc from initial string
-already exists...activate descriptors & fizzle
-object chosen = group[0:2] == ijk from target string
-object chosen = group[0:2] == ijk from target string
-already exists...activate descriptors & fizzle
+object chosen = group[0:1] == ij from target string
+no incompatible bonds
+lost fight with group[0:2] == ijk
+failed to break Groups: Fizzle
 posting bottom up codelets
+top_down_bond_scout__category
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for bond
+source: k, destination: j
+object chosen = successor bond between j and k from other string
+bond strength = 96 for successor bond between j and k
+succeeded: posting bond-builder
+urgency: 100.0, number: 2, bin: 7
+object chosen = successor bond between j and k from other string
+already exists: activate descriptors & Fizzle
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for bond
+urgency: 100.0, number: 2, bin: 7
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+target string selected: ijk with 3 letters, 4 objects, 2 bonds for direction
+source chosen = k
+firstBond: successor bond between j and k
+possible group: successor bond between j and k
+trying from k to successor
+proposing group from i to k
+initial : relevance = 100, unhappiness=15
+target : relevance = 100, unhappiness=15
+initial string selected: abc with 3 letters, 4 objects, 2 bonds for direction
+source chosen = b
+firstBond: successor bond between b and c
+possible group: successor bond between b and c
+trying from b to successor
+proposing group from a to c
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+posting bottom up codelets
+object chosen = group[0:2] == abc from initial string
+object chosen = group[0:2] == ijk from target string
+object chosen = group[0:2] == ijk from target string
+already exists...activate descriptors & fizzle
+object chosen = group[0:2] == abc from initial string
