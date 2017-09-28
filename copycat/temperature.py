@@ -115,6 +115,24 @@ class Temperature(object):
         xyd: 934 (avg time 7699.8, avg temp 88.1)
 
         It's bad overall, but at least it's statistically significant!
+
+        return (-f * (math.log2(f))) # Entropy test #1 (global).
+
+        wyz: 123 (avg time 5933.1, avg temp 16.5)
+        xyy: 200 (avg time 6486.7, avg temp 27.8)
+        yyz: 330 (avg time 6310.2, avg temp 38.5)
+        dyz: 75 (avg time 6393.3, avg temp 39.6)
+        yzz: 5 (avg time 4965.0, avg temp 59.3)
+        xyz: 160 (avg time 6886.2, avg temp 60.2)
+        xd: 4 (avg time 2841.0, avg temp 61.8)
+        dz: 3 (avg time 3721.0, avg temp 62.1)
+        xyd: 100 (avg time 5853.1, avg temp 67.5)
+
+        Here we get an intuitive result: entropy/uncertainty seems better at
+        exploring a whole range of possible solutions.  It even seems, at least
+        to me, better than the distribution obtained by the original copycat.
+
+        Need to play with this more... and WTF is f anyways?
         """
         if value == 0 or value == 0.5 or self.value() == 0:
             return value
@@ -124,4 +142,4 @@ class Temperature(object):
         a = math.sqrt(coldness)
         c = (10 - a) / 100
         f = (c + 1) * value
-        return (0.0)  # f  # max(f, 0.0000)
+        return (-f * math.log2(f))  # max(f, 0.0000)
