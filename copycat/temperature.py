@@ -164,7 +164,15 @@ class Temperature(object):
 
         Which leads me to suspect that someone may have overfitted the
         model for either xyz or iijjkk or some other problem, and one
-        improvement there means disaster here.  
+        improvement there means disaster here.
+
+        Something tells me to invert again to 1-entropy... and bingo!
+
+        iijjll: 59 (avg time 797.4, avg temp 19.8)
+        iijjkl: 41 (avg time 696.1, avg temp 28.5)
+
+
+
 
         Need to play with this more... and WTF is f anyways?
         """
@@ -176,4 +184,4 @@ class Temperature(object):
         a = math.sqrt(coldness)
         c = (10 - a) / 100
         f = (c + 1) * value
-        return (-f * math.log2(f))  # max(f, 0.0000)
+        return (1 - (-f * math.log2(f)))  # max(f, 0.0000)
