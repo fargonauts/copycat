@@ -10,13 +10,10 @@ from tkinter import filedialog
 
 class MainApplication(ttk.Frame):
     MAX_COLUMNS = 10
-    MAX_ROWS    = 4
 
     def __init__(self, parent, *args, **kwargs):
         ttk.Frame.__init__(self, parent, *args, **kwargs)
         self.widgets = dict()
-        self.slipnodes = []
-        self.slipwidgets = []
 
         self.parent = parent
         self.create_widgets()
@@ -34,19 +31,19 @@ class MainApplication(ttk.Frame):
         self.widgets['temp'] = temp_label
 
     def update_slipnodes(self, slipnodes):
-        for widget in self.slipwidgets:
-            widget.grid_forget()
-        self.slipnodes = [(node.name, round(node.activation, 2)) for node in slipnodes]
+        slipnodes = [(node.name, round(node.activation, 2)) for node in slipnodes]
         row = 0
-        for i, (name, amount) in enumerate(self.slipnodes):
+        for i, (name, amount) in enumerate(slipnodes):
             column = i % MainApplication.MAX_COLUMNS
-            if column == 0:
+            if column == 0 and i != 0:
                 row += 1
-            if row + 1 >= MainApplication.MAX_ROWS:
-                break
-            l = tk.Label(self, text='{}\n({})'.format(name, amount))
-            l.grid(column=column, row=row+4, sticky=tk.SE)
-            self.slipwidgets.append(l)
+            text = text='{}\n({})'.format(name, amount)
+            if name not in self.widgets:
+                l = tk.Label(self, text=text)
+                l.grid(column=column, row=row+3, sticky=tk.SE)
+                self.widgets[name] = l
+            else:
+                self.widgets[name]['text'] = text
 
 class GUI(object):
     def __init__(self, title):
