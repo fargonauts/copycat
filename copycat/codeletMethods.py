@@ -72,6 +72,7 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
     """Return true if the first structure comes out stronger than the second."""
     ctx = structure1.ctx
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     structure1.updateStrength()
     structure2.updateStrength()
@@ -111,6 +112,7 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 def __slippability(ctx, conceptMappings):
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
@@ -124,6 +126,7 @@ def __slippability(ctx, conceptMappings):
 @codelet('breaker')
 def breaker(ctx, codelet):
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     # TODO: use entropy
@@ -161,6 +164,7 @@ def chooseRelevantDescriptionByActivation(ctx, workspaceObject):
 
 def similarPropertyLinks(ctx, slip_node):
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     result = []
     for slip_link in slip_node.propertyLinks:
@@ -216,6 +220,7 @@ def top_down_description_scout(ctx, codelet):
 def description_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     description = codelet.arguments[0]
     description.descriptor.buffer = 100.0
@@ -301,6 +306,7 @@ def rule_scout(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
     slipnet = ctx.slipnet
+    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     assert workspace.numberOfUnreplacedObjects() == 0
@@ -339,6 +345,7 @@ def rule_scout(ctx, codelet):
         # "union of this and distinguishing descriptors"
     assert objectList
     # use conceptual depth to choose a description
+    # TODO: use entropy
     weights = [
         temperature.getAdjustedValue(node.conceptualDepth)
         for node in objectList
@@ -350,6 +357,7 @@ def rule_scout(ctx, codelet):
         objectList += [changed.replacement.relation]
     objectList += [changed.replacement.objectFromModified.getDescriptor(
         slipnet.letterCategory)]
+    # TODO: use entropy
     # use conceptual depth to choose a relation
     weights = [
         temperature.getAdjustedValue(node.conceptualDepth)
@@ -364,6 +372,7 @@ def rule_scout(ctx, codelet):
 def rule_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     rule = codelet.arguments[0]
     rule.updateStrength()
@@ -465,6 +474,7 @@ def top_down_bond_scout__direction(ctx, codelet):
 def bond_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     bond = codelet.arguments[0]
     __showWhichStringObjectIsFrom(bond)
@@ -747,6 +757,7 @@ def group_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
     slipnet = ctx.slipnet
+    # TODO: use entropy
     temperature = ctx.temperature
     # update strength value of the group
     group = codelet.arguments[0]
@@ -869,6 +880,7 @@ def __getCutoffWeights(bondDensity):
 def rule_translator(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     assert workspace.rule
@@ -946,6 +958,7 @@ def important_object_correspondence_scout(ctx, codelet):
     assert objectFromInitial is not None
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
     # choose descriptor by conceptual depth
+    # TODO: use entropy
     weights = [temperature.getAdjustedValue(n.conceptualDepth) for n in descriptors]
     slipnode = random.weighted_choice(descriptors, weights)
     assert slipnode
@@ -997,6 +1010,7 @@ def important_object_correspondence_scout(ctx, codelet):
 def correspondence_strength_tester(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
+    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     correspondence = codelet.arguments[0]

@@ -1,6 +1,5 @@
 import math
 
-
 class Temperature(object):
     def __init__(self):
         self.reset()
@@ -47,6 +46,8 @@ class Temperature(object):
     """
 
     def getAdjustedProbability(self, value):
+        # TODO: use entropy 
+
         """
         This function returns the probability for a decision.
         Copied above.
