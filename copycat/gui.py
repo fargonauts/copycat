@@ -23,10 +23,10 @@ class MainApplication(ttk.Frame):
     def create_widgets(self):
         """Contains all widgets in main application."""
 
-        main_label = tk.Label(self, text="abc:abd::ijk:?", background='black', foreground='white')
+        main_label = ttk.Label(self, text="abc:abd::ijk:?", background='black', foreground='white')
         main_label.grid(column=0, row=0, columnspan=9, rowspan=4)
         self.widgets['main'] = main_label
-        temp_label = tk.Label(self, text='temp')
+        temp_label = ttk.Label(self, text='temp')
         temp_label.grid(column=9, row=0, rowspan=1, sticky=tk.E)
         self.widgets['temp'] = temp_label
 
@@ -39,8 +39,8 @@ class MainApplication(ttk.Frame):
                 row += 1
             text = text='{}\n({})'.format(name, amount)
             if name not in self.widgets:
-                l = tk.Label(self, text=text)
-                l.grid(column=column, row=row+3, sticky=tk.SE)
+                l = ttk.Label(self, text=text)
+                l.grid(column=column*2, columnspan=2, row=row+3, sticky=tk.SE)
                 self.widgets[name] = l
             else:
                 self.widgets[name]['text'] = text
