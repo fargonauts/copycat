@@ -132,6 +132,40 @@ class Temperature(object):
         exploring a whole range of possible solutions.  It even seems, at least
         to me, better than the distribution obtained by the original copycat.
 
+        instead of log2, trying ln --> return (-f * math.log(f)):
+
+        wyz: 78 (avg time 7793.7, avg temp 16.6)
+        xyy: 202 (avg time 9168.5, avg temp 27.5)
+        wxz: 1 (avg time 3154.0, avg temp 33.4)
+        dyz: 63 (avg time 7950.3, avg temp 41.7)
+        yyz: 217 (avg time 8147.4, avg temp 41.7)
+        xyz: 201 (avg time 7579.7, avg temp 62.5)
+        xxy: 1 (avg time 7994.0, avg temp 64.8)
+        yzz: 8 (avg time 4672.6, avg temp 65.7)
+        xd: 9 (avg time 9215.2, avg temp 68.1)
+        xyd: 217 (avg time 7677.9, avg temp 73.8)
+        dz: 3 (avg time 20379.0, avg temp 77.3)
+
+        (quickly) trying out (1-this_entropy_function):
+
+        xyd: 100 (avg time 2984.3, avg temp 18.2)
+
+        And that's beautiful! One wants an inverse function that punishes
+        exploration and creativity, that takes all the fluidity off
+        the system.
+
+        But somehow this completely messes up with abc abd iijjkk:
+
+        jijjkk: 66 (avg time 3200.1, avg temp 61.3)
+        iijjkk: 114 (avg time 5017.2, avg temp 63.5)
+        dijjkk: 23 (avg time 2209.0, avg temp 67.3)
+        iijjkl: 748 (avg time 3262.8, avg temp 70.0)
+        iijjkd: 49 (avg time 2315.9, avg temp 76.3)
+
+        Which leads me to suspect that someone may have overfitted the
+        model for either xyz or iijjkk or some other problem, and one
+        improvement there means disaster here.  
+
         Need to play with this more... and WTF is f anyways?
         """
         if value == 0 or value == 0.5 or self.value() == 0:
