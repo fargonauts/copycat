@@ -9,10 +9,10 @@ To run it, type at the terminal:
 The script takes three to five arguments. The first two are a pair of strings
 with some change, for example "abc" and "abd". The third is a string which the
 script should try to change analogously. The fourth (which defaults to "1") is
-a number of iterations. One can also specify a defined seed falue for the
+a number of iterations. One can also specify a defined seed value for the
 random number generator.
 
-The above might produce output such as these runs:
+This instruction produces output such as:
 
     iiijjjlll: 670 (avg time 1108.5, avg temp 23.6)
     iiijjjd: 2 (avg time 1156.0, avg temp 35.0)
