@@ -56,6 +56,7 @@ def main():
     parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
     parser.add_argument('--iterations', type=int, default=1, help='Run the given case this many times.')
     parser.add_argument('--plot', action='store_true', help='Plot a bar graph of answer distribution')
+    parser.add_argument('--noshow', action='store_true', help='Don\'t display bar graph at end of run')
     parser.add_argument('initial', type=str, help='A...')
     parser.add_argument('modified', type=str, help='...is to B...')
     parser.add_argument('target', type=str, help='...as C is to... what?')
@@ -68,7 +69,7 @@ def main():
         print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
 
     if options.plot:
-        plot_answers(answers)
+        plot_answers(answers, show=not options.noshow)
 
 if __name__ == '__main__':
     main()

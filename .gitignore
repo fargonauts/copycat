@@ -28,3 +28,6 @@ copycat.log
 
 # Editors
 .*.swp
+
+# Output
+output/*

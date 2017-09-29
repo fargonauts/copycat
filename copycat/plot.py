@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
  
 
-def plot_answers(answers):
+def plot_answers(answers, show=True, save=True, filename='distribution.png'):
     answers = sorted(answers.items(), key=lambda kv : kv[1]['count'])
     objects = [t[0] + ' (temp:{})'.format(t[1]['avgtemp']) for t in answers]
     yvalues = [t[1]['count'] for t in answers]
@@ -14,5 +14,7 @@ def plot_answers(answers):
     plt.xticks(y_pos, objects)
     plt.ylabel('Count')
     plt.title('Answers')
-    plt.show()
-   
+    if show:
+        plt.show()
+    if save:
+        plt.savefig('output/{}'.format(filename))
