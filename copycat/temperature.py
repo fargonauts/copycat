@@ -221,6 +221,10 @@ class Temperature(object):
         
         f in terms of value() and value only
         f = ((10 - sqrt(100 - self.value()))/100 + 1) * value
+        so, the function: (10 - sqrt(100 - temp)) / 100 
+        produces a scalar from the current temperature,
+        ranging from 1.0 when the temp is 0 to 1.1 when the temp is 100.
+        This is used to scale probablities in their inverse directions
 
         For the original LISP program:
             ; This function is a filter:  it inputs a value (from 0 to 100) and returns
@@ -277,23 +281,89 @@ class Temperature(object):
         It looks like the function below preserves most of the functionality of the original lisp.
         However, the comments themselves agree that the formula is overly complicated.
 
+        """
         prob = value # Slightly more descriptive (and less ambiguous), will change argument
         # Temperature, potentially clamped
-        temp   = self.value()
+        temp = self.value()
+        iprob = 1 - prob
+
+        
+        # This function does precisely what I think the original lisp comment describes, but provides crappy results
+        # return (temp / 200) * iprob + ((200 - temp) / 200) * prob
+        # However, this version preforms much better:
+        # Some statistical analysis is needed of course
+        return (temp / 100) * iprob + ((100 - temp) / 100) * prob
+        '''
+        lucas@infinity:~/projects/personal/copycat$ ./main.py abc abd xyz --iterations 10 --plot
+        Answered wyz (time 3865, final temperature 13.9)
+        Answered wyz (time 8462, final temperature 10.8)
+        Answered wyz (time 6062, final temperature 11.7)
+        Answered yyz (time 4022, final temperature 15.6)
+        Answered yyz (time 2349, final temperature 59.8)
+        Answered xyd (time 17977, final temperature 14.9)
+        Answered xyd (time 1550, final temperature 14.7)
+        Answered xyd (time 11755, final temperature 16.8)
+        Answered wyz (time 2251, final temperature 13.7)
+        Answered yyz (time 13007, final temperature 11.7)
+        wyz: 4 (avg time 5160.0, avg temp 12.5)
+        xyd: 3 (avg time 10427.3, avg temp 15.5)
+        yyz: 3 (avg time 6459.3, avg temp 29.0)
+
+        However, it generally does worse on abc:abd::ijjkk:_
+
+        lucas@infinity:~/projects/personal/copycat$ ./main.py abc abd ijjkkk --iterations 10 --plot
+        Answered ijjlll (time 7127, final temperature 17.6)
+        Answered ijjlll (time 968, final temperature 17.5)
+        Answered ijjkkl (time 1471, final temperature 19.8)
+        Answered ijjlll (time 1058, final temperature 13.2)
+        Answered ijjkkl (time 489, final temperature 83.9)
+        Answered ijjkkl (time 1576, final temperature 18.7)
+        Answered ijjkkl (time 1143, final temperature 65.2)
+        Answered ijjkkl (time 3067, final temperature 19.6)
+        Answered ijjkkl (time 1973, final temperature 40.4)
+        Answered ijjkkl (time 1064, final temperature 50.6)
+        ijjlll: 3 (avg time 3051.0, avg temp 16.1)
+        ijjkkl: 7 (avg time 1540.4, avg temp 42.6)
+        '''
+        # unparameterized version
+        #curvedProb = (temp / 100) * iprob + (cold / 100) * prob
+
+        #if prob < .5:
+        #    # Curving small (<.5) probabilities to .5, but not over
+        #    return max(curvedProb, .5)
+        #else:
+        #    # Curving large (>.5) probabilities to .5, but not under
+        #    return min(curvedProb, .5)
+
+        # parameterized version : weights towards or away from probabilities
+        # alpha = 1.0
+        # beta  = 1.0
+        # return ((alpha + temp / 100) * iprob +  (beta + cold / 100) * prob) / (alpha + beta)
+
+        '''
         # A scaling factor (between 0 and infinity), based on temperature (i.e. 100/coldness)
         if temp == 100: # Avoid dividing by zero
             factor = float('inf') 
         else:
-            factor = 100 / (100 - temp)
-
+            # My factor:
+            # factor = 100 / (100 - temp)
+            # SQRT:
+            # factor = math.sqrt(100 / (100 - temp))
+            # Original factor:
+            # factor = (110 - math.sqrt(100 - temp)) / 100
+            # Factor ^ 10:
+            # factor = ((110 - math.sqrt(100 - temp)) / 100) ** 10.
+            # Factor ^ 20
+            # factor = ((110 - math.sqrt(100 - temp)) / 100) ** 20.
+            # No factor:
+            # factor = 1
         if prob == .5:
             return .5
         elif prob > .5:
             prob = prob / factor
         elif prob < .5:
             prob = prob * factor
-        return max(min(prob, 0), 1) # Normalize between 0 and 1. TODO: make scaling factor more reasonable
-        """
+        return min(max(prob, 0), 1) # Normalize between 0 and 1.
         
         if value == 0 or value == 0.5 or self.value() == 0:
             return value
@@ -307,3 +377,4 @@ class Temperature(object):
         # return max(f, 0.0)
         # return (0 + (-f * math.log2(f)))
         return -f * math.log2(f)
+        '''
