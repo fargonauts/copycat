@@ -222,3 +222,21 @@ class Temperature(object):
         c = (10 - a) / 100
         f = (c + 1) * value
         return (0 + (-f * math.log2(f)))  # max(f, 0.0000)
+
+    def getAdjustedProbability(self, value):
+        # Recall self.value():
+        # def value(self):
+        #     return 100.0 if self.clamped else self.actual_value
+        #
+        # f in terms of value() and value only
+        # f = ((10 - sqrt(100 - self.value()))/100 + 1) * value
+        
+        if value == 0 or value == 0.5 or self.value() == 0:
+            return value
+        if value < 0.5:
+            return 1.0 - self.getAdjustedProbability(1.0 - value)
+        coldness = 100.0 - self.value()
+        a = math.sqrt(coldness)
+        c = (10 - a) / 100
+        f = (c + 1) * value
+        return max(f, 0.5)
