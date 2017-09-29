@@ -212,6 +212,44 @@ class Temperature(object):
 
 
         Need to play with this more... and WTF is f anyways?
+
+        LSaldyt:
+
+        Recall self.value():
+        def value(self):
+            return 100.0 if self.clamped else self.actual_value
+        
+        f in terms of value() and value only
+        f = ((10 - sqrt(100 - self.value()))/100 + 1) * value
+
+        For the original LISP program:
+
+        ; This function is a filter:  it inputs a value (from 0 to 100) and returns
+        ; a probability (from 0 - 1) based on that value and the temperature.  When
+        ; the temperature is 0, the result is (/ value 100), but at higher 
+        ; temperatures, values below 50 get raised and values above 50 get lowered
+        ; as a function of temperature.
+        ; I think this whole formula could probably be simplified.
+
+          (setq result
+                (cond ((= prob 0) 0)
+                      ((<= prob .5)
+                       (setq low-prob-factor (max 1 (truncate (abs (log prob 10)))))
+                       (min (+ prob 
+                               (* (/ (- 10 (sqrt (fake-reciprocal *temperature*))) 
+                                     100) 
+                                  (- (expt 10 (- (1- low-prob-factor))) prob)))
+                            .5))
+                             
+                      ((= prob .5) .5)
+                      ((> prob .5)
+                       (max (- 1
+                                (+ (- 1 prob) 
+                                   (* (/ (- 10 (sqrt (fake-reciprocal *temperature*))) 
+                                         100)
+                                      (- 1 (- 1 prob)))))
+                            .5))))
+          result)
         """
         if value == 0 or value == 0.5 or self.value() == 0:
             return value
@@ -221,22 +259,7 @@ class Temperature(object):
         a = math.sqrt(coldness)
         c = (10 - a) / 100
         f = (c + 1) * value
-        return (0 + (-f * math.log2(f)))  # max(f, 0.0000)
-
-    def getAdjustedProbability(self, value):
-        # Recall self.value():
-        # def value(self):
-        #     return 100.0 if self.clamped else self.actual_value
-        #
-        # f in terms of value() and value only
-        # f = ((10 - sqrt(100 - self.value()))/100 + 1) * value
-        
-        if value == 0 or value == 0.5 or self.value() == 0:
-            return value
-        if value < 0.5:
-            return 1.0 - self.getAdjustedProbability(1.0 - value)
-        coldness = 100.0 - self.value()
-        a = math.sqrt(coldness)
-        c = (10 - a) / 100
-        f = (c + 1) * value
-        return max(f, 0.5)
+        # return max(f, 0.5)
+        # return max(f, 0.0)
+        # return (0 + (-f * math.log2(f)))
+        return -f * math.log2(f)
