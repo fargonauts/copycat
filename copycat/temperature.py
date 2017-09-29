@@ -223,34 +223,78 @@ class Temperature(object):
         f = ((10 - sqrt(100 - self.value()))/100 + 1) * value
 
         For the original LISP program:
+            ; This function is a filter:  it inputs a value (from 0 to 100) and returns
+            ; a probability (from 0 - 1) based on that value and the temperature. 
+            *********************************************************
+            ; When the temperature is 0, the result is (/ value 100), but at higher 
+            ; temperatures, values below 50 get raised and values above 50 get lowered
+            ; as a function of temperature.
+            **********************************************************
+            ; I think this whole formula could probably be simplified.
+            **********************************************************
 
-        ; This function is a filter:  it inputs a value (from 0 to 100) and returns
-        ; a probability (from 0 - 1) based on that value and the temperature.  When
-        ; the temperature is 0, the result is (/ value 100), but at higher 
-        ; temperatures, values below 50 get raised and values above 50 get lowered
-        ; as a function of temperature.
-        ; I think this whole formula could probably be simplified.
-
-          (setq result
-                (cond ((= prob 0) 0)
-                      ((<= prob .5)
-                       (setq low-prob-factor (max 1 (truncate (abs (log prob 10)))))
-                       (min (+ prob 
-                               (* (/ (- 10 (sqrt (fake-reciprocal *temperature*))) 
-                                     100) 
-                                  (- (expt 10 (- (1- low-prob-factor))) prob)))
-                            .5))
-                             
-                      ((= prob .5) .5)
-                      ((> prob .5)
-                       (max (- 1
-                                (+ (- 1 prob) 
+            (defun get-temperature-adjusted-probability (prob &aux low-prob-factor
+                                                                   result)
+              (setq result
+                    (cond ((= prob 0) 0)
+                          ((<= prob .5)
+                           (setq low-prob-factor (max 1 (truncate (abs (log prob 10)))))
+                           (min (+ prob 
                                    (* (/ (- 10 (sqrt (fake-reciprocal *temperature*))) 
-                                         100)
-                                      (- 1 (- 1 prob)))))
-                            .5))))
-          result)
+                                         100) 
+                                      (- (expt 10 (- (1- low-prob-factor))) prob)))
+                                .5))
+                                 
+                          ((= prob .5) .5)
+                          ((> prob .5)
+                           (max (- 1
+                                    (+ (- 1 prob) 
+                                       (* (/ (- 10 (sqrt (fake-reciprocal *temperature*))) 
+                                             100)
+                                          (- 1 (- 1 prob)))))
+                                .5))))
+              result)
+
+        Which was tested using:
+
+            (defun test-get-temperature-adjusted-probability (prob)
+            (with-open-file (ostream "testfile" :direction :output 
+                                              :if-does-not-exist :create
+                                              :if-exists :append) 
+                    (format ostream "prob: ~a~&" prob)
+              (loop for temp in '(0 10 20 30 40 50 60 70 80 90 100) do
+                    (setq *temperature* temp)
+                    (format ostream "Temperature: ~a; probability ~a~&"
+                            temp (float (get-temperature-adjusted-probability prob))))
+              (format ostream "~%")))
+
+        Interpretation:
+
+        Importantly, the values of .5 in both the min and max correspond to the mid-cutoff of 50:
+            i.e. 'values below 50 get raised and values above 50 get lowered'
+        Still, it is interesting to note that changing 'return max(f, 0.0) to max(f, 0.5) has no significant effect on the distribution
+
+        It looks like the function below preserves most of the functionality of the original lisp.
+        However, the comments themselves agree that the formula is overly complicated.
+
+        prob = value # Slightly more descriptive (and less ambiguous), will change argument
+        # Temperature, potentially clamped
+        temp   = self.value()
+        # A scaling factor (between 0 and infinity), based on temperature (i.e. 100/coldness)
+        if temp == 100: # Avoid dividing by zero
+            factor = float('inf') 
+        else:
+            factor = 100 / (100 - temp)
+
+        if prob == .5:
+            return .5
+        elif prob > .5:
+            prob = prob / factor
+        elif prob < .5:
+            prob = prob * factor
+        return max(min(prob, 0), 1) # Normalize between 0 and 1. TODO: make scaling factor more reasonable
         """
+        
         if value == 0 or value == 0.5 or self.value() == 0:
             return value
         if value < 0.5:
