@@ -67,6 +67,10 @@ class Copycat(object):
 
     def run(self, initial, modified, target, iterations, testAdjFormulas=False):
         self.workspace.resetWithStrings(initial, modified, target)
+
+        # I (LSaldyt) am very sorry for writing code like this.
+        # It will soon be deleted. I promise.
+
         if testAdjFormulas:
             formulas = self.temperature.adj_formulas()
         else:
@@ -90,9 +94,9 @@ class Copycat(object):
             for answer, d in answers.items():
                 d['avgtemp'] = d.pop('sumtemp') / d['count']
                 d['avgtime'] = d.pop('sumtime') / d['count']
-            formulaList.append(answers)
+            formulaList.append((formula, answers))
         if not testAdjFormulas:
-            return formulaList[0]
+            return formulaList[0][1]
         else:
             return formulaList
 
