@@ -35,8 +35,7 @@ final temperature of the workspace; lower means "more elegant".
 import argparse
 import logging
 
-from copycat import Copycat, Reporter, plot_answers
-
+from copycat import Copycat, Reporter, plot_answers, save_answers
 
 class SimpleReporter(Reporter):
     """Reports results from a single run."""
@@ -70,6 +69,8 @@ def main():
 
     if options.plot:
         plot_answers(answers, show=not options.noshow)
+    save_answers(answers, 'output/answers.csv')
+
 
 if __name__ == '__main__':
     main()
