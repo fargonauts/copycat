@@ -1,8 +1,44 @@
 import math
 
+# Alternate formulas for getAdjustedProbability
+
+def _original(temp, prob):
+    if prob == 0 or prob == 0.5 or temp == 0:
+        return prob
+    if prob < 0.5:
+        return 1.0 - _original(temp, 1.0 - prob)
+    coldness = 100.0 - temp
+    a = math.sqrt(coldness)
+    c = (10 - a) / 100
+    f = (c + 1) * prob
+    return max(f, 0.5)
+
+def _entropy(temp, prob):
+    if prob == 0 or prob == 0.5 or temp == 0:
+        return prob
+    if prob < 0.5:
+        return 1.0 - _original(temp, 1.0 - prob)
+    coldness = 100.0 - temp
+    a = math.sqrt(coldness)
+    c = (10 - a) / 100
+    f = (c + 1) * prob
+    return -f * math.log2(f)
+
+def _inverse_prob(temp, prob):
+    # Temperature, potentially clamped
+    iprob = 1 - prob
+    return (temp / 100) * iprob + ((100 - temp) / 100) * prob
+
+
 class Temperature(object):
     def __init__(self):
         self.reset()
+        self.adjustmentType = 'original'
+        self._adjustmentFormulas = {
+                'original' : _original,
+                'entropy'  : _entropy,
+                'inverse'  : _inverse_prob
+                }
 
     def reset(self):
         self.actual_value = 100.0
@@ -32,7 +68,19 @@ class Temperature(object):
     def getAdjustedValue(self, value):
         return value ** (((100.0 - self.value()) / 30.0) + 0.5)
 
-    """
+    def getAdjustedProbability(self, value):
+        temp = self.value()
+        prob = value
+        return self._adjustmentFormulas[self.adjustmentType](temp, prob)
+
+    def useAdj(self, adj):
+        print('Changing to adjustment formula {}'.format(adj))
+        self.adjustmentType = adj
+
+    def adj_formulas(self):
+        return self._adjustmentFormulas.keys()
+
+    '''
     def getAdjustedProbability(self, value):
         if value == 0 or value == 0.5 or self.value() == 0:
             return value
@@ -43,9 +91,20 @@ class Temperature(object):
         c = (10 - a) / 100
         f = (c + 1) * value
         return max(f, 0.5)
-    """
 
     def getAdjustedProbability(self, value):
+        if value == 0 or value == 0.5 or self.value() == 0:
+            return value
+        if value < 0.5:
+            return 1.0 - self.getAdjustedProbability(1.0 - value)
+        coldness = 100.0 - self.value()
+        a = math.sqrt(coldness)
+        c = (10 - a) / 100
+        f = (c + 1) * value
+        # return max(f, 0.5)
+        # return max(f, 0.0)
+        # return (0 + (-f * math.log2(f)))
+        return -f * math.log2(f)
         # TODO: use entropy 
 
         """
@@ -291,9 +350,13 @@ class Temperature(object):
         # This function does precisely what I think the original lisp comment describes, but provides crappy results
         # return (temp / 200) * iprob + ((200 - temp) / 200) * prob
         # However, this version preforms much better:
+        # Essentially, it weights probabilities towards their inverses when temperature is higher, and leaves them unaffected when it is lower.
         # Some statistical analysis is needed of course
         return (temp / 100) * iprob + ((100 - temp) / 100) * prob
-        '''
+
+        # This will give only xyd answers:
+        #return 1 - (temp / 100) * iprob + ((100 - temp) / 100) * prob
+        """
         lucas@infinity:~/projects/personal/copycat$ ./main.py abc abd xyz --iterations 10 --plot
         Answered wyz (time 3865, final temperature 13.9)
         Answered wyz (time 8462, final temperature 10.8)
@@ -324,7 +387,7 @@ class Temperature(object):
         Answered ijjkkl (time 1064, final temperature 50.6)
         ijjlll: 3 (avg time 3051.0, avg temp 16.1)
         ijjkkl: 7 (avg time 1540.4, avg temp 42.6)
-        '''
+        """
         # unparameterized version
         #curvedProb = (temp / 100) * iprob + (cold / 100) * prob
 
@@ -340,7 +403,7 @@ class Temperature(object):
         # beta  = 1.0
         # return ((alpha + temp / 100) * iprob +  (beta + cold / 100) * prob) / (alpha + beta)
 
-        '''
+        """
         # A scaling factor (between 0 and infinity), based on temperature (i.e. 100/coldness)
         if temp == 100: # Avoid dividing by zero
             factor = float('inf') 

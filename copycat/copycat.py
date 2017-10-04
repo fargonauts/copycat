@@ -4,7 +4,6 @@ from .slipnet import Slipnet
 from .temperature import Temperature
 from .workspace import Workspace
 
-
 class Reporter(object):
     """Do-nothing base class for defining new reporter types"""
     def report_answer(self, answer):
@@ -66,24 +65,36 @@ class Copycat(object):
         self.reporter.report_answer(answer)
         return answer
 
-    def run(self, initial, modified, target, iterations):
+    def run(self, initial, modified, target, iterations, testAdjFormulas=False):
         self.workspace.resetWithStrings(initial, modified, target)
-        answers = {}
-        for i in range(iterations):
-            answer = self.runTrial()
-            d = answers.setdefault(answer['answer'], {
-                'count': 0,
-                'sumtemp': 0, # TODO: use entropy
-                'sumtime': 0
-            })
-            d['count'] += 1
-            d['sumtemp'] += answer['temp'] # TODO: use entropy
-            d['sumtime'] += answer['time']
+        if testAdjFormulas:
+            formulas = self.temperature.adj_formulas()
+        else:
+            formulas = ['original']
 
-        for answer, d in answers.items():
-            d['avgtemp'] = d.pop('sumtemp') / d['count']
-            d['avgtime'] = d.pop('sumtime') / d['count']
-        return answers
+        formulaList = []
+        for formula in formulas:
+            self.temperature.useAdj(formula)
+            answers = {}
+            for i in range(iterations):
+                answer = self.runTrial()
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0, # TODO: use entropy
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp'] # TODO: use entropy
+                d['sumtime'] += answer['time']
+
+            for answer, d in answers.items():
+                d['avgtemp'] = d.pop('sumtemp') / d['count']
+                d['avgtime'] = d.pop('sumtime') / d['count']
+            formulaList.append(answers)
+        if not testAdjFormulas:
+            return formulaList[0]
+        else:
+            return formulaList
 
     def run_forever(self, initial, modified, target):
         self.workspace.resetWithStrings(initial, modified, target)
