@@ -68,13 +68,11 @@ class Copycat(object):
     def run(self, initial, modified, target, iterations, testAdjFormulas=False):
         self.workspace.resetWithStrings(initial, modified, target)
 
-        # I (LSaldyt) am very sorry for writing code like this.
-        # It will soon be deleted. I promise.
-
         if testAdjFormulas:
             formulas = self.temperature.adj_formulas()
         else:
-            formulas = ['original']
+            formulas = ['inverse']
+            #formulas = ['entropy']
 
         formulaList = []
         for formula in formulas:

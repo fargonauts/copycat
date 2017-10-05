@@ -1,7 +1,6 @@
 import math
 
 # Alternate formulas for getAdjustedProbability
-
 def _original(temp, prob):
     if prob == 0 or prob == 0.5 or temp == 0:
         return prob
@@ -33,7 +32,7 @@ def _inverse_prob(temp, prob):
 class Temperature(object):
     def __init__(self):
         self.reset()
-        self.adjustmentType = 'original'
+        self.adjustmentType = 'inverse'
         self._adjustmentFormulas = {
                 'original' : _original,
                 'entropy'  : _entropy,

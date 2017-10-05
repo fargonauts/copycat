@@ -40,13 +40,10 @@ def main():
                         originalCount = originalCounts[answer] 
                         if originalCount != 0:
                             chi2 += (count + originalCount) ** 2 / originalCount
-                    print((formula, chi2))
-
-
+                    print('Chi^2 value for {}:{}'.format(formula, chi2))
 
                 #for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
                     #print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
-
 
             #filename = 'output/{}-{}-{}.csv'.format(a, b, c)
             #save_answers(answers, filename)
