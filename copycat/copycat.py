@@ -65,38 +65,30 @@ class Copycat(object):
         self.reporter.report_answer(answer)
         return answer
 
-    def run(self, initial, modified, target, iterations, testAdjFormulas=False):
+    def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
 
-        if testAdjFormulas:
-            formulas = self.temperature.adj_formulas()
-        else:
-            formulas = ['inverse']
-            #formulas = ['entropy']
+        #self.temperature.useAdj('original')
+        #self.temperature.useAdj('entropy')
+        self.temperature.useAdj('inverse') # 100 weight
+        #self.temperature.useAdj('150-weight')
+        #self.temperature.useAdj('200-weight')
+        answers = {}
+        for i in range(iterations):
+            answer = self.runTrial()
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtemp': 0, # TODO: use entropy
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtemp'] += answer['temp'] # TODO: use entropy
+            d['sumtime'] += answer['time']
 
-        formulaList = []
-        for formula in formulas:
-            self.temperature.useAdj(formula)
-            answers = {}
-            for i in range(iterations):
-                answer = self.runTrial()
-                d = answers.setdefault(answer['answer'], {
-                    'count': 0,
-                    'sumtemp': 0, # TODO: use entropy
-                    'sumtime': 0
-                })
-                d['count'] += 1
-                d['sumtemp'] += answer['temp'] # TODO: use entropy
-                d['sumtime'] += answer['time']
-
-            for answer, d in answers.items():
-                d['avgtemp'] = d.pop('sumtemp') / d['count']
-                d['avgtime'] = d.pop('sumtime') / d['count']
-            formulaList.append((formula, answers))
-        if not testAdjFormulas:
-            return formulaList[0][1]
-        else:
-            return formulaList
+        for answer, d in answers.items():
+            d['avgtemp'] = d.pop('sumtemp') / d['count']
+            d['avgtime'] = d.pop('sumtime') / d['count']
+        return answers
 
     def run_forever(self, initial, modified, target):
         self.workspace.resetWithStrings(initial, modified, target)
