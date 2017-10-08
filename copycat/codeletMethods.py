@@ -112,11 +112,9 @@ def __fightIncompatibles(incompatibles, structure, name,
 
 def __slippability(ctx, conceptMappings):
     random = ctx.random
-    # TODO: use entropy
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
-        # TODO: use entropy
         probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
         if random.coinFlip(probabilityOfSlippage):
             return True
@@ -125,11 +123,18 @@ def __slippability(ctx, conceptMappings):
 
 @codelet('breaker')
 def breaker(ctx, codelet):
+    # From the original LISP:
+    '''
+        First decides probabilistically whether or not to fizzle, based on 
+        temperature.  Chooses a structure and random and decides probabilistically
+        whether or not to break it as a function of its total weakness.
+
+        If the structure is a bond in a group, have to break the group in 
+        order to break the bond.
+    '''
     random = ctx.random
-    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
-    # TODO: use entropy
     probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
     if random.coinFlip(probabilityOfFizzle):
         return
@@ -145,8 +150,9 @@ def breaker(ctx, codelet):
             if structure.source.group == structure.destination.group:
                 breakObjects += [structure.source.group]
     # Break all the objects or none of them; this matches the Java
+    # "all objects" means a bond and its group, if it has one.
+    
     for structure in breakObjects:
-        # TODO: use entropy
         breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
         if random.coinFlip(breakProbability):
