@@ -1,7 +1,9 @@
 import unittest
+from pprint import pprint
 
-from .copycat import Copycat
+from copycat import Copycat
 
+# TODO: update test cases to use entropy
 
 def pnormaldist(p):
     table = {
@@ -67,6 +69,7 @@ class TestCopycat(unittest.TestCase):
                     self.fail('No instances of expected key %s were produced! %r != %r' % (k, actual, expected))
 
     def run_testcase(self, initial, modified, target, iterations, expected):
+        pprint(expected)
         actual = Copycat().run(initial, modified, target, iterations)
         self.assertEqual(sum(a['count'] for a in list(actual.values())), iterations)
         self.assertProbabilitiesLookRoughlyLike(actual, expected)

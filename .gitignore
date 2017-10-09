@@ -27,3 +27,6 @@ pip-log.txt
 
 # Editors
 .*.swp
+
+# Output
+output/*

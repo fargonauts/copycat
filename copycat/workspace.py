@@ -39,7 +39,7 @@ class Workspace(object):
         self.changedObject = None
         self.objects = []
         self.structures = []
-        self.rule = None
+        self.rule = None # Only one rule? : LSaldyt
         self.initial = WorkspaceString(self.ctx, self.initialString)
         self.modified = WorkspaceString(self.ctx, self.modifiedString)
         self.target = WorkspaceString(self.ctx, self.targetString)
@@ -99,6 +99,11 @@ class Workspace(object):
 
     # TODO: use entropy
     def getUpdatedTemperature(self):
+        '''
+        Calculation of global tolerance towards irrelevance
+
+        temp = weightedAverage(totalUnhappiness(.8), ruleWeakness(.2))
+        '''
         self.calculateIntraStringUnhappiness()
         self.calculateInterStringUnhappiness()
         self.calculateTotalUnhappiness()

@@ -68,6 +68,7 @@ class Coderack(object):
             self.postBottomUpCodelets()
 
     def probabilityOfPosting(self, codeletName):
+        # TODO: use entropy
         temperature = self.ctx.temperature
         workspace = self.ctx.workspace
         if codeletName == 'breaker':
@@ -156,6 +157,7 @@ class Coderack(object):
 
     def __postBottomUpCodelets(self, codeletName):
         random = self.ctx.random
+        # TODO: use entropy
         temperature = self.ctx.temperature
         probability = self.probabilityOfPosting(codeletName)
         howMany = self.howManyToPost(codeletName)
@@ -288,6 +290,7 @@ class Coderack(object):
 
     def chooseCodeletToRun(self):
         random = self.ctx.random
+        # TODO: use entropy
         temperature = self.ctx.temperature
         assert self.codelets
 

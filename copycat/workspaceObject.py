@@ -2,7 +2,6 @@ from .description import Description
 from .formulas import weightedAverage
 from .workspaceStructure import WorkspaceStructure
 
-
 class WorkspaceObject(WorkspaceStructure):
     # pylint: disable=too-many-instance-attributes
     def __init__(self, workspaceString):
