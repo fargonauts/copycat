@@ -1,6 +1,7 @@
 import math
 
 # Alternate formulas for getAdjustedProbability
+
 def _original(temp, prob):
     if prob == 0 or prob == 0.5 or temp == 0:
         return prob
