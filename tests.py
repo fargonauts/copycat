@@ -1,6 +1,5 @@
 import unittest
-
-from .copycat import Copycat
+from copycat import Copycat
 
 # TODO: update test cases to use entropy
 
