@@ -5,81 +5,44 @@ from copycat import Copycat
 
 # TODO: update test cases to use entropy
 
-def pnormaldist(p):
-    table = {
-        0.80: 1.2815,
-        0.90: 1.6448,
-        0.95: 1.9599,
-        0.98: 2.3263,
-        0.99: 2.5758,
-        0.995: 2.8070,
-        0.998: 3.0902,
-        0.999: 3.2905,
-        0.9999: 3.8905,
-        0.99999: 4.4171,
-        0.999999: 4.8916,
-        0.9999999: 5.3267,
-        0.99999999: 5.7307,
-        0.999999999: 6.1094,
-    }
-    return max(v for k, v in table.items() if k <= p)
-
-
-def lower_bound_on_probability(hits, attempts, confidence=0.95):
-    if attempts == 0:
-        return 0
-    z = pnormaldist(confidence)
-    zsqr = z * z
-    phat = 1.0 * hits / attempts
-    under_sqrt = (phat * (1 - phat) + zsqr / (4 * attempts)) / attempts
-    denominator = (1 + zsqr / attempts)
-    return (phat + zsqr / (2 * attempts) - z * (under_sqrt ** 0.5)) / denominator
-
-
-def upper_bound_on_probability(hits, attempts, confidence=0.95):
-    misses = attempts - hits
-    return 1.0 - lower_bound_on_probability(misses, attempts, confidence)
-
+# CHI2 values for n degrees freedom
+_chiSquared_table = {
+        1:3.841,
+        2:5.991,
+        3:7.815,
+        4:9.488,
+        5:11.071,
+        6:12.592,
+        7:14.067,
+        8:15.507,
+        9:16.919,
+        10:18.307
+        }
 
 class TestCopycat(unittest.TestCase):
-
-    SignificantPercent = 10
 
     def setUp(self):
         self.longMessage = True  # new in Python 2.7
 
     def assertProbabilitiesLookRoughlyLike(self, actual, expected, iterations):
-        significantCount = iterations / TestCopycat.SignificantPercent # The number of times a value must show up to be significant
 
-        actual_count = 0.0 + sum(d['count'] for d in list(actual.values()))
-        expected_count = 0.0 + sum(d['count'] for d in list(expected.values()))
-        self.assertGreater(actual_count, 1)
-        self.assertGreater(expected_count, 1)
+        answerKeys = set(list(actual.keys()) + list(expected.keys()))
+        degreesFreedom = len(answerKeys)
+        chiSquared = 0
 
-        for k in set(list(actual.keys()) + list(expected.keys())):
-            if k not in expected:
-                expected_probability = 0.05
+        get_count = lambda k, d : d[k]['count'] if k in d else 0
+
+        for k in answerKeys:
+            E = get_count(k, expected)
+            O = get_count(k, actual)
+            if E == 0:
+                print('Warning! Expected 0 counts of {}, but got {}'.format(k, O))
             else:
-                expected_probability = expected[k]['count'] / expected_count
-            '''
-            if k not in expected and actual[k]['count'] >= significantCount:
-                self.fail('Key %s was produced but not expected! %r != %r' % (k, actual, expected))
-                expected_probability = 
-            expected_probability = expected[k]['count'] / expected_count
-            '''
-            if k in actual:
-                actual_lo = lower_bound_on_probability(actual[k]['count'], actual_count)
-                actual_hi = upper_bound_on_probability(actual[k]['count'], actual_count)
-                if not (actual_lo <= expected_probability <= actual_hi):
-                    print('Failed (%s <= %s <= %s)' % (actual_lo, expected_probability, actual_hi))
-                    self.fail('Count ("obviousness" metric) seems way off! %r != %r' % (actual, expected))
-                if abs(actual[k]['avgtemp'] - expected[k]['avgtemp']) >= 10.0 + (10.0 / actual[k]['count']):
-                    print('Failed (%s - %s >= %s)' % (actual[k]['avgtemp'], expected[k]['avgtemp'], 10.0 + (10.0 / actual[k]['count'])))
-                    self.fail('Temperature ("elegance" metric) seems way off! %r != %r' % (actual, expected))
-            else:
-                actual_hi = upper_bound_on_probability(0, actual_count)
-                if not (0 <= expected_probability <= actual_hi):
-                    self.fail('No instances of expected key %s were produced! %r != %r' % (k, actual, expected))
+                chiSquared += (O - E) ** 2 / E
+
+        if chiSquared >= _chiSquared_table[degreesFreedom]:
+            self.fail('Significant different between expected and actual answer distributions: \n' +
+                'Chi2 value: {} with {} degrees of freedom'.format(chiSquared, degreesFreedom))
 
     def run_testcase(self, initial, modified, target, iterations, expected):
         print('expected:')
@@ -90,7 +53,6 @@ class TestCopycat(unittest.TestCase):
         self.assertEqual(sum(a['count'] for a in list(actual.values())), iterations)
         self.assertProbabilitiesLookRoughlyLike(actual, expected, iterations)
 
-    '''
     def test_simple_cases(self):
         self.run_testcase('abc', 'abd', 'efg', 30, 
 	    {'dfg': {'avgtemp': 72.37092377767368, 'avgtime': 475.0, 'count': 1},
@@ -98,10 +60,13 @@ class TestCopycat(unittest.TestCase):
 	     'efh': {'avgtemp': 19.381658717913258,
 		     'avgtime': 757.1851851851852,
 		     'count': 27}})
-        self.run_testcase('abc', 'abd', 'ijk', 30, {
-            'ijl': {'count': 30, 'avgtemp': 20},
-        })
-    '''
+        self.run_testcase('abc', 'abd', 'ijk', 30, 
+            {'ijd': {'avgtemp': 14.691978036611559, 'avgtime': 453.0, 'count': 1},
+             'ijl': {'avgtemp': 22.344023091153964,
+                              'avgtime': 742.1428571428571,
+                                       'count': 28},
+             'jjk': {'avgtemp': 11.233344554288019, 'avgtime': 595.0, 'count': 1}})
+
 
     def test_abc_xyz(self):
         self.run_testcase('abc', 'abd', 'xyz', 100, 
@@ -132,7 +97,6 @@ class TestCopycat(unittest.TestCase):
 		      'count': 44},
 	     'jjkk': {'avgtemp': 75.76606718990365, 'avgtime': 925.0, 'count': 2}})
 
-    '''
     def test_mrrjjj(self):
         self.run_testcase('abc', 'abd', 'mrrjjj', 30, 
 	    {'drrjjj': {'avgtemp': 47.3961, 'avgtime': 1538.0, 'count': 1},
@@ -144,7 +108,6 @@ class TestCopycat(unittest.TestCase):
 	     'mrrkkk': {'avgtemp': 43.6931,
 			'avgtime': 2251.4615,
 			'count': 13}})
-    '''
 
     '''
     Below are examples of improvements that could be made to copycat.
