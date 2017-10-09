@@ -27,12 +27,6 @@ def _inverse_prob(temp, prob):
     iprob = 1 - prob
     return (temp / 100) * iprob + ((100 - temp) / 100) * prob
 
-def _alt_inverse_prob(temp, prob):
-    if temp == 100:
-        return .5
-    iprob = 1 - prob
-    return (temp / 100) * iprob + ((100 - temp) / 100) * prob
-
 class Temperature(object):
     def __init__(self):
         self.reset()
@@ -40,9 +34,7 @@ class Temperature(object):
         self._adjustmentFormulas = {
                 'original'    : _original,
                 'entropy'     : _entropy,
-                'inverse'     : _inverse_prob,
-                'alt_inverse' : _alt_inverse_prob
-                }
+                'inverse'     : _inverse_prob}
 
     def reset(self):
         self.actual_value = 100.0

@@ -20,7 +20,6 @@ pip-log.txt
 .coverage
 .tox
 .log
-copycat.log
 
 # Other filesystems
 .svn
