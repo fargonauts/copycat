@@ -1,5 +1,10 @@
 language: python
+branches:
+  only:
+    - "develop"
+    - "master"
 python:
   - "3.6"
 script: 
   - python3 tests.py
+
