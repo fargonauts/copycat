@@ -155,6 +155,7 @@ def breaker(ctx, codelet):
     for structure in breakObjects:
         breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
+        #breakProbability = structure.totalStrength / 100.0
         if random.coinFlip(breakProbability):
             return
     for structure in breakObjects:
