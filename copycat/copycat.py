@@ -68,11 +68,10 @@ class Copycat(object):
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
 
-        self.temperature.useAdj('original')
+        #self.temperature.useAdj('original')
         #self.temperature.useAdj('entropy')
-        #self.temperature.useAdj('inverse') # 100 weight
-        #self.temperature.useAdj('150-weight')
-        #self.temperature.useAdj('200-weight')
+        self.temperature.useAdj('inverse') # 100 weight
+        #self.temperature.useAdj('alt_inverse') # 100 weight, equal probs at 100
         answers = {}
         for i in range(iterations):
             answer = self.runTrial()
