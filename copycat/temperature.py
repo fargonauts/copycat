@@ -25,22 +25,41 @@ def _entropy(temp, prob):
     return -f * math.log2(f)
 
 def _weighted_inverse(temp, prob):
-    alpha = 10
-    beta  = 1
-
     iprob = 1 - prob
-    inverse_weighted = (temp / 100) * iprob + ((100 - temp) / 100) * prob 
+    weight = 100
+    inverse_weighted = (temp / weight) * iprob + ((weight - temp) / weight) * prob 
+    return inverse_weighted
 
-    return (alpha * inverse_weighted + beta * prob) / (alpha + beta)
+def _fifty_converge(temp, prob): # Uses .5 instead of 1-prob
+    weight = 100
+    curved = (temp / weight) * .5 + ((weight - temp) / weight) * prob 
+    return curved 
+
+def _soft_curve(temp, prob): # Curves to the average of the (1-p) and .5
+    iprob = 1 - prob
+    weight = 100
+    curved = min(1, (temp / weight) * ((1.5 - prob) / 2) + ((weight - temp) / weight) * prob)
+    return curved
+
+def _weighted_soft_curve(temp, prob): # Curves to the weighted average of the (1-p) and .5
+    weight = 100 # Don't change me in this context
+    gamma  = .5  # convergance value
+    alpha  = 1   # gamma weight
+    beta   = 3   # iprob weight
+    curved = min(1, (temp / weight) * ((alpha * gamma + beta * (1 - prob)) / (alpha + beta)) + ((weight - temp) / weight) * prob)
+    return curved
 
 class Temperature(object):
     def __init__(self):
         self.reset()
         self.adjustmentType = 'inverse'
         self._adjustmentFormulas = {
-                'original'    : _original,
-                'entropy'     : _entropy,
-                'inverse'     : _weighted_inverse}
+                'original'       : _original,
+                'entropy'        : _entropy,
+                'inverse'        : _weighted_inverse,
+                'fifty_converge' : _fifty_converge,
+                'soft'           : _soft_curve,
+                'weighted_soft'  : _weighted_soft_curve}
 
     def reset(self):
         self.actual_value = 100.0
