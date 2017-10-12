@@ -24,9 +24,14 @@ def _entropy(temp, prob):
     f = (c + 1) * prob
     return -f * math.log2(f)
 
-def _inverse_prob(temp, prob):
+def _weighted_inverse(temp, prob):
+    alpha = 10
+    beta  = 1
+
     iprob = 1 - prob
-    return (temp / 100) * iprob + ((100 - temp) / 100) * prob
+    inverse_weighted = (temp / 100) * iprob + ((100 - temp) / 100) * prob 
+
+    return (alpha * inverse_weighted + beta * prob) / (alpha + beta)
 
 class Temperature(object):
     def __init__(self):
@@ -35,7 +40,7 @@ class Temperature(object):
         self._adjustmentFormulas = {
                 'original'    : _original,
                 'entropy'     : _entropy,
-                'inverse'     : _inverse_prob}
+                'inverse'     : _weighted_inverse}
 
     def reset(self):
         self.actual_value = 100.0
