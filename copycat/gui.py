@@ -24,7 +24,7 @@ class MainApplication(ttk.Frame):
         """Contains all widgets in main application."""
 
         main_label = ttk.Label(self, text="abc:abd::ijk:?", background='black', foreground='white')
-        main_label.grid(column=0, row=0, columnspan=9, rowspan=4, sticky=tk.N+tk.S+tk.E+tk.W)
+        main_label.grid(column=0, row=0, columnspan=9, rowspan=4, sticky=tk.N)#+tk.S+tk.E+tk.W)
         self.widgets['main'] = main_label
         temp_label = ttk.Label(self, text='temp')
         temp_label.grid(column=9, row=0, rowspan=1, sticky=tk.N+tk.S+tk.E+tk.W)
