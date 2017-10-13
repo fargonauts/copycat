@@ -5,8 +5,42 @@ import time
 
 import tkinter as tk
 import tkinter.ttk as ttk
+
 from tkinter import scrolledtext
 from tkinter import filedialog
+
+font1Size = 32
+font2Size = 16
+font1 = ('Helvetica', str(font1Size)) 
+font2 = ('Helvetica', str(font2Size))
+
+def create_main_canvas(root, initial, final, new, guess):
+    padding  = 100
+
+    canvas = tk.Canvas(root, borderwidth=5, relief=tk.GROOVE, background='#70747a')
+
+    def add_sequences(sequences, x, y):
+        for sequence in sequences:
+            x += padding
+            for char in sequence:
+                canvas.create_text(x, y, text=char, anchor=tk.NW, font=font1, fill='white')
+                x += font1Size
+        return x, y
+
+    x = 0
+    y = padding
+
+    add_sequences([initial, final], x, y)
+
+    x = 0
+    y += padding
+
+    add_sequences([new, guess], x, y)
+
+    canvas['height'] = str(int(canvas['height']) + padding)
+    canvas['width']  = str(int(canvas['width'])  + padding)
+
+    return canvas
 
 class MainApplication(ttk.Frame):
     MAX_COLUMNS = 10
@@ -17,33 +51,20 @@ class MainApplication(ttk.Frame):
 
         self.parent = parent
         self.create_widgets()
+        self.canvas = None
         self.columnconfigure(0)
         self.rowconfigure(0)
 
     def create_widgets(self):
-        """Contains all widgets in main application."""
+        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '')
+        self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
-        main_label = ttk.Label(self, text="abc:abd::ijk:?", background='black', foreground='white')
-        main_label.grid(column=0, row=0, columnspan=9, rowspan=4, sticky=tk.N)#+tk.S+tk.E+tk.W)
-        self.widgets['main'] = main_label
-        temp_label = ttk.Label(self, text='temp')
-        temp_label.grid(column=9, row=0, rowspan=1, sticky=tk.N+tk.S+tk.E+tk.W)
+        temp_label = ttk.Label(self, text='', background='#70747a', foreground='white', borderwidth=5, relief=tk.GROOVE, font=font2, padding=30)
+        temp_label.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['temp'] = temp_label
 
-    def update_slipnodes(self, slipnodes):
-        slipnodes = [(node.name, round(node.activation, 2)) for node in slipnodes]
-        row = 0
-        for i, (name, amount) in enumerate(slipnodes):
-            column = i % MainApplication.MAX_COLUMNS
-            if column == 0 and i != 0:
-                row += 1
-            text = text='{}\n({})'.format(name, amount)
-            if name not in self.widgets:
-                l = ttk.Label(self, text=text)
-                l.grid(column=column*2, columnspan=2, row=row+3, sticky=tk.N+tk.S+tk.E+tk.W)
-                self.widgets[name] = l
-            else:
-                self.widgets[name]['text'] = text
+    def update_slipnodes(self):
+        self.canvas = create_main_canvas(self.root, 'abc', 'abd', 'ijk', '')
 
 class GUI(object):
     def __init__(self, title):
@@ -56,5 +77,5 @@ class GUI(object):
     def update(self, temp, slipnodes):
         self.root.update_idletasks()
         self.root.update()
-        self.app.widgets['temp']['text'] = 'Temp:({})'.format(temp)
-        self.app.update_slipnodes(slipnodes)
+        self.app.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
+        self.app.update()
