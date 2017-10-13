@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import sys
 import time
 
@@ -13,6 +12,12 @@ font1Size = 32
 font2Size = 16
 font1 = ('Helvetica', str(font1Size)) 
 font2 = ('Helvetica', str(font2Size))
+
+style = dict(background='#70747a', 
+             foreground='white',  
+             borderwidth=5, 
+             relief=tk.GROOVE, 
+             font=font2)
 
 def create_main_canvas(root, initial, final, new, guess):
     padding  = 100
@@ -59,23 +64,40 @@ class MainApplication(ttk.Frame):
         self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '')
         self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
-        temp_label = ttk.Label(self, text='', background='#70747a', foreground='white', borderwidth=5, relief=tk.GROOVE, font=font2, padding=30)
-        temp_label.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
-        self.widgets['temp'] = temp_label
+        tempLabel = ttk.Label(self, text='', **style, padding=30)
+        tempLabel.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.widgets['temp'] = tempLabel
 
-    def update_slipnodes(self):
-        self.canvas = create_main_canvas(self.root, 'abc', 'abd', 'ijk', '')
+        slipList = tk.Listbox(self, **style)
+        slipList.grid(column=2, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.widgets['sliplist'] = slipList
+
+    def update(self, temp, slipnodes):
+        slipList = self.widgets['sliplist']
+        slipList.delete(0, slipList.size())
+
+        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '')
+        self.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
+        slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
+        for item in slipnodes:
+            listStr = '{}: {}'.format(item.name, round(item.activation, 2))
+            self.widgets['sliplist'].insert(tk.END, listStr)
 
 class GUI(object):
-    def __init__(self, title):
+    def __init__(self, title, updateInterval=.5):
         self.root = tk.Tk()
         self.root.title(title)
         self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
         self.app.pack(side='top', fill='both', expand=True)
 
+        self.lastUpdated = time.time()
+        self.updateInterval = updateInterval
+
     def update(self, temp, slipnodes):
         self.root.update_idletasks()
         self.root.update()
-        self.app.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
-        self.app.update()
+        current = time.time()
+        if current - self.lastUpdated > self.updateInterval:
+            self.app.update(temp, slipnodes)
+            self.lastUpdated = current
