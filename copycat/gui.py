@@ -72,7 +72,11 @@ class MainApplication(ttk.Frame):
         slipList.grid(column=2, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['sliplist'] = slipList
 
-    def update(self, temp, slipnodes):
+        codeletList = tk.Listbox(self, **style)
+        codeletList.grid(column=3, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.widgets['codeletlist'] = codeletList
+
+    def update(self, temp, slipnodes, codelets):
         slipList = self.widgets['sliplist']
         slipList.delete(0, slipList.size())
 
@@ -81,23 +85,30 @@ class MainApplication(ttk.Frame):
         slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
         for item in slipnodes:
             listStr = '{}: {}'.format(item.name, round(item.activation, 2))
-            self.widgets['sliplist'].insert(tk.END, listStr)
+            slipList.insert(tk.END, listStr)
+
+        codeletList = self.widgets['codeletlist']
+        codeletList.delete(0, codeletList.size())
+        codelets = sorted(codelets, key=lambda c:c.urgency, reverse=True)
+        for codelet in codelets:
+            listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
+            codeletList.insert(tk.END, listStr)
 
 class GUI(object):
     def __init__(self, title, updateInterval=.5):
         self.root = tk.Tk()
         self.root.title(title)
-        self.root.geometry('1200x800')
+        #self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
         self.app.pack(side='top', fill='both', expand=True)
 
         self.lastUpdated = time.time()
         self.updateInterval = updateInterval
 
-    def update(self, temp, slipnodes):
+    def update(self, temp, slipnodes, codelets):
         self.root.update_idletasks()
         self.root.update()
         current = time.time()
         if current - self.lastUpdated > self.updateInterval:
-            self.app.update(temp, slipnodes)
+            self.app.update(temp, slipnodes, codelets)
             self.lastUpdated = current

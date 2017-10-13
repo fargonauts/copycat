@@ -54,7 +54,8 @@ class Copycat(object):
         if self.showgui:
             self.gui.update(
                     self.temperature.value(),
-                    self.slipnet.slipnodes
+                    self.slipnet.slipnodes,
+                    self.coderack.codelets
                     )
         return lastUpdate
 
