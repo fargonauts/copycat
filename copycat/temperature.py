@@ -24,18 +24,58 @@ def _entropy(temp, prob):
     f = (c + 1) * prob
     return -f * math.log2(f)
 
-def _inverse_prob(temp, prob):
+def _weighted(temp, prob, s, u):
+    weighted = (temp / 100) * s + ((100 - temp) / 100) * u 
+    return weighted
+
+def _weighted_inverse(temp, prob):
     iprob = 1 - prob
-    return (temp / 100) * iprob + ((100 - temp) / 100) * prob
+    return _weighted(temp, prob, iprob, prob)
+
+def _fifty_converge(temp, prob): # Uses .5 instead of 1-prob
+    return _weighted(temp, prob, .5, prob)
+
+def _soft_curve(temp, prob): # Curves to the average of the (1-p) and .5
+    return min(1, _weighted(temp, prob, (1.5-prob)/2, prob))
+
+def _weighted_soft_curve(temp, prob): # Curves to the weighted average of the (1-p) and .5
+    weight = 100
+    gamma  = .5  # convergance value
+    alpha  = 1   # gamma weight
+    beta   = 3   # iprob weight
+    curved = min(1, (temp / weight) * ((alpha * gamma + beta * (1 - prob)) / (alpha + beta)) + ((weight - temp) / weight) * prob)
+    return curved
+
+def _alt_fifty(temp, prob):
+    s = .5
+    u = prob ** 2 if prob < .5 else math.sqrt(prob)
+    return _weighted(temp, prob, s, u)
+
+def _averaged_alt(temp, prob):
+    s = (1.5 - prob)/2
+    u = prob ** 2 if prob < .5 else math.sqrt(prob)
+    return _weighted(temp, prob, s, u)
+
+def _working_best(temp, prob):
+    s = .5   # convergence
+    r = 1.05 # power
+    u = prob ** r if prob < .5 else prob ** (1/r)
+    return _weighted(temp, prob, s, u)
 
 class Temperature(object):
     def __init__(self):
         self.reset()
         self.adjustmentType = 'inverse'
         self._adjustmentFormulas = {
-                'original'    : _original,
-                'entropy'     : _entropy,
-                'inverse'     : _inverse_prob}
+                'original'       : _original,
+                'entropy'        : _entropy,
+                'inverse'        : _weighted_inverse,
+                'fifty_converge' : _fifty_converge,
+                'soft'           : _soft_curve,
+                'weighted_soft'  : _weighted_soft_curve,
+                'alt_fifty'      : _alt_fifty,
+                'average_alt'    : _averaged_alt,
+                'best'           : _working_best}
 
     def reset(self):
         self.actual_value = 100.0

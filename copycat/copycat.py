@@ -71,6 +71,13 @@ class Copycat(object):
         self.temperature.useAdj('original')
         #self.temperature.useAdj('entropy')
         #self.temperature.useAdj('inverse') # 100 weight
+        #self.temperature.useAdj('fifty_converge') 
+        #self.temperature.useAdj('soft') 
+        #self.temperature.useAdj('weighted_soft') 
+        #self.temperature.useAdj('alt_fifty')
+        #self.temperature.useAdj('average_alt')
+        self.temperature.useAdj('best')
+
         answers = {}
         for i in range(iterations):
             answer = self.runTrial()
