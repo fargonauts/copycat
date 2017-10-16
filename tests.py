@@ -70,16 +70,13 @@ class TestCopycat(unittest.TestCase):
 
     def test_abc_xyz(self):
         self.run_testcase('abc', 'abd', 'xyz', 100, 
-	    {'dyz': {'avgtemp': 26.143509984937367, 'avgtime': 9866.625, 'count': 8},
-	     'wyz': {'avgtemp': 12.249539212574128,
-		     'avgtime': 9520.666666666666,
-		     'count': 18},
-	     'xyd': {'avgtemp': 38.73402068486291, 'avgtime': 7439.225, 'count': 40},
-	     'xyy': {'avgtemp': 24.614440709519627, 'avgtime': 3522.625, 'count': 8},
-	     'xyz': {'avgtemp': 57.674822842028945, 'avgtime': 8315.2, 'count': 5},
-	     'yyz': {'avgtemp': 26.874886217740315,
-		     'avgtime': 8493.142857142857,
-		     'count': 21}})
+	    {'dyz': {'avgtemp': 16.78130739435325, 'avgtime': 393.0, 'count': 1},
+	     'wyz': {'avgtemp': 26.100450643627426, 'avgtime': 4040.0, 'count': 2},
+	     'xyd': {'avgtemp': 21.310415433987586,
+		     'avgtime': 5592.277777777777,
+		     'count': 90},
+	     'xyz': {'avgtemp': 23.798124933747882, 'avgtime': 3992.0, 'count': 1},
+	     'yyz': {'avgtemp': 27.137975077133788, 'avgtime': 4018.5, 'count': 6}})
 
     def test_ambiguous_case(self):
         self.run_testcase('abc', 'abd', 'ijkk', 100, 
@@ -99,15 +96,12 @@ class TestCopycat(unittest.TestCase):
 
     def test_mrrjjj(self):
         self.run_testcase('abc', 'abd', 'mrrjjj', 30, 
-	    {'drrjjj': {'avgtemp': 47.3961, 'avgtime': 1538.0, 'count': 1},
-	     'mrrjjd': {'avgtemp': 70.5363, 'avgtime': 681.0, 'count': 1},
-	     'mrrjjjj': {'avgtemp': 19.1294, 'avgtime': 2075.0, 'count': 1},
-	     'mrrjjk': {'avgtemp': 48.0952,
-			'avgtime': 2203.5714,
-			'count': 14},
-	     'mrrkkk': {'avgtemp': 43.6931,
-			'avgtime': 2251.4615,
-			'count': 13}})
+	    {'mrrjjd': {'avgtemp': 44.46354725386579, 'avgtime': 1262.0, 'count': 1},
+	     'mrrjjjj': {'avgtemp': 17.50702440140412, 'avgtime': 1038.375, 'count': 8},
+	     'mrrjjk': {'avgtemp': 55.189156978290264,
+			'avgtime': 1170.6363636363637,
+			'count': 11},
+	     'mrrkkk': {'avgtemp': 43.709349775080746, 'avgtime': 1376.2, 'count': 10}})
 
     '''
     Below are examples of improvements that could be made to copycat.
