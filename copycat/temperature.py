@@ -56,6 +56,12 @@ def _averaged_alt(temp, prob):
     u = prob ** 2 if prob < .5 else math.sqrt(prob)
     return _weighted(temp, prob, s, u)
 
+def _working_best(temp, prob):
+    s = .5   # convergence
+    r = 1.05 # power
+    u = prob ** r if prob < .5 else prob ** (1/r)
+    return _weighted(temp, prob, s, u)
+
 class Temperature(object):
     def __init__(self):
         self.reset()
@@ -68,7 +74,8 @@ class Temperature(object):
                 'soft'           : _soft_curve,
                 'weighted_soft'  : _weighted_soft_curve,
                 'alt_fifty'      : _alt_fifty,
-                'average_alt'    : _averaged_alt}
+                'average_alt'    : _averaged_alt,
+                'best'           : _working_best}
 
     def reset(self):
         self.actual_value = 100.0

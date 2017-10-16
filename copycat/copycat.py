@@ -68,7 +68,7 @@ class Copycat(object):
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
 
-        self.temperature.useAdj('original')
+        #self.temperature.useAdj('original')
         #self.temperature.useAdj('entropy')
         #self.temperature.useAdj('inverse') # 100 weight
         #self.temperature.useAdj('fifty_converge') 
@@ -76,6 +76,7 @@ class Copycat(object):
         #self.temperature.useAdj('weighted_soft') 
         #self.temperature.useAdj('alt_fifty')
         #self.temperature.useAdj('average_alt')
+        self.temperature.useAdj('best')
 
         answers = {}
         for i in range(iterations):
