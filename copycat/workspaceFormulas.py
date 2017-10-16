@@ -1,5 +1,6 @@
 
 def __chooseObjectFromList(ctx, objects, attribute):
+    # TODO: use entropy
     random = ctx.random
     temperature = ctx.temperature
     weights = [

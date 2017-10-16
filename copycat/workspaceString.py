@@ -38,7 +38,7 @@ class WorkspaceString(object):
         return self.string[i]
 
     def updateRelativeImportance(self):
-        """Update the normalised importance of all objects in the string"""
+        """Update the normalised importance of all objects in the string."""
         total = sum(o.rawImportance for o in self.objects)
         if not total:
             for o in self.objects:

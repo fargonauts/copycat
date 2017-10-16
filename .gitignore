@@ -19,6 +19,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+.log
 
 # Other filesystems
 .svn
@@ -26,3 +27,6 @@ pip-log.txt
 
 # Editors
 .*.swp
+
+# Output
+output/*

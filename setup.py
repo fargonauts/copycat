@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+"""Self-explanatory."""
 from setuptools import setup
 
 setup(

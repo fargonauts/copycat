@@ -63,7 +63,7 @@ class CursesReporter(Reporter):
         coderackHeight = height - upperHeight - answersHeight
         self.focusOnSlipnet = focus_on_slipnet
         self.fpsGoal = fps_goal
-        self.temperatureWindow = SafeSubwindow(window, height, 5, 0, 0)
+        self.temperatureWindow = SafeSubwindow(window, height, 5, 0, 0) # TODO: use entropy (entropyWindow)
         self.upperWindow = SafeSubwindow(window, upperHeight, width-5, 0, 5)
         self.coderackWindow = SafeSubwindow(window, coderackHeight, width-5, upperHeight, 5)
         self.answersWindow = SafeSubwindow(window, answersHeight, width-5, upperHeight + coderackHeight, 5)
@@ -239,6 +239,7 @@ class CursesReporter(Reporter):
         w.border()
         w.refresh()
 
+    #TODO: use entropy
     def report_temperature(self, temperature):
         self.do_keyboard_shortcuts()
         w = self.temperatureWindow
