@@ -58,7 +58,7 @@ def _averaged_alt(temp, prob):
 
 def _working_best(temp, prob):
     s = .5   # convergence
-    r = 1.05 # power
+    r = 2 # power
     u = prob ** r if prob < .5 else prob ** (1/r)
     return _weighted(temp, prob, s, u)
 

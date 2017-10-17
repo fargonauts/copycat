@@ -4,6 +4,8 @@ from .slipnet import Slipnet
 from .temperature import Temperature
 from .workspace import Workspace
 
+from pprint import pprint
+
 class Reporter(object):
     """Do-nothing base class for defining new reporter types"""
     def report_answer(self, answer):
@@ -68,31 +70,27 @@ class Copycat(object):
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
 
-        #self.temperature.useAdj('original')
-        #self.temperature.useAdj('entropy')
-        #self.temperature.useAdj('inverse') # 100 weight
-        #self.temperature.useAdj('fifty_converge') 
-        #self.temperature.useAdj('soft') 
-        #self.temperature.useAdj('weighted_soft') 
-        #self.temperature.useAdj('alt_fifty')
-        #self.temperature.useAdj('average_alt')
-        self.temperature.useAdj('best')
-
         answers = {}
-        for i in range(iterations):
-            answer = self.runTrial()
-            d = answers.setdefault(answer['answer'], {
-                'count': 0,
-                'sumtemp': 0, # TODO: use entropy
-                'sumtime': 0
-            })
-            d['count'] += 1
-            d['sumtemp'] += answer['temp'] # TODO: use entropy
-            d['sumtime'] += answer['time']
+        for formula in ['original', 'best']:
+            self.temperature.useAdj(formula)
+            answers = {}
+            for i in range(iterations):
+                answer = self.runTrial()
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0, # TODO: use entropy
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp'] # TODO: use entropy
+                d['sumtime'] += answer['time']
 
-        for answer, d in answers.items():
-            d['avgtemp'] = d.pop('sumtemp') / d['count']
-            d['avgtime'] = d.pop('sumtime') / d['count']
+            for answer, d in answers.items():
+                d['avgtemp'] = d.pop('sumtemp') / d['count']
+                d['avgtime'] = d.pop('sumtime') / d['count']
+            print('The formula {} provided:'.format(formula))
+            pprint(answers)
+
         return answers
 
     def run_forever(self, initial, modified, target):
