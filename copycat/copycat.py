@@ -52,11 +52,7 @@ class Copycat(object):
         self.reporter.report_workspace(self.workspace)
 
         if self.showgui:
-            self.gui.update(
-                    self.temperature.value(),
-                    self.slipnet.slipnodes,
-                    self.coderack.codelets
-                    )
+            self.gui.update(self)
         return lastUpdate
 
     def runTrial(self):

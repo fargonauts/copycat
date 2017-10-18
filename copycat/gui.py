@@ -13,7 +13,7 @@ font2Size = 16
 font1 = ('Helvetica', str(font1Size)) 
 font2 = ('Helvetica', str(font2Size))
 
-style = dict(background='#70747a', 
+style = dict(background='black', 
              foreground='white',  
              borderwidth=5, 
              relief=tk.GROOVE, 
@@ -61,7 +61,7 @@ class MainApplication(ttk.Frame):
         self.rowconfigure(0)
 
     def create_widgets(self):
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '')
+        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '?')
         self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
         tempLabel = ttk.Label(self, text='', **style, padding=30)
@@ -76,11 +76,17 @@ class MainApplication(ttk.Frame):
         codeletList.grid(column=3, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['codeletlist'] = codeletList
 
-    def update(self, temp, slipnodes, codelets):
+    def update(self, copycat):
+        temp      = copycat.temperature.value()
+        slipnodes = copycat.slipnet.slipnodes
+        codelets  = copycat.coderack.codelets
+        answer    = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
+
         slipList = self.widgets['sliplist']
         slipList.delete(0, slipList.size())
 
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '')
+        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', answer)
+        self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
         slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
         for item in slipnodes:
@@ -94,21 +100,31 @@ class MainApplication(ttk.Frame):
             listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
             codeletList.insert(tk.END, listStr)
 
+        descriptionsFrame = tk.Frame(self)
+        for i, obj in enumerate(sorted(copycat.workspace.objects, key=lambda o:o.string.string)):
+            l = tk.Label(descriptionsFrame, text=obj.string.string)
+            l.grid(column=i, row=0)
+            for j, description in enumerate(obj.descriptions):
+                l = tk.Label(descriptionsFrame, text='[]')
+                l.grid(column=i, row=j+1)
+        descriptionsFrame.grid(row=1)
+
+
 class GUI(object):
-    def __init__(self, title, updateInterval=.5):
+    def __init__(self, title, updateInterval=.1):
         self.root = tk.Tk()
         self.root.title(title)
         #self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
-        self.app.pack(side='top', fill='both', expand=True)
+        self.app.pack(fill=tk.Y)
 
         self.lastUpdated = time.time()
         self.updateInterval = updateInterval
 
-    def update(self, temp, slipnodes, codelets):
+    def update(self, copycat):
         self.root.update_idletasks()
         self.root.update()
         current = time.time()
         if current - self.lastUpdated > self.updateInterval:
-            self.app.update(temp, slipnodes, codelets)
+            self.app.update(copycat)
             self.lastUpdated = current
