@@ -1,7 +1,6 @@
 from .coderack import Coderack
 from .randomness import Randomness
 from .slipnet import Slipnet
-from .temperature import Temperature
 from .workspace import Workspace
 
 from pprint import pprint
@@ -17,9 +16,6 @@ class Reporter(object):
     def report_slipnet(self, slipnet):
         pass
 
-    def report_temperature(self, temperature): #TODO: use entropy
-        pass
-
     def report_workspace(self, workspace):
         pass
 
@@ -29,24 +25,20 @@ class Copycat(object):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
-        self.temperature = Temperature() # TODO: use entropy
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
 
     def mainLoop(self, lastUpdate):
         currentTime = self.coderack.codeletsRun
-        self.temperature.tryUnclamp(currentTime) # TODO: use entropy
         # Every 15 codelets, we update the workspace.
         if currentTime >= lastUpdate + 15:
             self.workspace.updateEverything()
             self.coderack.updateCodelets()
             self.slipnet.update(self.random)
-            self.temperature.update(self.workspace.getUpdatedTemperature()) # TODO: use entropy
             lastUpdate = currentTime
             self.reporter.report_slipnet(self.slipnet)
         self.coderack.chooseAndRunCodelet()
         self.reporter.report_coderack(self.coderack)
-        self.reporter.report_temperature(self.temperature)
         self.reporter.report_workspace(self.workspace)
         return lastUpdate
 
@@ -54,14 +46,12 @@ class Copycat(object):
         """Run a trial of the copycat algorithm"""
         self.coderack.reset()
         self.slipnet.reset()
-        self.temperature.reset() # TODO: use entropy
         self.workspace.reset()
         lastUpdate = float('-inf')
         while self.workspace.finalAnswer is None:
             lastUpdate = self.mainLoop(lastUpdate)
         answer = {
             'answer': self.workspace.finalAnswer,
-            'temp': self.temperature.last_unclamped_value, # TODO: use entropy
             'time': self.coderack.codeletsRun,
         }
         self.reporter.report_answer(answer)
@@ -71,26 +61,18 @@ class Copycat(object):
         self.workspace.resetWithStrings(initial, modified, target)
 
         answers = {}
-        for formula in ['original', 'best']:
-            self.temperature.useAdj(formula)
-            answers = {}
-            for i in range(iterations):
-                answer = self.runTrial()
-                d = answers.setdefault(answer['answer'], {
-                    'count': 0,
-                    'sumtemp': 0, # TODO: use entropy
-                    'sumtime': 0
-                })
-                d['count'] += 1
-                d['sumtemp'] += answer['temp'] # TODO: use entropy
-                d['sumtime'] += answer['time']
+        for i in range(iterations):
+            answer = self.runTrial()
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtime'] += answer['time']
 
-            for answer, d in answers.items():
-                d['avgtemp'] = d.pop('sumtemp') / d['count']
-                d['avgtime'] = d.pop('sumtime') / d['count']
-            print('The formula {} provided:'.format(formula))
-            print('Average difference: {}'.format(self.temperature.getAverageDifference()))
-            pprint(answers)
+        for answer, d in answers.items():
+            d['avgtime'] = d.pop('sumtime') / d['count']
+        pprint(answers)
 
         return answers
 

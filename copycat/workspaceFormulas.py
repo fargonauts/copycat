@@ -1,14 +1,8 @@
 
+
 def __chooseObjectFromList(ctx, objects, attribute):
-    # TODO: use entropy
     random = ctx.random
-    temperature = ctx.temperature
-    weights = [
-        temperature.getAdjustedValue(
-            getattr(o, attribute)
-        )
-        for o in objects
-    ]
+    weights = [getattr(o, attribute) for o in objects]
     return random.weighted_choice(objects, weights)
 
 

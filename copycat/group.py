@@ -83,7 +83,6 @@ class Group(WorkspaceObject):
 
     def singleLetterGroupProbability(self):
         slipnet = self.ctx.slipnet
-        temperature = self.ctx.temperature
         numberOfSupporters = self.numberOfLocalSupportingGroups()
         if not numberOfSupporters:
             return 0.0
@@ -96,8 +95,7 @@ class Group(WorkspaceObject):
         support = self.localSupport() / 100.0
         activation = slipnet.length.activation / 100.0
         supportedActivation = (support * activation) ** exp
-        #TODO: use entropy
-        return temperature.getAdjustedProbability(supportedActivation)
+        return supportedActivation
 
     def flippedVersion(self):
         slipnet = self.ctx.slipnet
@@ -124,7 +122,6 @@ class Group(WorkspaceObject):
 
     def lengthDescriptionProbability(self):
         slipnet = self.ctx.slipnet
-        temperature = self.ctx.temperature
         length = len(self.objectList)
         if length > 5:
             return 0.0
@@ -132,7 +129,7 @@ class Group(WorkspaceObject):
         fred = cubedlength * (100.0 - slipnet.length.activation) / 100.0
         probability = 0.5 ** fred
         #TODO: use entropy
-        value = temperature.getAdjustedProbability(probability)
+        value = probability
         if value < 0.06:
             value = 0.0
         return value

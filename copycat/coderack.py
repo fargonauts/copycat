@@ -68,8 +68,6 @@ class Coderack(object):
             self.postBottomUpCodelets()
 
     def probabilityOfPosting(self, codeletName):
-        # TODO: use entropy
-        temperature = self.ctx.temperature
         workspace = self.ctx.workspace
         if codeletName == 'breaker':
             return 1.0
@@ -83,9 +81,10 @@ class Coderack(object):
             return workspace.rule.totalWeakness() / 100.0
         if 'correspondence' in codeletName:
             return workspace.interStringUnhappiness / 100.0
-        if 'description' in codeletName:
+        #if 'description' in codeletName:
+            #return 1.0
             # TODO: use entropy
-            return (temperature.value() / 100.0) ** 2
+            #return (temperature.value() / 100.0) ** 2
         return workspace.intraStringUnhappiness / 100.0
 
     def howManyToPost(self, codeletName):
@@ -157,17 +156,12 @@ class Coderack(object):
 
     def __postBottomUpCodelets(self, codeletName):
         random = self.ctx.random
-        # TODO: use entropy
-        temperature = self.ctx.temperature
         probability = self.probabilityOfPosting(codeletName)
         howMany = self.howManyToPost(codeletName)
         urgency = 3
         if codeletName == 'breaker':
             urgency = 1
 
-        # TODO: use entropy
-        if temperature.value() < 25.0 and 'translator' in codeletName:
-            urgency = 5
         for _ in range(howMany):
             if random.coinFlip(probability):
                 codelet = Codelet(codeletName, urgency, [], self.codeletsRun)
@@ -290,12 +284,9 @@ class Coderack(object):
 
     def chooseCodeletToRun(self):
         random = self.ctx.random
-        # TODO: use entropy
-        temperature = self.ctx.temperature
         assert self.codelets
 
-        # TODO: use entropy
-        scale = (100.0 - temperature.value() + 10.0) / 15.0
+        scale = 1 #(100.0 - temperature.value() + 10.0) / 15.0
         chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
         return chosen

@@ -42,8 +42,8 @@ class SimpleReporter(Reporter):
 
     def report_answer(self, answer):
         """Self-explanatory code."""
-        print('Answered %s (time %d, final temperature %.1f)' % (
-            answer['answer'], answer['time'], answer['temp'],
+        print('Answered %s (time %d)' % (
+            answer['answer'], answer['time'],
         ))
 
 
@@ -64,8 +64,8 @@ def main():
     copycat = Copycat(reporter=SimpleReporter(), rng_seed=options.seed)
     answers = copycat.run(options.initial, options.modified, options.target, options.iterations)
 
-    for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
-        print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
+    for answer, d in sorted(iter(answers.items())):
+        print('%s: %d (avg time %.1f)' % (answer, d['count'], d['avgtime']))
 
     if options.plot:
         plot_answers(answers, show=not options.noshow)
