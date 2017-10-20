@@ -25,7 +25,6 @@ class TestCopycat(unittest.TestCase):
         self.longMessage = True  # new in Python 2.7
 
     def assertProbabilitiesLookRoughlyLike(self, actual, expected, iterations):
-
         answerKeys = set(list(actual.keys()) + list(expected.keys()))
         degreesFreedom = len(answerKeys)
         chiSquared = 0
@@ -41,7 +40,7 @@ class TestCopycat(unittest.TestCase):
                 chiSquared += (O - E) ** 2 / E
 
         if chiSquared >= _chiSquared_table[degreesFreedom]:
-            self.fail('Significant different between expected and actual answer distributions: \n' +
+            self.fail('Significant difference between expected and actual answer distributions: \n' +
                 'Chi2 value: {} with {} degrees of freedom'.format(chiSquared, degreesFreedom))
 
     def run_testcase(self, initial, modified, target, iterations, expected):

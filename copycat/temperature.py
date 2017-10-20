@@ -58,7 +58,7 @@ def _averaged_alt(temp, prob):
 
 def _working_best(temp, prob):
     s = .5   # convergence
-    r = 2 # power
+    r = 1.05 # power
     u = prob ** r if prob < .5 else prob ** (1/r)
     return _weighted(temp, prob, s, u)
 
@@ -76,6 +76,8 @@ class Temperature(object):
                 'alt_fifty'      : _alt_fifty,
                 'average_alt'    : _averaged_alt,
                 'best'           : _working_best}
+        self.diffs  = 0
+        self.ndiffs = 0
 
     def reset(self):
         self.actual_value = 100.0
@@ -108,7 +110,14 @@ class Temperature(object):
     def getAdjustedProbability(self, value):
         temp = self.value()
         prob = value
-        return self._adjustmentFormulas[self.adjustmentType](temp, prob)
+        adjusted = self._adjustmentFormulas[self.adjustmentType](temp, prob)
+
+        self.diffs  += abs(adjusted - prob)
+        self.ndiffs += 1
+        return adjusted
+
+    def getAverageDifference(self):
+        return self.diffs / self.ndiffs
 
     def useAdj(self, adj):
         print('Changing to adjustment formula {}'.format(adj))

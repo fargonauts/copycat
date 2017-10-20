@@ -30,7 +30,7 @@ class Rule(WorkspaceStructure):
             return
         averageDepth = (self.descriptor.conceptualDepth +
                         self.relation.conceptualDepth) / 2.0
-        averageDepth **= 1.1
+        averageDepth **= 1.1 # LSaldyt: This value (1.1) seems 100% contrived.
         # see if the object corresponds to an object
         # if so, see if the descriptor is present (modulo slippages) in the
         # corresponding object
@@ -45,15 +45,15 @@ class Rule(WorkspaceStructure):
                 self.internalStrength = 0.0
                 return
             sharedDescriptorTerm = 100.0
-        conceptual_height = (100.0 - self.descriptor.conceptualDepth) / 10.0
-        sharedDescriptorWeight = conceptual_height ** 1.4
+        conceptual_height = (100.0 - self.descriptor.conceptualDepth) / 10.0 # LSaldyt: 10?
+        sharedDescriptorWeight = conceptual_height ** 1.4 # LSaldyt: 1.4 is also seemingly contrived
         depthDifference = 100.0 - abs(self.descriptor.conceptualDepth -
                                       self.relation.conceptualDepth)
-        weights = ((depthDifference, 12),
-                   (averageDepth, 18),
-                   (sharedDescriptorTerm, sharedDescriptorWeight))
+        weights = ((depthDifference, 12),                          # LSaldyt: ???
+                   (averageDepth, 18),                             # ????
+                   (sharedDescriptorTerm, sharedDescriptorWeight)) # 12 and 18 can be reduced to 2 and 3, depending on sharedDescriptorWeight
         self.internalStrength = formulas.weightedAverage(weights)
-        if self.internalStrength > 100.0:
+        if self.internalStrength > 100.0: # LSaldyt: A better formula wouldn't need to do this.
             self.internalStrength = 100.0
 
     def ruleEqual(self, other):

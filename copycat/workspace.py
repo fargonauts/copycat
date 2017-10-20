@@ -101,8 +101,6 @@ class Workspace(object):
     def getUpdatedTemperature(self):
         '''
         Calculation of global tolerance towards irrelevance
-
-        temp = weightedAverage(totalUnhappiness(.8), ruleWeakness(.2))
         '''
         self.calculateIntraStringUnhappiness()
         self.calculateInterStringUnhappiness()

@@ -89,6 +89,7 @@ class Copycat(object):
                 d['avgtemp'] = d.pop('sumtemp') / d['count']
                 d['avgtime'] = d.pop('sumtime') / d['count']
             print('The formula {} provided:'.format(formula))
+            print('Average difference: {}'.format(self.temperature.getAverageDifference()))
             pprint(answers)
 
         return answers
