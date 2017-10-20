@@ -53,6 +53,40 @@ class TestCopycat(unittest.TestCase):
         self.assertProbabilitiesLookRoughlyLike(actual, expected, iterations)
 
     def test_simple_cases(self):
+        self.run_testcase('abc', 'abd', 'efg', 100, {
+            'efd': {'count': 1, 'avgtemp': 16},
+            'efh': {'count': 99, 'avgtemp': 19},
+        })
+        self.run_testcase('abc', 'abd', 'ijk', 100, {
+            'ijd': {'count': 4, 'avgtemp': 24},
+            'ijl': {'count': 96, 'avgtemp': 20},
+        })
+
+    def test_abc_xyz(self):
+        self.run_testcase('abc', 'abd', 'xyz', 100, {
+            'xyd': {'count': 100, 'avgtemp': 19},
+        })
+
+    def test_ambiguous_case(self):
+        self.run_testcase('abc', 'abd', 'ijkk', 100, {
+            'ijkkk': {'count': 7, 'avgtemp': 21},
+            'ijll': {'count': 47, 'avgtemp': 28},
+            'ijkl': {'count': 44, 'avgtemp': 32},
+            'ijkd': {'count': 2, 'avgtemp': 65},
+        })
+
+    def test_mrrjjj(self):
+        self.run_testcase('abc', 'abd', 'mrrjjj', 100, {
+            'mrrjjjj': {'count': 4, 'avgtemp': 16},
+            'mrrkkk': {'count': 31, 'avgtemp': 47},
+            'mrrjjk': {'count': 64, 'avgtemp': 51},
+            'mrrjkk': {'count': 1, 'avgtemp': 52},
+            'mrrjjd': {'count': 1, 'avgtemp': 54},
+        })
+
+    ''''
+
+    def test_simple_cases(self):
         self.run_testcase('abc', 'abd', 'efg', 30, 
 	    {'dfg': {'avgtemp': 72.37092377767368, 'avgtime': 475.0, 'count': 1},
 	     'efd': {'avgtemp': 49.421147725239024, 'avgtime': 410.5, 'count': 2},
@@ -102,6 +136,7 @@ class TestCopycat(unittest.TestCase):
 			'count': 11},
 	     'mrrkkk': {'avgtemp': 43.709349775080746, 'avgtime': 1376.2, 'count': 10}})
 
+    '''
     '''
     Below are examples of improvements that could be made to copycat.
 
