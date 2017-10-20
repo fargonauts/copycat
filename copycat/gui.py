@@ -57,8 +57,6 @@ class MainApplication(ttk.Frame):
         self.parent = parent
         self.create_widgets()
         self.canvas = None
-        self.columnconfigure(0)
-        self.rowconfigure(0)
 
     def create_widgets(self):
         self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '?')
@@ -75,6 +73,10 @@ class MainApplication(ttk.Frame):
         codeletList = tk.Listbox(self, **style)
         codeletList.grid(column=3, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['codeletlist'] = codeletList
+
+        self.rowconfigure(0, weight=1)
+        for i in range(4):
+            self.columnconfigure(i, weight=1)
 
     def update(self, copycat):
         temp      = copycat.temperature.value()
@@ -100,6 +102,7 @@ class MainApplication(ttk.Frame):
             listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
             codeletList.insert(tk.END, listStr)
 
+        '''
         descriptionsFrame = tk.Frame(self)
         for i, obj in enumerate(sorted(copycat.workspace.objects, key=lambda o:o.string.string)):
             l = tk.Label(descriptionsFrame, text=obj.string.string)
@@ -108,15 +111,18 @@ class MainApplication(ttk.Frame):
                 l = tk.Label(descriptionsFrame, text='[]')
                 l.grid(column=i, row=j+1)
         descriptionsFrame.grid(row=1)
+        '''
 
 
 class GUI(object):
     def __init__(self, title, updateInterval=.1):
         self.root = tk.Tk()
         self.root.title(title)
+        tk.Grid.rowconfigure(self.root, 0, weight=1)
+        tk.Grid.columnconfigure(self.root, 0, weight=1)
         #self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
-        self.app.pack(fill=tk.Y)
+        self.app.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
         self.lastUpdated = time.time()
         self.updateInterval = updateInterval
