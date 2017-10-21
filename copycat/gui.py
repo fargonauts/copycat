@@ -8,6 +8,8 @@ import tkinter.ttk as ttk
 from tkinter import scrolledtext
 from tkinter import filedialog
 
+from .status import Status, StatusFrame
+
 font1Size = 32
 font2Size = 16
 font1 = ('Helvetica', str(font1Size)) 
@@ -63,20 +65,30 @@ class MainApplication(ttk.Frame):
         self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
         tempLabel = ttk.Label(self, text='', **style, padding=30)
-        tempLabel.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        #tempLabel.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['temp'] = tempLabel
 
         slipList = tk.Listbox(self, **style)
-        slipList.grid(column=2, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        slipList.grid(column=0, row=1, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['sliplist'] = slipList
 
         codeletList = tk.Listbox(self, **style)
-        codeletList.grid(column=3, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        codeletList.grid(column=1, row=1, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['codeletlist'] = codeletList
+
+        l = ttk.Label(self, text='temp', **style, padding=30)
+        l.grid(column=2, row=1, sticky=tk.N+tk.S+tk.E+tk.W)
 
         self.rowconfigure(0, weight=1)
         for i in range(4):
             self.columnconfigure(i, weight=1)
+
+        self.graph1 = Status()
+        sframe = StatusFrame(self, self.graph1, 'graph 1')
+        sframe.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.graph2 = Status()
+        sframe = StatusFrame(self, self.graph2, 'graph 2')
+        sframe.grid(column=2, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
     def update(self, copycat):
         temp      = copycat.temperature.value()
