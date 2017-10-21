@@ -37,7 +37,7 @@ class Copycat(object):
         self.lastUpdate = float('-inf')
 
     def step(self):
-        if (not self.showgui) or (self.showgui and not self.gui.app.primary.control.paused):
+        if (not self.showgui) or (self.showgui and (not self.gui.app.primary.control.paused or self.gui.app.primary.control.has_step())):
             self.coderack.chooseAndRunCodelet()
             self.reporter.report_coderack(self.coderack)
             self.reporter.report_temperature(self.temperature)

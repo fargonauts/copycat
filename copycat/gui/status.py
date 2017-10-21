@@ -15,9 +15,9 @@ LARGE_FONT = ('Verdana', 20)
 
 plt.style.use('dark_background')
 
-class StatusFrame(tk.Frame):
+class StatusFrame(ttk.Frame):
     def __init__(self, parent, status, title, toolbar=False):
-        tk.Frame.__init__(self, parent)
+        ttk.Frame.__init__(self, parent)
         self.status = status
 
         self.canvas = FigureCanvasTkAgg(status.figure, self)

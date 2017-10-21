@@ -5,6 +5,7 @@ from tkinter import scrolledtext
 from tkinter import filedialog
 
 from .control import Control
+from .gridframe import GridFrame
 
 font1Size = 32
 font2Size = 16
@@ -43,23 +44,18 @@ def create_main_canvas(root, initial, final, new, guess):
 
     return canvas
 
-class Primary(ttk.Frame):
+class Primary(GridFrame):
 
     def __init__(self, parent, *args, **kwargs):
-        ttk.Frame.__init__(self, parent, *args, **kwargs)
+        GridFrame.__init__(self, parent, *args, **kwargs)
 
         self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '?')
-        self.canvas.grid(column=0, row=0, rowspan=2, sticky=tk.N+tk.S+tk.E+tk.W)
-
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
+        self.add(self.canvas, 0, 0, xspan=2)
 
         self.control = Control(self)
-        self.control.grid(column=0, row=2, sticky=tk.N+tk.S+tk.E+tk.W)
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(2, weight=1)
+        self.add(self.control, 0, 2)
 
     def update(self, copycat):
         answer    = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
         self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', answer)
-        self.canvas.grid(column=0, row=0, rowspan=2, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.add(self.canvas, 0, 0, xspan=2)
