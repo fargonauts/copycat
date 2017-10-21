@@ -17,8 +17,6 @@ font2 = ('Helvetica', str(font2Size))
 
 style = dict(background='black', 
              foreground='white',  
-             borderwidth=5, 
-             relief=tk.GROOVE, 
              font=font2)
 
 class MainApplication(ttk.Frame):

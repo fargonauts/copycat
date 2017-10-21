@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
  
+plt.style.use('dark_background')
 
 def plot_answers(answers):
     answers = sorted(answers.items(), key=lambda kv : kv[1]['count'])

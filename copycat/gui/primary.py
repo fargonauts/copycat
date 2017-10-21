@@ -11,14 +11,12 @@ font2 = ('Helvetica', str(font2Size))
 
 style = dict(background='black', 
              foreground='white',  
-             borderwidth=5, 
-             relief=tk.GROOVE, 
              font=font2)
 
 def create_main_canvas(root, initial, final, new, guess):
     padding  = 100
 
-    canvas = tk.Canvas(root, borderwidth=5, relief=tk.GROOVE, background='#70747a')
+    canvas = tk.Canvas(root, background='black')
 
     def add_sequences(sequences, x, y):
         for sequence in sequences:

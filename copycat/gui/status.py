@@ -10,27 +10,26 @@ import time
 import matplotlib.animation as animation
 
 import matplotlib.pyplot as plt
-plt.style.use('dark_background')
 
 LARGE_FONT = ('Verdana', 20)
 
+plt.style.use('dark_background')
+
 class StatusFrame(tk.Frame):
-    def __init__(self, parent, status, title):
+    def __init__(self, parent, status, title, toolbar=False):
         self.status = status
 
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text=title, font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
-
-        canvas = FigureCanvasTkAgg(status.figure, self)
-        canvas.show()
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.canvas = FigureCanvasTkAgg(status.figure, self)
+        self.canvas.show()
+        self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         self.animation = animation.FuncAnimation(status.figure, lambda i : status.update_plots(i), interval=1000)
+
+        if toolbar:
+            toolbar = NavigationToolbar2TkAgg(self.canvas, self)
+            toolbar.update()
+            self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
 class Status(object):
@@ -39,10 +38,12 @@ class Status(object):
         self.subplot = self.figure.add_subplot(111)
         self.x       = []
         self.y       = []
+        self.update_plots(0)
 
     def update_plots(self, i):
         self.subplot.clear()
-        self.subplot.plot(self.x, self.y)
+        with plt.style.context(('dark_background')):
+            self.subplot.plot(self.x, self.y)
 
 if __name__ == '__main__':
     app = tk.Tk()
