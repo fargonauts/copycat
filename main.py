@@ -11,7 +11,7 @@ class SimpleReporter(Reporter):
         ))
 
 def main():
-    logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./copycat.log', filemode='w')
+    logging.basicConfig(level=logging.INFO, format='%(message)s', filename='./output/copycat.log', filemode='w')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
