@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import time
 
@@ -9,6 +8,7 @@ from tkinter import scrolledtext
 from tkinter import filedialog
 
 from .status import Status, StatusFrame
+from .primary import Primary
 
 font1Size = 32
 font2Size = 16
@@ -21,48 +21,18 @@ style = dict(background='black',
              relief=tk.GROOVE, 
              font=font2)
 
-def create_main_canvas(root, initial, final, new, guess):
-    padding  = 100
-
-    canvas = tk.Canvas(root, borderwidth=5, relief=tk.GROOVE, background='#70747a')
-
-    def add_sequences(sequences, x, y):
-        for sequence in sequences:
-            x += padding
-            for char in sequence:
-                canvas.create_text(x, y, text=char, anchor=tk.NW, font=font1, fill='white')
-                x += font1Size
-        return x, y
-
-    x = 0
-    y = padding
-
-    add_sequences([initial, final], x, y)
-
-    x = 0
-    y += padding
-
-    add_sequences([new, guess], x, y)
-
-    canvas['height'] = str(int(canvas['height']) + padding)
-    canvas['width']  = str(int(canvas['width'])  + padding)
-
-    return canvas
-
 class MainApplication(ttk.Frame):
-    MAX_COLUMNS = 10
 
     def __init__(self, parent, *args, **kwargs):
         ttk.Frame.__init__(self, parent, *args, **kwargs)
         self.widgets = dict()
 
         self.parent = parent
+        self.primary = Primary(self, *args, **kwargs)
+        self.primary.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.create_widgets()
-        self.canvas = None
 
     def create_widgets(self):
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '?')
-        self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
         tempLabel = ttk.Label(self, text='', **style, padding=30)
         #tempLabel.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
@@ -91,16 +61,13 @@ class MainApplication(ttk.Frame):
         sframe.grid(column=2, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
     def update(self, copycat):
+        self.primary.update(copycat)
         temp      = copycat.temperature.value()
         slipnodes = copycat.slipnet.slipnodes
         codelets  = copycat.coderack.codelets
-        answer    = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
 
         slipList = self.widgets['sliplist']
         slipList.delete(0, slipList.size())
-
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', answer)
-        self.canvas.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
         self.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
         slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
         for item in slipnodes:
@@ -114,25 +81,12 @@ class MainApplication(ttk.Frame):
             listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
             codeletList.insert(tk.END, listStr)
 
-        '''
-        descriptionsFrame = tk.Frame(self)
-        for i, obj in enumerate(sorted(copycat.workspace.objects, key=lambda o:o.string.string)):
-            l = tk.Label(descriptionsFrame, text=obj.string.string)
-            l.grid(column=i, row=0)
-            for j, description in enumerate(obj.descriptions):
-                l = tk.Label(descriptionsFrame, text='[]')
-                l.grid(column=i, row=j+1)
-        descriptionsFrame.grid(row=1)
-        '''
-
-
 class GUI(object):
     def __init__(self, title, updateInterval=.1):
         self.root = tk.Tk()
         self.root.title(title)
         tk.Grid.rowconfigure(self.root, 0, weight=1)
         tk.Grid.columnconfigure(self.root, 0, weight=1)
-        #self.root.geometry('1200x800')
         self.app = MainApplication(self.root)
         self.app.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
