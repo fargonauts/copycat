@@ -17,9 +17,9 @@ plt.style.use('dark_background')
 
 class StatusFrame(tk.Frame):
     def __init__(self, parent, status, title, toolbar=False):
+        tk.Frame.__init__(self, parent)
         self.status = status
 
-        tk.Frame.__init__(self, parent)
         self.canvas = FigureCanvasTkAgg(status.figure, self)
         self.canvas.show()
         self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)

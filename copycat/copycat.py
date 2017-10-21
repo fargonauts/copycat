@@ -34,26 +34,33 @@ class Copycat(object):
         self.reporter = reporter or Reporter()
         self.showgui = showgui
         self.gui = GUI('Copycat')
+        self.lastUpdate = float('-inf')
 
-    def mainLoop(self, lastUpdate):
+    def step(self):
+        if (not self.showgui) or (self.showgui and not self.gui.app.primary.control.paused):
+            self.coderack.chooseAndRunCodelet()
+            self.reporter.report_coderack(self.coderack)
+            self.reporter.report_temperature(self.temperature)
+            self.reporter.report_workspace(self.workspace)
+
+    def update_workspace(self, currentTime):
+        self.workspace.updateEverything()
+        self.coderack.updateCodelets()
+        self.slipnet.update(self.random)
+        self.temperature.update(self.workspace.getUpdatedTemperature())
+        self.lastUpdate = currentTime
+        self.reporter.report_slipnet(self.slipnet)
+
+    def mainLoop(self):
         currentTime = self.coderack.codeletsRun
         self.temperature.tryUnclamp(currentTime)
         # Every 15 codelets, we update the workspace.
-        if currentTime >= lastUpdate + 15:
-            self.workspace.updateEverything()
-            self.coderack.updateCodelets()
-            self.slipnet.update(self.random)
-            self.temperature.update(self.workspace.getUpdatedTemperature())
-            lastUpdate = currentTime
-            self.reporter.report_slipnet(self.slipnet)
-        self.coderack.chooseAndRunCodelet()
-        self.reporter.report_coderack(self.coderack)
-        self.reporter.report_temperature(self.temperature)
-        self.reporter.report_workspace(self.workspace)
+        if currentTime >= self.lastUpdate + 15:
+            self.update_workspace(currentTime)
+        self.step()
 
         if self.showgui:
             self.gui.update(self)
-        return lastUpdate
 
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
@@ -61,9 +68,8 @@ class Copycat(object):
         self.slipnet.reset()
         self.temperature.reset()
         self.workspace.reset()
-        lastUpdate = float('-inf')
         while self.workspace.finalAnswer is None:
-            lastUpdate = self.mainLoop(lastUpdate)
+            self.mainLoop()
         answer = {
             'answer': self.workspace.finalAnswer,
             'temp': self.temperature.last_unclamped_value,
