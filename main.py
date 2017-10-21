@@ -2,7 +2,7 @@
 import argparse
 import logging
 
-from copycat import Copycat, Reporter, plot_answers
+from copycat import Copycat, Reporter
 
 class SimpleReporter(Reporter):
     def report_answer(self, answer):
@@ -27,7 +27,7 @@ def main():
     for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
         print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
 
-    plot_answers(answers)
+    #plot_answers(answers)
 
 if __name__ == '__main__':
     main()

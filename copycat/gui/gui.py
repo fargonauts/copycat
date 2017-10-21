@@ -11,6 +11,8 @@ from .status import Status, StatusFrame
 from .gridframe import GridFrame
 from .primary import Primary
 
+from .plot import plot_imbedded
+
 font1Size = 32
 font2Size = 16
 font1 = ('Helvetica', str(font1Size)) 
@@ -30,22 +32,20 @@ class MainApplication(GridFrame):
         self.primary = Primary(self, *args, **kwargs)
         self.add(self.primary, 0, 0)
         self.create_widgets()
+        
+        self.iterations = 0
 
     def create_widgets(self):
 
-        tempLabel = ttk.Label(self, text='', **style, padding=30)
-        #tempLabel.grid(column=1, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
-        self.widgets['temp'] = tempLabel
-
-        slipList = tk.Listbox(self, **style)
+        slipList = tk.Listbox(self, **style, bd=0)
         self.add(slipList, 0, 1)
         self.widgets['sliplist'] = slipList
 
-        codeletList = tk.Listbox(self, **style)
+        codeletList = tk.Listbox(self, **style, bd=0)
         self.add(codeletList, 1, 1)
         self.widgets['codeletlist'] = codeletList
 
-        l = ttk.Label(self, text='temp', **style, padding=30)
+        l = ttk.Label(self, text='', **style, padding=30)
         self.add(l, 2, 1)
 
         self.graph1 = Status()
@@ -56,14 +56,18 @@ class MainApplication(GridFrame):
         self.add(sframe2, 2, 0)
 
     def update(self, copycat):
+        self.iterations += 1
         self.primary.update(copycat)
         temp      = copycat.temperature.value()
+        self.graph1.x += [self.iterations]
+        self.graph1.y += [temp]
+        #self.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
+
         slipnodes = copycat.slipnet.slipnodes
         codelets  = copycat.coderack.codelets
 
         slipList = self.widgets['sliplist']
         slipList.delete(0, slipList.size())
-        self.widgets['temp']['text'] = 'Temp:\n{}'.format(round(temp, 2))
         slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
         for item in slipnodes:
             listStr = '{}: {}'.format(item.name, round(item.activation, 2))
@@ -88,9 +92,16 @@ class GUI(object):
         self.lastUpdated = time.time()
         self.updateInterval = updateInterval
 
-    def update(self, copycat):
+    def add_answers(self, answers):
+        def modifier(status):
+            plot_imbedded(answers, status)
+        self.app.graph2.modifier = modifier 
+
+    def refresh(self):
         self.root.update_idletasks()
         self.root.update()
+
+    def update(self, copycat):
         current = time.time()
         if current - self.lastUpdated > self.updateInterval:
             self.app.update(copycat)

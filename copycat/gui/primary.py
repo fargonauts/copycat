@@ -24,6 +24,8 @@ def create_main_canvas(root, initial, final, new, guess):
     def add_sequences(sequences, x, y):
         for sequence in sequences:
             x += padding
+            if sequence is None:
+                sequence = ''
             for char in sequence:
                 canvas.create_text(x, y, text=char, anchor=tk.NW, font=font1, fill='white')
                 x += font1Size

@@ -16,4 +16,3 @@ def plot_answers(answers):
     plt.ylabel('Count')
     plt.title('Answers')
     plt.show()
-   

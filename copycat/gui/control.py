@@ -10,10 +10,10 @@ class Control(GridFrame):
         self.paused = True
         self.steps  = 0
 
-        self.playbutton = tk.Button(self, text='Play', command=lambda : self.toggle(), background='black', foreground='white', activebackground='black', activeforeground='blue')
+        self.playbutton = tk.Button(self, bd=0, text='Play', command=lambda : self.toggle(), background='black', foreground='white', activebackground='black', activeforeground='blue')
         self.add(self.playbutton, 0, 0)
 
-        self.stepbutton= tk.Button(self, text='Step', command=lambda : self.step(), background='black', foreground='white', activebackground='black', activeforeground='blue')
+        self.stepbutton= tk.Button(self, bd=0, text='Step', command=lambda : self.step(), background='black', foreground='white', activebackground='black', activeforeground='blue')
         self.add(self.stepbutton, 1, 0)
 
     def toggle(self):

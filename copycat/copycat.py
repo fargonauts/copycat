@@ -42,6 +42,8 @@ class Copycat(object):
             self.reporter.report_coderack(self.coderack)
             self.reporter.report_temperature(self.temperature)
             self.reporter.report_workspace(self.workspace)
+            if (self.showgui):
+                self.gui.update(self)
 
     def update_workspace(self, currentTime):
         self.workspace.updateEverything()
@@ -60,7 +62,7 @@ class Copycat(object):
         self.step()
 
         if self.showgui:
-            self.gui.update(self)
+            self.gui.refresh()
 
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
@@ -91,6 +93,8 @@ class Copycat(object):
             d['count'] += 1
             d['sumtemp'] += answer['temp']
             d['sumtime'] += answer['time']
+            if self.showgui:
+                self.gui.add_answers(answers)
 
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']

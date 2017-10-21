@@ -38,12 +38,17 @@ class Status(object):
         self.subplot = self.figure.add_subplot(111)
         self.x       = []
         self.y       = []
+
+        def modifier(status):
+            status.subplot.plot(status.x, status.y)
+
+        self.modifier = modifier
         self.update_plots(0)
 
     def update_plots(self, i):
         self.subplot.clear()
         with plt.style.context(('dark_background')):
-            self.subplot.plot(self.x, self.y)
+            self.modifier(self)
 
 if __name__ == '__main__':
     app = tk.Tk()
