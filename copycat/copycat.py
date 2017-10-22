@@ -64,6 +64,7 @@ class Copycat(object):
         if self.showgui:
             self.gui.refresh()
 
+
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
         self.coderack.reset()
@@ -84,6 +85,11 @@ class Copycat(object):
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
         for i in range(iterations):
+            if self.gui.app.primary.control.go:
+                initial, modified, target = self.gui.app.primary.control.get_vars()
+                self.workspace.resetWithStrings(initial, modified, target)
+                answers = {}
+
             answer = self.runTrial()
             d = answers.setdefault(answer['answer'], {
                 'count': 0,

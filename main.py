@@ -27,7 +27,5 @@ def main():
     for answer, d in sorted(iter(answers.items()), key=lambda kv: kv[1]['avgtemp']):
         print('%s: %d (avg time %.1f, avg temp %.1f)' % (answer, d['count'], d['avgtime'], d['avgtemp']))
 
-    #plot_answers(answers)
-
 if __name__ == '__main__':
     main()
