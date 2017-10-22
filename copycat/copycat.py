@@ -53,6 +53,18 @@ class Copycat(object):
         self.lastUpdate = currentTime
         self.reporter.report_slipnet(self.slipnet)
 
+    def check_reset(self):
+        if self.gui.app.primary.control.go:
+            initial, modified, target = self.gui.app.primary.control.get_vars()
+            self.reset_with_strings(initial, modified, target)
+            return True
+        else:
+            return False
+
+    def reset_with_strings(self, initial, modified, target):
+        self.workspace.resetWithStrings(initial, modified, target)
+        self.gui.app.reset_with_strings(initial, modified, target)
+
     def mainLoop(self):
         currentTime = self.coderack.codeletsRun
         self.temperature.tryUnclamp(currentTime)
@@ -63,7 +75,6 @@ class Copycat(object):
 
         if self.showgui:
             self.gui.refresh()
-
 
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
@@ -82,12 +93,10 @@ class Copycat(object):
         return answer
 
     def run(self, initial, modified, target, iterations):
-        self.workspace.resetWithStrings(initial, modified, target)
+        self.reset_with_strings(initial, modified, target)
         answers = {}
         for i in range(iterations):
-            if self.gui.app.primary.control.go:
-                initial, modified, target = self.gui.app.primary.control.get_vars()
-                self.workspace.resetWithStrings(initial, modified, target)
+            if self.check_reset():
                 answers = {}
 
             answer = self.runTrial()
@@ -108,6 +117,7 @@ class Copycat(object):
         return answers
 
     def run_forever(self, initial, modified, target):
-        self.workspace.resetWithStrings(initial, modified, target)
+        self.reset_with_strings(initial, modified, target)
         while True:
+            self.check_reset()
             self.runTrial()

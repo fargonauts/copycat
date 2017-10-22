@@ -80,6 +80,9 @@ class MainApplication(GridFrame):
             listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
             codeletList.insert(tk.END, listStr)
 
+    def reset_with_strings(self, initial, modified, target):
+        self.primary.reset_with_strings(initial, modified, target)
+
 class GUI(object):
     def __init__(self, title, updateInterval=.1):
         self.root = tk.Tk()

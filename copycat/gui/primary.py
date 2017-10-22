@@ -51,13 +51,21 @@ class Primary(GridFrame):
     def __init__(self, parent, *args, **kwargs):
         GridFrame.__init__(self, parent, *args, **kwargs)
 
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', '?')
-        self.add(self.canvas, 0, 0, xspan=2)
+        self.initial  = ''
+        self.modified = ''
+        self.target   = ''
 
+        self.canvas = create_main_canvas(self, self.initial, self.modified, self.target, '')
+        self.add(self.canvas, 0, 0, xspan=2)
         self.control = Control(self)
         self.add(self.control, 0, 2)
 
     def update(self, copycat):
         answer    = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
-        self.canvas = create_main_canvas(self, 'abc', 'abd', 'ijk', answer)
+        self.canvas = create_main_canvas(self, self.initial, self.modified, self.target, answer)
         self.add(self.canvas, 0, 0, xspan=2)
+
+    def reset_with_strings(self, initial, modified, target):
+        self.initial  = initial
+        self.modified = modified
+        self.target   = target
