@@ -40,15 +40,15 @@ class Status(object):
         self.y       = []
 
         def modifier(status):
-            status.subplot.plot(status.x, status.y)
+            with plt.style.context(('dark_background')):
+                status.subplot.plot(status.x, status.y)
 
         self.modifier = modifier
         self.update_plots(0)
 
     def update_plots(self, i):
         self.subplot.clear()
-        with plt.style.context(('dark_background')):
-            self.modifier(self)
+        self.modifier(self)
 
 if __name__ == '__main__':
     app = tk.Tk()
