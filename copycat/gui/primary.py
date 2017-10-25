@@ -61,7 +61,7 @@ class Primary(GridFrame):
         self.add(self.control, 0, 2)
 
     def update(self, copycat):
-        answer    = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
+        answer = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
         self.canvas = create_main_canvas(self, self.initial, self.modified, self.target, answer)
         self.add(self.canvas, 0, 0, xspan=2)
 

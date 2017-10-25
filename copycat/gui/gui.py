@@ -38,6 +38,11 @@ class MainApplication(GridFrame):
         
         self.iterations = 0
 
+        self.messages = []
+
+    def log(self, message):
+        self.messages.append(message)
+
     def create_widgets(self):
 
         self.slipList = tk.Listbox(self, **style, bd=0)
@@ -49,11 +54,8 @@ class MainApplication(GridFrame):
         self.objectList = tk.Listbox(self, **style, bd=0)
         self.add(self.objectList, 2, 1)
 
-        #l = ttk.Label(self, text='', **style, padding=30)
-        #self.add(l, 2, 1)
-
-        self.log = tk.Label(self, text='[Logging]', **style)
-        self.add(self.log, 1, 0)
+        self.logBox = tk.Label(self, text='', **style, bd=1)
+        self.add(self.logBox, 1, 0)
         self.graph2 = Status()
         sframe2 = StatusFrame(self, self.graph2, 'graph 2')
         self.add(sframe2, 2, 0)
@@ -84,6 +86,10 @@ class MainApplication(GridFrame):
             #listStr = '{}: {}'.format(o.name, round(o.urgency, 2))
             listStr = str(o)
             self.objectList.insert(tk.END, listStr)
+
+        self.logBox['text'] = '\n'.join(list(reversed(self.messages))[:10])
+        if len(self.messages) > 10:
+            self.logBox['text'] += '\n...'
 
     def reset_with_strings(self, initial, modified, target):
         self.primary.reset_with_strings(initial, modified, target)

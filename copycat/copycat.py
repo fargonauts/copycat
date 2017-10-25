@@ -92,14 +92,41 @@ class Copycat(object):
         self.reporter.report_answer(answer)
         return answer
 
+    def runGUI(self):
+        while not self.check_reset():
+            self.gui.update(self)
+            self.gui.refresh()
+        answers = {}
+        while True:
+            if self.check_reset():
+                answers = {}
+            answer = self.runTrial()
+            if self.showgui:
+                self.gui.app.log('Answered: {}'.format(answer['answer']))
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtemp': 0,
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtemp'] += answer['temp']
+            d['sumtime'] += answer['time']
+            if self.showgui:
+                self.gui.add_answers(answers)
+
+        for answer, d in answers.items():
+            d['avgtemp'] = d.pop('sumtemp') / d['count']
+            d['avgtime'] = d.pop('sumtime') / d['count']
+
     def run(self, initial, modified, target, iterations):
         self.reset_with_strings(initial, modified, target)
         answers = {}
         for i in range(iterations):
             if self.check_reset():
                 answers = {}
-
             answer = self.runTrial()
+            if self.showgui:
+                self.gui.app.log('Answered: {}'.format(answer['answer']))
             d = answers.setdefault(answer['answer'], {
                 'count': 0,
                 'sumtemp': 0,
