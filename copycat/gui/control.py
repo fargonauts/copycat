@@ -24,9 +24,19 @@ class Control(GridFrame):
         self.gobutton = tk.Button(self, bd=0, text='Go', command=lambda : self.set_go(), background='black', foreground='white', activebackground='black', activeforeground='blue')
         self.add(self.gobutton, 0, 2, xspan=2)
 
+    def play(self):
+        self.paused = False
+        self.playbutton['text'] = 'Pause'
+
+    def pause(self):
+        self.paused = True
+        self.playbutton['text'] = 'Play'
+
     def toggle(self):
-        self.paused = not self.paused
-        self.playbutton['text'] = 'Pause' if not self.paused else 'Play'
+        if self.paused:
+            self.play()
+        else:
+            self.pause()
 
     def step(self):
         self.steps += 1
@@ -40,6 +50,7 @@ class Control(GridFrame):
 
     def set_go(self):
         self.go = True
+        self.play()
 
     def get_vars(self):
         return self.entry.a.get(), self.entry.b.get(), self.entry.c.get()

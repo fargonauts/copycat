@@ -33,8 +33,9 @@ class MainApplication(GridFrame):
 
         self.parent = parent
         self.primary = Primary(self, *args, **kwargs)
-        self.add(self.primary, 0, 0)
+        self.add(self.primary, 0, 0, )
         self.create_widgets()
+        GridFrame.configure(self)
         
         self.iterations = 0
 
