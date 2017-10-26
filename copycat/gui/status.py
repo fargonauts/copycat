@@ -49,18 +49,3 @@ class Status(object):
     def update_plots(self, i):
         self.subplot.clear()
         self.modifier(self)
-
-if __name__ == '__main__':
-    app = tk.Tk()
-    status = Status()
-    sframe = StatusFrame(app, status, 'x**2')
-    sframe.pack()
-
-    i = 0
-    while True:
-        app.update()
-        app.update_idletasks()
-        time.sleep(.01)
-        i += 1
-        status.x += [i]
-        status.y += [i**2]

@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 
 import time
 
@@ -8,7 +9,7 @@ class List(GridFrame):
 
     def __init__(self, parent, columns, updateInterval=.1, **style):
         GridFrame.__init__(self, parent)
-        self.text = tk.Label(self, **style, anchor='w', justify=tk.LEFT, width=30)
+        self.text = ttk.Label(self, anchor='w', justify=tk.LEFT, width=30)
         self.add(self.text, 0, 0)
 
         self.columns = columns
