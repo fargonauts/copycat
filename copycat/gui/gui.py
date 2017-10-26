@@ -13,6 +13,7 @@ from .status import Status, StatusFrame
 from .gridframe import GridFrame
 from .primary import Primary
 from .list import List
+from .style import configure_style
 
 from .plot import plot_imbedded
 
@@ -85,6 +86,8 @@ class GUI(object):
         tk.Grid.columnconfigure(self.root, 0, weight=1)
         self.app = MainApplication(self.root)
         self.app.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
+
+        configure_style(ttk.Style())
 
         self.lastUpdated = time.time()
         self.updateInterval = updateInterval
