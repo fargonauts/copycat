@@ -7,7 +7,7 @@ from .gridframe import GridFrame
 
 class List(GridFrame):
 
-    def __init__(self, parent, columns, updateInterval=.1, **style):
+    def __init__(self, parent, columns, updateInterval=.1):
         GridFrame.__init__(self, parent)
         self.text = ttk.Label(self, anchor='w', justify=tk.LEFT, width=30)
         self.add(self.text, 0, 0)

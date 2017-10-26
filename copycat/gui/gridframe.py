@@ -7,5 +7,5 @@ class GridFrame(tk.Frame):
 
     def add(self, element, x, y, xspan=1, yspan=1):
         element.grid(column=x, row=y, columnspan=xspan, rowspan=yspan, sticky=tk.N+tk.E+tk.S+tk.W)
-        self.rowconfigure(x, weight=1)
-        self.columnconfigure(y, weight=1)
+        tk.Grid.rowconfigure(self, x, weight=1)
+        tk.Grid.columnconfigure(self, y, weight=1)

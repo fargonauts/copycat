@@ -41,8 +41,8 @@ def create_main_canvas(root, initial, final, new, guess):
 
     add_sequences([new, guess], x, y)
 
-    canvas['height'] = str(int(canvas['height']) + padding)
-    canvas['width']  = str(int(canvas['width'])  + padding)
+    #canvas['height'] = str(int(canvas['height']) + padding)
+    #canvas['width']  = str(int(canvas['width'])  + padding)
 
     return canvas
 
@@ -59,11 +59,12 @@ class Primary(GridFrame):
         self.add(self.canvas, 0, 0, xspan=2)
         self.control = Control(self)
         self.add(self.control, 0, 2)
+        GridFrame.configure(self)
 
     def update(self, copycat):
         answer = '' if copycat.workspace.rule is None else copycat.workspace.rule.buildTranslatedRule()
-        self.canvas = create_main_canvas(self, self.initial, self.modified, self.target, answer)
-        self.add(self.canvas, 0, 0, xspan=2)
+        #self.canvas = create_main_canvas(self, self.initial, self.modified, self.target, answer)
+        #self.add(self.canvas, 0, 0, xspan=2)
 
     def reset_with_strings(self, initial, modified, target):
         self.initial  = initial

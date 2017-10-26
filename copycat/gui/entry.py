@@ -24,3 +24,4 @@ class Entry(GridFrame):
 
         self.add(self.cLabel, 2, 0)
         self.add(self.c, 2, 1)
+        GridFrame.configure(self)
