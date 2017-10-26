@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from .status import Status, StatusFrame
 from .gridframe import GridFrame
 from .primary import Primary
+from .list import List
 
 from .plot import plot_imbedded
 
@@ -37,8 +38,6 @@ class MainApplication(GridFrame):
         self.create_widgets()
         GridFrame.configure(self)
         
-        self.iterations = 0
-
         self.messages = []
 
     def log(self, message):
@@ -46,51 +45,34 @@ class MainApplication(GridFrame):
 
     def create_widgets(self):
 
-        self.slipList = tk.Listbox(self, **style, bd=0)
+        self.slipList = List(self, 10, **style)
         self.add(self.slipList, 0, 1)
 
-        self.codeletList = tk.Listbox(self, **style, bd=0)
+        self.codeletList = List(self, 10, **style)
         self.add(self.codeletList, 1, 1)
 
-        self.objectList = tk.Listbox(self, **style, bd=0)
+        self.objectList = List(self, 10, **style)
         self.add(self.objectList, 2, 1)
 
-        self.logBox = tk.Label(self, text='', **style, bd=1)
+        self.logBox = List(self, 10, **style)
         self.add(self.logBox, 1, 0)
+
         self.graph2 = Status()
         sframe2 = StatusFrame(self, self.graph2, 'graph 2')
         self.add(sframe2, 2, 0)
 
     def update(self, copycat):
-        self.iterations += 1
         self.primary.update(copycat)
 
         slipnodes = copycat.slipnet.slipnodes
         codelets  = copycat.coderack.codelets
         objects   = copycat.workspace.objects
 
-        self.slipList.delete(0, self.slipList.size())
-        slipnodes = sorted(slipnodes, key=lambda s:s.activation, reverse=True)
-        for item in slipnodes:
-            listStr = '{}: {}'.format(item.name, round(item.activation, 2))
-            self.slipList.insert(tk.END, listStr)
-
-        self.codeletList.delete(0, self.codeletList.size())
-        codelets = sorted(codelets, key=lambda c:c.urgency, reverse=True)
-        for codelet in codelets:
-            listStr = '{}: {}'.format(codelet.name, round(codelet.urgency, 2))
-            self.codeletList.insert(tk.END, listStr)
-
-        self.objectList.delete(0, self.objectList.size())
-        #objects = sorted(objects, key=lambda c:c.urgency, reverse=True)
-        for o in objects:
-            #listStr = '{}: {}'.format(o.name, round(o.urgency, 2))
-            listStr = str(o)
-            self.objectList.insert(tk.END, listStr)
-
-        self.logBox['text'] = '\n'.join(list(reversed(self.messages))[:10])
-        if len(self.messages) > 10:
-            self.logBox['text'] += '\n...'
+        self.slipList.update(slipnodes, key=lambda s:s.activation, reverse=True,
+                formatter=lambda s : '{}: {}'.format(s.name, round(s.activation, 2)))
+        self.codeletList.update(codelets, key=lambda c:c.urgency, reverse=True, formatter= lambda s : '{}: {}'.format(s.name, round(s.urgency, 2)))
+        self.objectList.update(objects)
+        self.logBox.update(list(reversed(self.messages))[:10])
 
     def reset_with_strings(self, initial, modified, target):
         self.primary.reset_with_strings(initial, modified, target)
@@ -119,6 +101,5 @@ class GUI(object):
 
     def update(self, copycat):
         current = time.time()
-        if current - self.lastUpdated > self.updateInterval:
-            self.app.update(copycat)
-            self.lastUpdated = current
+        self.app.update(copycat)
+        self.lastUpdated = current
