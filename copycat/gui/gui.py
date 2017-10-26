@@ -10,6 +10,7 @@ from tkinter import filedialog
 import matplotlib.pyplot as plt
 
 from .status import Status, StatusFrame
+from .status import Plot
 from .gridframe import GridFrame
 from .primary import Primary
 from .list import List
@@ -58,9 +59,11 @@ class MainApplication(GridFrame):
         self.logBox = List(self, 10, **style)
         self.add(self.logBox, 1, 0)
 
-        self.graph2 = Status()
-        sframe2 = StatusFrame(self, self.graph2, 'graph 2')
-        self.add(sframe2, 2, 0)
+        self.graph2 = Plot(self, 'Answer Distribution')
+        #self.graph2 = Status()
+        #sframe2 = StatusFrame(self, self.graph2, 'graph 2')
+        #self.add(sframe2, 2, 0)
+        self.add(self.graph2, 2, 0)
 
     def update(self, copycat):
         self.primary.update(copycat)
@@ -96,7 +99,7 @@ class GUI(object):
         def modifier(status):
             with plt.style.context(('dark_background')):
                 plot_imbedded(answers, status)
-        self.app.graph2.modifier = modifier 
+        self.app.graph2.status.modifier = modifier 
 
     def refresh(self):
         self.root.update_idletasks()

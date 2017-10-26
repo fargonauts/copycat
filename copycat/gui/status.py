@@ -11,12 +11,33 @@ import matplotlib.animation as animation
 
 import matplotlib.pyplot as plt
 
-LARGE_FONT = ('Verdana', 20)
-
 plt.style.use('dark_background')
 
+from .gridframe import GridFrame
+
+class Plot(GridFrame):
+    def __init__(self, parent, title):
+        GridFrame.__init__(self, parent)
+        self.status = Status()
+        self.sframe = StatusFrame(self, self.status, title)
+        self.add(self.sframe, 0, 0, xspan=2)
+
+        self.savebutton = ttk.Button(self, text='Save to path:', command=lambda : self.save())
+        self.add(self.savebutton, 0, 1)
+
+        self.pathentry = ttk.Entry(self, style='EntryStyle.TEntry', textvariable='output/dist.png')
+        self.add(self.pathentry, 1, 1)
+
+    def save(self):
+        path = self.pathentry.get()
+        if len(path) > 0:
+            try:
+                self.status.figure.savefig(path)
+            except Exception as e:
+                print(e)
+
 class StatusFrame(ttk.Frame):
-    def __init__(self, parent, status, title, toolbar=False):
+    def __init__(self, parent, status, title):
         ttk.Frame.__init__(self, parent)
         self.status = status
 
@@ -25,12 +46,6 @@ class StatusFrame(ttk.Frame):
         self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         self.animation = animation.FuncAnimation(status.figure, lambda i : status.update_plots(i), interval=1000)
-
-        if toolbar:
-            toolbar = NavigationToolbar2TkAgg(self.canvas, self)
-            toolbar.update()
-            self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
 
 class Status(object):
     def __init__(self):
