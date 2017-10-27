@@ -32,18 +32,14 @@ class Copycat(object):
         self.temperature = Temperature()
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
-        self.showgui = showgui
         self.gui = GUI('Copycat')
         self.lastUpdate = float('-inf')
 
     def step(self):
-        if (not self.showgui) or (self.showgui and (not self.gui.app.primary.control.paused or self.gui.app.primary.control.has_step())):
-            self.coderack.chooseAndRunCodelet()
-            self.reporter.report_coderack(self.coderack)
-            self.reporter.report_temperature(self.temperature)
-            self.reporter.report_workspace(self.workspace)
-            if (self.showgui):
-                self.gui.update(self)
+        self.coderack.chooseAndRunCodelet()
+        self.reporter.report_coderack(self.coderack)
+        self.reporter.report_temperature(self.temperature)
+        self.reporter.report_workspace(self.workspace)
 
     def update_workspace(self, currentTime):
         self.workspace.updateEverything()
@@ -73,8 +69,6 @@ class Copycat(object):
             self.update_workspace(currentTime)
         self.step()
 
-        if self.showgui:
-            self.gui.refresh()
 
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
@@ -101,8 +95,8 @@ class Copycat(object):
             if self.check_reset():
                 answers = {}
             answer = self.runTrial()
-            if self.showgui:
-                self.gui.app.log('Answered: {}'.format(answer['answer']))
+            self.gui.refresh()
+            self.gui.update(self)
             d = answers.setdefault(answer['answer'], {
                 'count': 0,
                 'sumtemp': 0,
@@ -111,8 +105,7 @@ class Copycat(object):
             d['count'] += 1
             d['sumtemp'] += answer['temp']
             d['sumtime'] += answer['time']
-            if self.showgui:
-                self.gui.add_answers(answers)
+            self.gui.add_answers(answers)
 
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
@@ -125,8 +118,6 @@ class Copycat(object):
             if self.check_reset():
                 answers = {}
             answer = self.runTrial()
-            if self.showgui:
-                self.gui.app.log('Answered: {}'.format(answer['answer']))
             d = answers.setdefault(answer['answer'], {
                 'count': 0,
                 'sumtemp': 0,
@@ -135,8 +126,6 @@ class Copycat(object):
             d['count'] += 1
             d['sumtemp'] += answer['temp']
             d['sumtime'] += answer['time']
-            if self.showgui:
-                self.gui.add_answers(answers)
 
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
