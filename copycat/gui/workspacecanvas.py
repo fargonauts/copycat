@@ -3,13 +3,15 @@ import tkinter.ttk as ttk
 
 from .gridframe import GridFrame
 
-font1Size = 16
+font1Size = 32
 font1 = ('Helvetica', font1Size)
 
 class WorkspaceCanvas(GridFrame):
 
     def __init__(self, parent, *args, **kwargs):
         GridFrame.__init__(self, parent, *args, **kwargs)
+
+        self.chars    = []
 
         self.initial  = ''
         self.modified = ''
@@ -20,6 +22,7 @@ class WorkspaceCanvas(GridFrame):
 
         self.canvas = tk.Canvas(self, background='black')
         self.add(self.canvas, 0, 0)
+
         GridFrame.configure(self)
 
     def update(self, copycat):
@@ -29,6 +32,7 @@ class WorkspaceCanvas(GridFrame):
 
         if self.changed:
             self.canvas.delete('all')
+            del self.chars[:]
             self.add_text()
 
     def add_text(self):
@@ -40,6 +44,7 @@ class WorkspaceCanvas(GridFrame):
                 if sequence is None:
                     sequence = ''
                 for char in sequence:
+                    self.chars.append((char, (x, y)))
                     self.canvas.create_text(x, y, text=char, anchor=tk.NW, font=font1, fill='white')
                     x += font1Size
             return x, y
