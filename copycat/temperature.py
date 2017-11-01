@@ -24,7 +24,7 @@ def _entropy(temp, prob):
     f = (c + 1) * prob
     return -f * math.log2(f)
 
-def _weighted(temp, prob, s, u):
+def _weighted(temp, prob, s, u, alpha=1, beta=1):
     weighted = (temp / 100) * s + ((100 - temp) / 100) * u 
     return weighted
 
@@ -56,11 +56,30 @@ def _averaged_alt(temp, prob):
     u = prob ** 2 if prob < .5 else math.sqrt(prob)
     return _weighted(temp, prob, s, u)
 
+
 def _working_best(temp, prob):
     s = .5   # convergence
     r = 2 # power
     u = prob ** r if prob < .5 else prob ** (1/r)
     return _weighted(temp, prob, s, u)
+
+def _soft_best(temp, prob):
+    s = .5   # convergence
+    r = 1.05 # power
+    u = prob ** r if prob < .5 else prob ** (1/r)
+    return _weighted(temp, prob, s, u)
+
+def _parameterized_best(temp, prob):
+    # (D$66/100)*($E$64*$B68 + $G$64*$F$64)/($E$64 + $G$64)+((100-D$66)/100)*IF($B68 > 0.5, $B68^(1/$H$64), $B68^$H$64)
+    # (T/100) * (alpha * p + beta * .5) / (alpha + beta) + ((100 - T)/100) * IF(p > .5, p^(1/2), p^2)
+    alpha = 5
+    beta  = 1
+    s     = .5
+    s     = (alpha * prob + beta * s) / (alpha + beta)
+    r     = 1.05
+    u = prob ** r if prob < .5 else prob ** (1/r)
+    return _weighted(temp, prob, s, u)
+
 
 class Temperature(object):
     def __init__(self):
@@ -75,7 +94,9 @@ class Temperature(object):
                 'weighted_soft'  : _weighted_soft_curve,
                 'alt_fifty'      : _alt_fifty,
                 'average_alt'    : _averaged_alt,
-                'best'           : _working_best}
+                'best'           : _working_best,
+                'sbest'          : _soft_best,
+                'pbest'          : _parameterized_best}
 
     def reset(self):
         self.actual_value = 100.0
