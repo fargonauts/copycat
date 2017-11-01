@@ -3,6 +3,10 @@ from .randomness import Randomness
 from .slipnet import Slipnet
 from .temperature import Temperature
 from .workspace import Workspace
+from .gui import GUI
+
+from pprint import pprint
+
 
 class Reporter(object):
     """Do-nothing base class for defining new reporter types"""
@@ -23,30 +27,48 @@ class Reporter(object):
 
 
 class Copycat(object):
-    def __init__(self, rng_seed=None, reporter=None):
+    def __init__(self, rng_seed=None, reporter=None, gui=False):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
         self.temperature = Temperature() # TODO: use entropy
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
+        if gui:
+            self.gui = GUI('Copycat')
+        self.lastUpdate = float('-inf')
 
-    def mainLoop(self, lastUpdate):
-        currentTime = self.coderack.codeletsRun
-        self.temperature.tryUnclamp(currentTime) # TODO: use entropy
-        # Every 15 codelets, we update the workspace.
-        if currentTime >= lastUpdate + 15:
-            self.workspace.updateEverything()
-            self.coderack.updateCodelets()
-            self.slipnet.update(self.random)
-            self.temperature.update(self.workspace.getUpdatedTemperature()) # TODO: use entropy
-            lastUpdate = currentTime
-            self.reporter.report_slipnet(self.slipnet)
+    def step(self):
         self.coderack.chooseAndRunCodelet()
         self.reporter.report_coderack(self.coderack)
         self.reporter.report_temperature(self.temperature)
         self.reporter.report_workspace(self.workspace)
-        return lastUpdate
+
+    def update_workspace(self, currentTime):
+        self.workspace.updateEverything()
+        self.coderack.updateCodelets()
+        self.slipnet.update(self.random)
+        self.temperature.update(self.workspace.getUpdatedTemperature())
+        self.lastUpdate = currentTime
+        self.reporter.report_slipnet(self.slipnet)
+
+    def check_reset(self):
+        if self.gui.app.primary.control.go:
+            initial, modified, target = self.gui.app.primary.control.get_vars()
+            self.gui.app.reset_with_strings(initial, modified, target)
+            self.workspace.resetWithStrings(initial, modified, target)
+            return True
+        else:
+            return False
+
+    def mainLoop(self):
+        currentTime = self.coderack.codeletsRun
+        self.temperature.tryUnclamp(currentTime) # TODO: use entropy
+        # Every 15 codelets, we update the workspace.
+        if currentTime >= self.lastUpdate + 15:
+            self.update_workspace(currentTime)
+        self.step()
+
 
     def runTrial(self):
         """Run a trial of the copycat algorithm"""
@@ -54,9 +76,8 @@ class Copycat(object):
         self.slipnet.reset()
         self.temperature.reset() # TODO: use entropy
         self.workspace.reset()
-        lastUpdate = float('-inf')
         while self.workspace.finalAnswer is None:
-            lastUpdate = self.mainLoop(lastUpdate)
+            self.mainLoop()
         answer = {
             'answer': self.workspace.finalAnswer,
             'temp': self.temperature.last_unclamped_value, # TODO: use entropy
@@ -65,34 +86,60 @@ class Copycat(object):
         self.reporter.report_answer(answer)
         return answer
 
-    def run(self, initial, modified, target, iterations):
-        self.workspace.resetWithStrings(initial, modified, target)
-
-        self.temperature.useAdj('original')
-        #self.temperature.useAdj('entropy')
-        #self.temperature.useAdj('inverse') # 100 weight
-        #self.temperature.useAdj('fifty_converge') 
-        #self.temperature.useAdj('soft') 
-        #self.temperature.useAdj('weighted_soft') 
-        #self.temperature.useAdj('alt_fifty')
-        #self.temperature.useAdj('average_alt')
-        self.temperature.useAdj('best')
-
+    def runGUI(self):
+        while not self.check_reset():
+            self.gui.update(self)
+            self.gui.refresh()
         answers = {}
-        for i in range(iterations):
-            answer = self.runTrial()
-            d = answers.setdefault(answer['answer'], {
-                'count': 0,
-                'sumtemp': 0, # TODO: use entropy
-                'sumtime': 0
-            })
-            d['count'] += 1
-            d['sumtemp'] += answer['temp'] # TODO: use entropy
-            d['sumtime'] += answer['time']
+        self.temperature.useAdj('pbest')
+        while True:
+            if self.check_reset():
+                answers = {}
+            self.gui.refresh()
+            if not self.gui.paused():
+                answer = self.runTrial()
+                self.gui.update(self)
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0,
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp']
+                d['sumtime'] += answer['time']
+                self.gui.add_answers(answers)
 
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
             d['avgtime'] = d.pop('sumtime') / d['count']
+        pprint(answers)
+        return answers
+
+    def run(self, initial, modified, target, iterations):
+        self.temperature.useAdj('best')
+        self.gui.app.reset_with_strings(initial, modified, target)
+        self.workspace.resetWithStrings(initial, modified, target)
+        answers = {}
+        for formula in ['original', 'best', 'sbest', 'pbest']:
+            self.temperature.useAdj(formula)
+            answers = {}
+            for i in range(iterations):
+                answer = self.runTrial()
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0, # TODO: use entropy
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp'] # TODO: use entropy
+                d['sumtime'] += answer['time']
+
+            for answer, d in answers.items():
+                d['avgtemp'] = d.pop('sumtemp') / d['count']
+                d['avgtime'] = d.pop('sumtime') / d['count']
+            print('The formula {} provided:'.format(formula))
+            pprint(answers)
+
         return answers
 
     def run_forever(self, initial, modified, target):
