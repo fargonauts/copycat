@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.style.use('dark_background')
+
 def plot_imbedded(answers, status):
     answers = sorted(answers.items(), key=lambda kv : kv[1]['count'])
     objects = [t[0] for t in answers]

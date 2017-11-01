@@ -4,6 +4,10 @@ import logging
 
 from copycat import Copycat, Reporter
 
+import matplotlib.pyplot as plt
+
+plt.style.use('dark_background')
+
 class SimpleReporter(Reporter):
     def report_answer(self, answer):
         print('Answered %s (time %d, final temperature %.1f)' % (
