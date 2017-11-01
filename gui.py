@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--seed', type=int, default=None, help='Provide a deterministic seed for the RNG.')
     options = parser.parse_args()
 
-    copycat = Copycat(reporter=SimpleReporter(), rng_seed=options.seed)
+    copycat = Copycat(reporter=SimpleReporter(), rng_seed=options.seed, gui=True)
     copycat.runGUI()
 
 if __name__ == '__main__':

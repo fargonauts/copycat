@@ -30,24 +30,17 @@ class MainApplication(GridFrame):
         self.add(self.primary, 0, 0, xspan=2)
         self.create_widgets()
         GridFrame.configure(self)
-        
-        #self.messages = []
-
-    #def log(self, message):
-    #    self.messages.append(message)
 
     def create_widgets(self):
-        self.slipList = List(self, 10)
+        columns = 20
+        self.slipList = List(self, columns)
         self.add(self.slipList, 0, 1)
 
-        self.codeletList = List(self, 10)
+        self.codeletList = List(self, columns)
         self.add(self.codeletList, 1, 1)
 
-        self.objectList = List(self, 10)
+        self.objectList = List(self, columns)
         self.add(self.objectList, 2, 1)
-
-        #self.logBox = List(self, 10)
-        #self.add(self.logBox, 1, 0)
 
         self.graph2 = Plot(self, 'Answer Distribution')
         self.add(self.graph2, 2, 0)
@@ -62,14 +55,21 @@ class MainApplication(GridFrame):
         self.slipList.update(slipnodes, key=lambda s:s.activation, 
                 formatter=lambda s : '{}: {}'.format(s.name, round(s.activation, 2)))
         self.codeletList.update(codelets, key=lambda c:c.urgency, formatter= lambda s : '{}: {}'.format(s.name, round(s.urgency, 2)))
-        self.objectList.update(objects, formatter=lambda s : '{}'.format(str(s.descriptions)))
-        #self.logBox.update(list(reversed(self.messages))[:10])
+        self.objectList.update(objects, formatter=lambda s : '{}'.format(', '.join(map(str, s.descriptions))))
+        if len(objects) > 0:
+            print('Descriptions:')
+            for obj in objects:
+                print(obj)
+                for description in obj.descriptions:
+                    print('    {}:'.format(description))
+                    print('        {}'.format(description.descriptionType.name))
+                    print('        {}'.format(description.descriptor.name))
 
     def reset_with_strings(self, initial, modified, target):
         self.primary.reset_with_strings(initial, modified, target)
 
 class GUI(object):
-    def __init__(self, title, updateInterval=.1):
+    def __init__(self, title):
         self.root = tk.Tk()
         self.root.title(title)
         tk.Grid.rowconfigure(self.root, 0, weight=1)
@@ -78,9 +78,6 @@ class GUI(object):
         self.app.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
         configure_style(ttk.Style())
-
-        self.lastUpdated = time.time()
-        self.updateInterval = updateInterval
 
     def add_answers(self, answers):
         def modifier(status):
@@ -92,7 +89,8 @@ class GUI(object):
         self.root.update_idletasks()
         self.root.update()
 
+    def paused(self):
+        return self.app.primary.control.paused
+
     def update(self, copycat):
-        current = time.time()
         self.app.update(copycat)
-        self.lastUpdated = current

@@ -25,14 +25,15 @@ class Reporter(object):
 
 
 class Copycat(object):
-    def __init__(self, rng_seed=None, reporter=None, showgui=True):
+    def __init__(self, rng_seed=None, reporter=None, gui=False):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
         self.temperature = Temperature()
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
-        self.gui = GUI('Copycat')
+        if gui:
+            self.gui = GUI('Copycat')
         self.lastUpdate = float('-inf')
 
     def step(self):
@@ -52,14 +53,11 @@ class Copycat(object):
     def check_reset(self):
         if self.gui.app.primary.control.go:
             initial, modified, target = self.gui.app.primary.control.get_vars()
-            self.reset_with_strings(initial, modified, target)
+            self.gui.app.reset_with_strings(initial, modified, target)
+            self.workspace.resetWithStrings(initial, modified, target)
             return True
         else:
             return False
-
-    def reset_with_strings(self, initial, modified, target):
-        self.workspace.resetWithStrings(initial, modified, target)
-        self.gui.app.reset_with_strings(initial, modified, target)
 
     def mainLoop(self):
         currentTime = self.coderack.codeletsRun
@@ -94,29 +92,28 @@ class Copycat(object):
         while True:
             if self.check_reset():
                 answers = {}
-            answer = self.runTrial()
             self.gui.refresh()
-            self.gui.update(self)
-            d = answers.setdefault(answer['answer'], {
-                'count': 0,
-                'sumtemp': 0,
-                'sumtime': 0
-            })
-            d['count'] += 1
-            d['sumtemp'] += answer['temp']
-            d['sumtime'] += answer['time']
-            self.gui.add_answers(answers)
+            if not self.gui.paused():
+                answer = self.runTrial()
+                self.gui.update(self)
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0,
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp']
+                d['sumtime'] += answer['time']
+                self.gui.add_answers(answers)
 
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
             d['avgtime'] = d.pop('sumtime') / d['count']
 
     def run(self, initial, modified, target, iterations):
-        self.reset_with_strings(initial, modified, target)
+        self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
         for i in range(iterations):
-            if self.check_reset():
-                answers = {}
             answer = self.runTrial()
             d = answers.setdefault(answer['answer'], {
                 'count': 0,
@@ -133,7 +130,6 @@ class Copycat(object):
         return answers
 
     def run_forever(self, initial, modified, target):
-        self.reset_with_strings(initial, modified, target)
+        self.workspace.resetWithStrings(initial, modified, target)
         while True:
-            self.check_reset()
             self.runTrial()
