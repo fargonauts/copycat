@@ -80,6 +80,8 @@ def _parameterized_best(temp, prob):
     u = prob ** r if prob < .5 else prob ** (1/r)
     return _weighted(temp, prob, s, u)
 
+def _none(temp, prob):
+    return prob
 
 class Temperature(object):
     def __init__(self):
@@ -96,7 +98,8 @@ class Temperature(object):
                 'average_alt'    : _averaged_alt,
                 'best'           : _working_best,
                 'sbest'          : _soft_best,
-                'pbest'          : _parameterized_best}
+                'pbest'          : _parameterized_best,
+                'none'           : _none}
         self.diffs  = 0
         self.ndiffs = 0
 

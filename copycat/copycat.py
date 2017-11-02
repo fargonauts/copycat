@@ -71,7 +71,7 @@ class Copycat(object):
         self.workspace.resetWithStrings(initial, modified, target)
 
         answers = {}
-        for formula in ['original', 'best', 'sbest', 'pbest']:
+        for formula in ['original', 'best', 'sbest', 'pbest', 'none']:
             self.temperature.useAdj(formula)
             answers = {}
             for i in range(iterations):
