@@ -20,6 +20,8 @@ pip-log.txt
 .coverage
 .tox
 .log
+copycat.log
+output
 
 # Other filesystems
 .svn
@@ -27,3 +29,5 @@ pip-log.txt
 
 # Editors
 .*.swp
+
+

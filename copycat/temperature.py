@@ -221,3 +221,7 @@ class Temperature(object):
         c = (10 - a) / 100
         f = (c + 1) * value
         return (0 + (-f * math.log2(f)))  # max(f, 0.0000)
+
+    def getAdjustedProbability(self, value):
+        # Experimental: no adjustment
+        return value
