@@ -57,16 +57,6 @@ class MainApplication(GridFrame):
         self.codeletList.update(codelets, key=lambda c:c.urgency, formatter= lambda s : '{}: {}'.format(s.name, round(s.urgency, 2)))
         get_descriptors = lambda s : ', '.join('({}={})'.format(d.descriptionType.name, d.descriptor.name) for d in s.descriptions)
         self.objectList.update(objects, formatter=lambda s : '{}: {}'.format(s, get_descriptors(s)))
-        '''
-        if len(objects) > 0:
-            print('Descriptions:')
-            for obj in objects:
-                print(obj)
-                for description in obj.descriptions:
-                    print('    {}:'.format(description))
-                    print('        {}'.format(description.descriptionType.name))
-                    print('        {}'.format(description.descriptor.name))
-        '''
 
     def reset_with_strings(self, initial, modified, target):
         self.primary.reset_with_strings(initial, modified, target)
@@ -84,6 +74,8 @@ class GUI(object):
 
     def add_answers(self, answers):
         def modifier(status):
+            print('Here')
+            print(answers)
             with plt.style.context(('dark_background')):
                 plot_imbedded(answers, status)
         self.app.graph2.status.modifier = modifier 
