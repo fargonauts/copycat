@@ -30,6 +30,7 @@ class Temperature(object):
     def value(self):
         return 100.0 if self.clamped else self.actual_value
 
+    '''
     def getAdjustedValue(self, value):
         return value ** (((100.0 - self.value()) / 30.0) + 0.5)
 
@@ -228,3 +229,4 @@ class Temperature(object):
     def getAdjustedProbability(self, value):
         # Experimental: no adjustment
         return value
+    '''

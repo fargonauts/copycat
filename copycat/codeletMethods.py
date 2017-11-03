@@ -76,13 +76,10 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
     structure1.updateStrength()
     structure2.updateStrength()
     # TODO: use entropy
-    weightedStrength1 = temperature.getAdjustedValue(
-        structure1.totalStrength * weight1)
+    weightedStrength1 = structure1.totalStrength * weight1
     # TODO: use entropy
-    weightedStrength2 = temperature.getAdjustedValue(
-        structure2.totalStrength * weight2)
+    weightedStrength2 = structure2.totalStrength * weight2
     return random.weighted_greater_than(weightedStrength1, weightedStrength2)
-
 
 def __fight(structure, structureWeight, incompatibles, incompatibleWeight):
     if not (incompatibles and len(incompatibles)):
@@ -108,14 +105,13 @@ def __fightIncompatibles(incompatibles, structure, name,
     logging.info('no incompatible %s', name)
     return True
 
-
 def __slippability(ctx, conceptMappings):
     random = ctx.random
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
         # TODO: use entropy
-        probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
+        probabilityOfSlippage = slippiness
         if random.coinFlip(probabilityOfSlippage):
             return True
     return False
@@ -144,20 +140,17 @@ def breaker(ctx, codelet):
     # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
         # TODO: use entropy
-        breakProbability = temperature.getAdjustedProbability(
-            structure.totalStrength / 100.0)
+        breakProbability = structure.totalStrength / 100.0
         if random.coinFlip(breakProbability):
             return
     for structure in breakObjects:
         structure.break_the_structure()
-
 
 def chooseRelevantDescriptionByActivation(ctx, workspaceObject):
     random = ctx.random
     descriptions = workspaceObject.relevantDescriptions()
     weights = [description.descriptor.activation for description in descriptions]
     return random.weighted_choice(descriptions, weights)
-
 
 def similarPropertyLinks(ctx, slip_node):
     random = ctx.random
@@ -166,7 +159,7 @@ def similarPropertyLinks(ctx, slip_node):
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
         # TODO:use entropy
-        probability = temperature.getAdjustedProbability(association)
+        probability = association
         if random.coinFlip(probability):
             result += [slip_link]
     return result
@@ -222,7 +215,7 @@ def description_strength_tester(ctx, codelet):
     description.updateStrength()
     strength = description.totalStrength
     # TODO: use entropy
-    probability = temperature.getAdjustedProbability(strength / 100.0)
+    probability = strength / 100.0
     assert random.coinFlip(probability)
     coderack.newCodelet('description-builder', strength, [description])
 
@@ -340,7 +333,7 @@ def rule_scout(ctx, codelet):
     assert objectList
     # use conceptual depth to choose a description
     weights = [
-        temperature.getAdjustedValue(node.conceptualDepth)
+        node.conceptualDepth
         for node in objectList
     ]
     descriptor = random.weighted_choice(objectList, weights)
@@ -352,7 +345,7 @@ def rule_scout(ctx, codelet):
         slipnet.letterCategory)]
     # use conceptual depth to choose a relation
     weights = [
-        temperature.getAdjustedValue(node.conceptualDepth)
+        node.conceptualDepth
         for node in objectList
     ]
     relation = random.weighted_choice(objectList, weights)
@@ -368,7 +361,7 @@ def rule_strength_tester(ctx, codelet):
     rule = codelet.arguments[0]
     rule.updateStrength()
     # TODO: use entropy
-    probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
+    probability = rule.totalStrength / 100.0
     if random.coinFlip(probability):
         coderack.newCodelet('rule-builder', rule.totalStrength, [rule])
 
@@ -471,7 +464,7 @@ def bond_strength_tester(ctx, codelet):
     bond.updateStrength()
     strength = bond.totalStrength
     # TODO: use entropy
-    probability = temperature.getAdjustedProbability(strength / 100.0)
+    probability = strength / 100.0
     logging.info('bond strength = %d for %s', strength, bond)
     assert random.coinFlip(probability)
     bond.facet.buffer = 100.0
@@ -754,7 +747,7 @@ def group_strength_tester(ctx, codelet):
     group.updateStrength()
     strength = group.totalStrength
     # TODO: use entropy
-    probability = temperature.getAdjustedProbability(strength / 100.0)
+    probability = strength / 100.0
     if random.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
         group.groupCategory.getRelatedNode(slipnet.bondCategory).buffer = 100.0
@@ -946,7 +939,7 @@ def important_object_correspondence_scout(ctx, codelet):
     assert objectFromInitial is not None
     descriptors = objectFromInitial.relevantDistinguishingDescriptors()
     # choose descriptor by conceptual depth
-    weights = [temperature.getAdjustedValue(n.conceptualDepth) for n in descriptors]
+    weights = [n.conceptualDepth for n in descriptors]
     slipnode = random.weighted_choice(descriptors, weights)
     assert slipnode
     initialDescriptor = slipnode
@@ -1010,7 +1003,7 @@ def correspondence_strength_tester(ctx, codelet):
     correspondence.updateStrength()
     strength = correspondence.totalStrength
     # TODO: use entropy
-    probability = temperature.getAdjustedProbability(strength / 100.0)
+    probability = strength / 100.0
     if random.coinFlip(probability):
         # activate some concepts
         for mapping in correspondence.conceptMappings:

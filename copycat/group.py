@@ -97,7 +97,7 @@ class Group(WorkspaceObject):
         activation = slipnet.length.activation / 100.0
         supportedActivation = (support * activation) ** exp
         #TODO: use entropy
-        return temperature.getAdjustedProbability(supportedActivation)
+        return supportedActivation
 
     def flippedVersion(self):
         slipnet = self.ctx.slipnet
@@ -132,7 +132,7 @@ class Group(WorkspaceObject):
         fred = cubedlength * (100.0 - slipnet.length.activation) / 100.0
         probability = 0.5 ** fred
         #TODO: use entropy
-        value = temperature.getAdjustedProbability(probability)
+        value = probability
         if value < 0.06:
             value = 0.0
         return value

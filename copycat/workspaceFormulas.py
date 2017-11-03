@@ -3,9 +3,7 @@ def __chooseObjectFromList(ctx, objects, attribute):
     random = ctx.random
     temperature = ctx.temperature
     weights = [
-        temperature.getAdjustedValue(
-            getattr(o, attribute)
-        )
+        getattr(o, attribute)
         for o in objects
     ]
     return random.weighted_choice(objects, weights)
