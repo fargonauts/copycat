@@ -33,6 +33,9 @@ class Temperature(object):
     def getAdjustedValue(self, value):
         return value ** (((100.0 - self.value()) / 30.0) + 0.5)
 
+    def getAdjustedValue(self, value):
+        return value
+
     """
     def getAdjustedProbability(self, value):
         if value == 0 or value == 0.5 or self.value() == 0:
