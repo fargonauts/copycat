@@ -1,0 +1,331 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Distributed Parallel Terraced Scan}
+\author{Lucas Saldyt, Alexandre Linhares}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We investigate FARG architectures in general, and Copycat in particular.  One of the foundations of those models is the \emph{Parallel Terraced Scan}--a psychologically-plausible model that enables a system to fluidly move between different modes of processing.  Previous work has modeled decision-making under Parallel Terraced Scan by using a central variable of \emph{Temperature}. 
+
+\end{abstract}
+
+\section{Introduction: towards `normal science'}
+
+This paper stems from Mitchell's (1993) and Hofstadter \& FARG (1995). The goals of this project are twofold:
+
+ 	First, is to create a framework of  `normal science' in FARG architectures. By `normal science' we use the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc. It then becomes close to impossible to reproduce a result, or to test some new idea. Here we provide: i) the full, documented, source-code; ii) a tutorial on how to install it and run it on a jupyter notebook; and, because we are using git for source-control, iii) the full set of modifications done on the project that results in distinct behavior.
+
+The Parallel Terraced Scan is a major innovation of FARG architectures. It corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. This type of behavior seems to very fluidly change the intensity of an activity based on local, contextual cues. It is found in high-level decisions such as marriage and low-level decisions such as a foraging predator choosing whether to further explore a particular area. Previous FARG models have used a central temperature T to implement this behavior. We explore how to maintain the same behavior while distributing decision-making throughout the system.
+
+\section{LSaldyt: Brainstorm, Planning, and Outline}
+
+\subsection{Steps/plan}
+
+Normal Science:
+\begin{enumerate}
+	\item Introduce statistical techniques
+    \item Reduce magic number usage, document reasoning and math
+    \item Propose effective human subject comparison
+\end{enumerate}
+Temperature:
+\begin{enumerate}
+	\item Propose formula improvements
+    \item Experiment with a destructive removal of temperature
+    \item Experiment with a "surgical" removal of temperature
+    \item Assess different copycat versions with/without temperature
+\end{enumerate}
+
+\subsection{Semi-structured Notes}
+
+Biological or psychological plausibility only matters if it actually affects the presence of intelligent processes. For example, neurons don't exist in copycat because we feel that they aren't required to simulate the processes being studied. Instead, copycat uses higher-level structures to simulate the same emergent processes that neurons do. However, codelets and the control of them relies on a global function representing tolerance to irrelevant structures. Other higher level structures in copycat likely rely on globals as well. Another central variable in copycat is the "rule" structure, of which there is only one. While some global variables might be viable, others may actually obstruct the ability to model intelligent processes. For example, a distributed notion of temperature will not only increase biological and psychological plausibility, but increase copycat's effectiveness at producing acceptable answer distributions.
+
+We must also realize that copycat is only a model, so even if we take goals (level of abstraction) and biological plausibility into account...
+It is only worth changing temperature if it affects the model.
+Arguably, it does affect the model. (Or, rather, we hypothesize that it does. There is only one way to find out for sure, and that's the point of this paper)
+
+So, maybe this is a paper about goals, model accuracy, and an attempt to find which cognitive details matter and which don't. It also might provide some insight into making a "Normal Science" framework.
+
+Copycat is full of random uncommented parameters and formulas. Personally, I would advocate for removing or at least documenting as many of these as possible. In an ideal model, all of the numbers present might be either from existing mathematical formulas, or present for a very good (emergent and explainable - so that no other number would make sense in the same place) reason. However, settling on so called "magic" numbers because the authors of the program believed that their parameterizations were correct is very dangerous. If we removed random magic numbers, we would gain confidence in our model, progress towards a normal science, and gain a better understanding of cognitive processes. 
+
+Similarly, a lot of the testing of copycat is based on human perception of answer distributions. However, I suggest that we move to a more statistical approach. For example, deciding on some arbitrary baseline answer distribution and then modifying copycat to obtain other answer distributions and then comparing distributions with a statistical significance test would actually be indicative of what effect each change had. This paper will include code changes and proposals that lead copycat (and FARG projects in general) to a more statistical and verifiable approach.
+While there is a good argument about copycat representing an individual with biases and therefore being incomparable to a distributed group of individuals, I believe that additional effort should be made to test copycat against human subjects.  I may include in this paper a concrete proposal on how such an experiment might be done.
+
+Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (significantly different with increased frequencies of more desirable answers and decreased frequencies of less desirable answers: desirability will be determined by some concrete metric, such as the number of relationships that are preserved or mirrored) answer distribution if temperature is turned to a set of distributed metrics. \[H_0\] Copycat's answer distribution will be unaffected by changing temperature to a set of distributed metrics.
+
+\subsection{Random Notes}
+
+This is all just free-flow unstructured notes. Don't take anything too seriously :).
+
+Below are a list of relevant primary and secondary sources I am reviewing:
+
+Biological/Psychological Plausibility:
+\begin{verbatim}
+http://www.cell.com/trends/cognitive-sciences/abstract/S1364-6613(16)30217-0
+"There is no evidence for a single site of working memory storage."
+https://ekmillerlab.mit.edu/2017/01/10/the-distributed-nature-of-working-memory/
+
+Creativity as a distributed process (SECONDARY: Review primaries)
+https://blogs.scientificamerican.com/beautiful-minds/the-real-neuroscience-of-creativity/
+cognition results from the dynamic interactions of distributed brain areas operating in large-scale networks
+http://scottbarrykaufman.com/wp-content/uploads/2013/08/Bressler_Large-Scale_Brain_10.pdf
+
+MIT Encyclopedia of the Cognitive Sciences:
+In reference to connectionist models:
+"Advantages of distribution are generally held to include greater representational capacity, content addressability, automatic generalization, fault tolerance, and biological plausibility. Disadvantages include slow learning, catastrophic interference, and binding problems."
+
+Cites:
+French, R. (1992). Semi-distributed representation and catastrophic forgetting in connectionist networks.
+Smolensky, P. (1991). Connectionism, constituency, and the language of thought.
+[...]
+\end{verbatim}
+
+(Sure, we know that the brain is a distributed system, but citing some neuroscience makes me feel much safer.)
+
+Goal related sources:
+\begin{verbatim}
+This will all most likely be FARG related stuff
+Isolating and enumerating FARG's goals will help show me what direction to take
+[..]
+\end{verbatim}
+
+Eliminating global variables might create a program that is more psychologically and biologically plausible, as according to the above. But our goals should be kept in mind. If we wanted full psychological and biological plausibility, we would just replicate a human mind atom for atom, particle for particle, or string for string. 
+
+Levels of abstraction in modeling the human brain and its processes:
+\begin{enumerate}
+	\item Cloning a brain at the smallest scale possible (i.e. preserving quantum states of electrons or something)
+    \item Simulating true neurons, abstracting away quantum mechanical detail
+    \item Artificial neurons that abstract away electrochemical detail
+    \item Simulation of higher-level brain structures and behaviors that transcends individual neurons
+    ...
+    \item Highest level of abstraction that still produces intelligent processes
+\end{enumerate}
+
+How far do we plan to go? What are we even abstracting? Which details matter and which don't?
+
+One side: Abstraction from biological detail may eventually mean that global variables become plausible
+Alt: Abstraction may remove some features and not others. Global variables may \emph{never} be plausible, even at the highest level of abstraction. (Of course, this extreme is probably not the case).
+
+Lack of a centralized structure versus lack of a global phenomena
+
+Since temperature, for example, is really just a function of several local phenomena, how global is it? I mean: If a centralized decision maker queried local phenomena separately, and made decisions based on that, it would be the same. Maybe centralized decision makers don't exist. Decisions, while seemingly central, have to emerge from agent processes. But what level of abstraction are we working on? 
+
+Clearly, if we knew 100\% which details mattered, we would already have an effective architecture.
+
+
+\section{A formalization of the model}
+
+Let $\Omega = \{\omega_1, \omega_2, ..., \omega_n\}$ be a finite discrete space.  In FARG models $\Omega$ represents the \emph{working short-term memory} of the system and the goal is to craft a context-sensitive representation (cite FRENCH here).  Hence $\Omega$ holds \emph{all possible configurations} of objects that could possibly exist in one's working memory; a large space. 
+
+Let us define the neighborhood function $A:(\Omega,$C$) \to 2^\Omega$ as the set of \emph{perceived affordances} under \emph{context} $C$.  The affordances $A$ define which state transitions $\omega_i \to \omega_j$ are possible at a particular context $C$. Another term that has been used in the complexity literature is \emph{the adjacent possible}. 
+
+A context is defined by the high-level ideas, the concepts that are active at a particular point in time. 
+
+The \emph{Cohesion} of the system is measured by the mutual information between the external memory, the short-term memory state $\omega_i$, and the context $C$.  
+
+\subsection{Copycat}
+
+% LUCAS: this entire section is copies from my old "minds and machines" paper... so we should discuss at some point whether to re-write it or not.  
+
+\subsubsection{The letter-analogy domain}
+
+Consider the following, seemingly trivial, analogy problem: $abc \to abd:ijk \to ?$, that is, if the letter string “abc” changes to the letter string “abd”, how would the letter string “ijk” change “in the same way”?  This is the domain of the Copycat project, and before we attempt a full description of the system, let us discuss in more detail some of the underlying intricacies.   Most people will in this case come up with a rule of transformation that looks like: “Replace the rightmost letter by its successor in the alphabet”, the application of which would lead to $ijl$.  This is a simple and straightforward example.  But other examples bring us the full subtlety of this domain.  The reader unfamiliar with the Copycat project is invited to consider the following problems: $abc\to abd: ijjkkk?\to $, $abc\to abd: xyz\to ?$, $abc\to abd: mrrkkk\to ?$, among others (Mitchell, 2003) to have a sense of the myriad of subtle intuitions involved in solving these problems.
+
+To solve this type of problem, one could come up with a scheme where the computer must first find a representation that models the change and then apply that change to the new string.  This natural sequence of operations is \emph{not possible}, however, because \emph{the transformation rule representing the change itself must bend to contextual cues and adapt to the particularities of the letter strings}.  For example, in the problem $abc\to abd: xyz\to ?$, the system may at first find a rule like “change rightmost letter to its successor in the alphabet”.  However, this explicit rule cannot be carried out in this case, simply because $z$ has no successor.  This leads to an impasse, out of which the only alternative by the system is to use a flexible, context-sensitive, representation system. 
+
+The reader may have noticed that this cognitive processing bears some similarities to the process of chess perception.  Perception obviously plays a significant role in letter string analogies, as it is necessary to connect a set of individual units--in this case, letter sequences--, into a meaningful interpretation which stresses the underlying pressures of the analogy. In chess it is also necessary to connect disparate pieces into a meaningful description stressing the position’s pressures.   But the most striking similarities with chess perception (in what concerns bounded rationality) seems to be the absolute lack of a single objectively correct answer, we have instead just an intuitive subjective feeling, given by the great number of simultaneous pressures arising in each problem.  
+
+In the previous section we have made reference to some studies considering multiple, incompatible chunks that emerge in chess positions. In letter strings this same problem appears.  Consider for instance the following problem:  
+
+If $aabc\to aabd: ijkk?$  
+
+\begin{itemize}
+\item One may chunk the initial strings as $(a)(abc)$ and $(a)(abd)$ and find a `corresponding’ chunk $(ijk)(k)$, which could lead to the following transformation rule: “change the last letter of the increasing sequence to its successor in the alphabet”. This interpretation would lead to the answer $ijlk$.
+
+\item Or, alternatively, one may chunk the initial strings as $(aa)(b)(c)$ and $(aa)(b)(d)$ and find a counterpart string with the chunking $(i)(j)(kk)$, and, in this case, the mapping can be inverted:  The first letter group $(aa)$ maps to the last letter group $(kk)$, and this will also invert the other mappings, leading to $(b)$ mapping to $(j)$ and $(c)$ mapping to $(i)$.  Because this viewpoint substantially stresses the concept `opposite’, Copycat is able to create the transformation rule “change the first letter to its predecessor in the alphabet”, leading to the solution $hjkk$, which preserves symmetry between group letter sizes and between successorship and predecessorship relations.
+
+\item Other potential transformation rules could lead, in this problem, to $ijkl$ (change the last letter to its successor in the alphabet), $ijll$ (change the last group of letters to its successor in the alphabet), or $jjkk$ (change the first letter to its successor in the alphabet). This problem of many incompatible (and overlapping) chunkings is of importance.  The specific chunking of a problem is directly linked to its solution, because chunks stress what is important on the underlying relations. 
+\end{itemize}
+
+\subsubsection{The FARG architecture of Copycat}
+
+How does the Copycat system work?  Before reviewing its underlying parts, let us bear in mind one of its principal philosophical points.  Copycat is not intended solely as a letter-string analogy program.  The intention of the project is the test of a theory; a theory of `statistically emergent active symbols’ (Hofstadter 1979; Hofstadter 1985) which is diametrically opposite to the “symbol system hypothesis” (Newell, 1980; Simon, 1980).  The major idea of active symbols is that instead of being tokens passively manipulated by programs, active symbols emerge from high numbers of interdependent subcognitive processes, which swarm over the system and drive its processing by triggering a complex `chain reaction of concepts’.  The system is termed `subsymbolic’ because these processes are intended to correspond to subliminal human information processes of few milliseconds, such as a subtle activation of a concept (i.e., priming), or an unconscious urge to look for a particular object.  So the models are of collective (or emergent) computation, where a multitude of local processes gradually build a context-sensitive representation of the problem. These symbols are active because they drive processing, leading a chain reaction of activation spreading, in which active concepts continuously trigger related concepts, and short-term memory structures are construed to represent the symbol (in this philosophical view a token does not have any associated meaning, while a meaningful representation, a symbol, emerges from an interlocked interpretation of many subcognitive pressing urges).  
+
+This cognitively plausible architecture has been applied to numerous domains (see for instance French 1992; Mitchell and Hofstadter 1990; Mitchell 1993; McGraw 1995; Marshall 1999; Rehling 2001 MANY ARE MISSING HERE!). It has five principal components: 
+
+\begin{enumerate}
+
+\item A workspace that interacts with external memory--this is the working short-term memory of the model.  The workspace is where the representations are construed, with innumerable pressing urges waiting for attention and their corresponding impulsive processes swarming over the representation, independently perceiving and creating many types of subpatterns.  Common examples of such subpatterns are bonds between letters – such as group bonds between $a*a$ or successor bonds between successive letters $a*b$ –, or relations between objects, awareness of abstract roles played by objects, and so on. 
+
+\item Pressing urges and impulsive processes – The computational processes constructing the representations on short-term memory are subcognitive impulsive processes named codelets.  The system perceives a great number of subtle pressures that immediately invoke subcognitive urges to handle them.  These urges will eventually become impulsive processes. Some of these impulsive processes may look for particular objects, some may look for particular relations between objects and create bonds between them, some may group objects into chunks, or associate descriptions to objects, etc.  The collective computation of these impulsive processes, at any given time, stands for the working memory of the model.  These processes can be described as impulsive for a number of reasons: first of all, they are involuntary, as there is no conscious decision required for their triggering.  (As Daniel Dennett once put it, if I ask you “not to think of an elephant”, it is too late, you already have done so, in an involuntary way.)  They are also automatic, as there is no need for conscious decisions to be taken in their internal processing; they simply know how to do their job without asking for help. They are fast, with only a few operations carried out.  They accomplish direct connections between their micro-perceptions and their micro-actions. Processing is also granular and fragmented – as opposed to a linearly structured sequence of operations that cannot be interrupted (Linhares 2003). Finally, they are functional, associated with a subpattern, and operate on a subsymbolic level (but not restricted to the manipulation of internal numerical parameters as opposed to most connectionist systems).  
+
+
+\item List of parallel priorities— Each impulsive process executes a local, incremental, change to the emerging representation, but the philosophy of the system is that all pressing urges are perceived simultaneously, in parallel.  So there is at any point in time a list of subcognitive urges ready to execute, fighting for the attention of the system and waiting probabilistically to fire as an impulsive process. This list of parallel priorities is named in Copycat as the coderack.  
+
+\item A semantic associative network undergoing constant flux– The system has very limited basic knowledge: it knows the 26 letters of the alphabet, and the immediate successorship relations entailed (it does not, for instance, know that the shapes of lowercase letters p, b, q bear some resemblance).  The long-term memory of the system is embedded over a network of nodes representing concepts with links between nodes associating related concepts.  This network is a crucial part for the formation of the chain reaction of conceptual activation: any specific concept, when activated, propagates activation to its related concepts, which will in turn launch top-down expectation-driven urges to look for those related concepts. This mode of computation not only enforces a context-sensitive search but also is the basis of the chain reaction of activation spreading – hence the term ‘active symbols’.  This network is named in Copycat as the slipnet.    One of the most original features of the slipnet is the ability to “slip one concept into another”, in which analogies between concepts are made (for details see Hofstadter 1995, Mitchell 1993).  
+
+\item A temperature measure – It should be obvious that the system does not zoom in immediately and directly into a faultless representation.  The process of representation construction is gradual, tentative, and numerous impulsive processes are executed erroneously.  At start, the system has no expectations of the content of letter strings, so it slowly wanders through many possibilities before converging on an specific interpretation, a process named the parallel terraced scan (Hofstadter 1995); and embedded within it is a control parameter of temperature that is similar in some aspects to that found in simulated annealing (Cagan and Kotovsky 1997; Hofstadter 1995).  The temperature measures the global amount of disorder and misunderstanding contained in the situation.  So at the beginning of the process, when no relevant information has been gathered, the temperature will be high, but it will gradually decrease as intricate relationships are perceived, first concepts are activated, the abstract roles played by letters and chunks are found; and meaning starts to emerge.  Though other authors have proposed a relationship between temperature and understanding (Cagan and Kotovsky, 1997), there is still a crucial difference here (see Hofstadter 1985, 1995): unlike the simulated annealing process that has a forcedly monotonically decreasing temperature schedule, the construction of a representation for these letter strings does not necessarily get monotonically improved as time flows.  As in the $abc\to abd : xyz\to ?$ problem, there are many instants when roadblocks are reached, when snags appear, and incompatible structures arise. At these moments, complexity (and entropy and confusion) grows, and so the temperature decrease is not monotonic.
+
+Finally, temperature does not act as a control parameter dictated by the user, that is, \emph{forced} to go either down or up, but it also acts \emph{as a feedback mechanism} to the system, which may reorganize itself, accepting or rejecting changes as temperature allows.  As pressing urges are perceived, their corresponding impulses eventually propose changes to working memory, to construct or to destruct structures.  How do these proposed changes get accepted?  Through the guidance of temperature.  At start $T$ is high and the vast majority of proposed structures are built, but as it decreases it becomes increasingly more important for a proposed change to be compatible with the existing interpretation.  And the system may thus focus on developing a particular viewpoint.
+
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig4-copycat.png}
+\caption{\label{fig:run-1}Copycat after 110 codelets have executed.  This implementation was carried out by Scott Bolland from the University of Queensland, Australia (2003, available online).}
+\end{figure}
+
+\subsubsection{An example run}
+
+Let us consider an example run of the Copycat system, and look at some specific steps in its processing of the problem $abc\to abd : iijjkk \to ?$  
+
+
+
+
+Figure \ref{fig:run-1} presents the working memory (workspace) after 110 codelets.  The system at this point has not perceived much structure.  It has perceived each individual letter, it has mapped the letters $c$ and $d$ between the original and target strings, and it has perceived some initial bonds between neighboring letters.  Some of these bonds are sameness bonds (such as $i*i$), some are successorship bonds (such as $i*j$), and some are predecessorship bonds (such as $b*c$).  In fact, there is confusion between the competing views of successorship and predecessorship relations in the string $abc$.  These incompatible interpretations will occasionally compete.  The system is also mapping the leftmost letter $a$ to the leftmost letter $i$.
+
+
+
+
+Notice that a first chunk has been created in the group `$jj$'.  Now \emph{this chunk is an individual object on its own}, capable of bonding with (and relating to) other objects. Notice also that the system has not yet perceived---and built the corresponding bond between---the two $k$'s in succession. So perception in Copycat is granular, fragmented over large numbers of small `micro-events'.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig5-copycat.png}
+\caption{\label{fig:run-2}Copycat’s working memory after the execution of 260 codelets.}
+\end{figure}
+
+
+After an additional 150 codelets have been executed (Figure \ref{fig:run-2}), more structure is built:  we now have three group chunks perceived; and there is also less confusion in the $abc$, as a `staircase' relation is perceived: that is, the system now perceives $abc$ as a successorship group, another chunked object. Finally, an initial translation rule appears: replace letter category of rightmost letter by successor. If the system were to stop processing at this stage it would apply this rule rather crudely and obtain the answer $iijjkl$.  Note that temperature is dropping as more structure is created.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig6-copycat.png}
+\caption{\label{fig:run-3}Copycat’s working memory after the execution of 280 codelets. }
+\end{figure}
+
+
+Let us slow down our overview a little bit and return in Figure \ref{fig:run-3} after only 20 codelets have run, to illustrate an important phenomenon: though $c$ now will map to the group $kk$, which is an important discovery, the global temperature will still be higher than that of the previous point (Figure \ref{fig:run-2}).  This occurs because there is some `confusion' arising from the predecessorship bond which was found between chunks `$ii$' and `$jj$', which does not seem to fit well with all those successorship relations already perceived and with the high activation of the successorship concept.  So temperature does not always drop monotonically.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig7-copycat.png}
+\caption{\label{fig:frog}Copycat's working memory the after execution of 415 codelets.}
+\end{figure}
+
+On the next step we can perceive two important changes:  first, the system perceives some successorship relations between the groups $ii$ and $jj$ and between the groups $jj$ and $kk$, but these relations are perceived in isolation from each other.    Another important discovery is that $jj$ is interpreted as being in `the middle of' $iijjkk$, which will eventually lead to its mapping to the letter $b$ in the original string.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig8-copycat.png}
+\caption{\label{fig:f8}Copycat’s working memory after the execution of 530 codelets.}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{fig9-copycat.png}
+\caption{\label{fig:f9}Final solution obtained after the execution of 695 codelets.}
+\end{figure}
+
+
+The system finally perceives that the successorship relations between the $ii$, $jj$, and $kk$ groups are not isolated and creates a single successorship group encompassing these three sameness groups.  Thus two successor groups are perceived on the workspace, and a mapping between them is built. However, a still maps to the letter $i$, instead of to the group $ii$, and $c$ still maps to the letter $k$, instead of to the group $kk$.
+
+From this stage it still remains for the letter $a$ to map to the group $ii$ and for the letter $c$ to map to group $kk$, which will lead naturally to the translated rule ``replace letter category of rightmost group to successor'', illustrating the slipping of the concept letter to the concept group.
+
+After 695 codelets, the system reaches the answer $iijjll$.  The workspace may seem very clean and symmetric, but it has evolved from a great deal of disorder and from many microscopic `battles' between incompatible interpretations.  
+
+The most important concepts activated in this example were group and successor group.  Once some sameness bonds were constructed, they rapidly activated the concept sameness group which re-inforced the search to find sameness groups, such as $kk$.  Once the initial successorship bonds were created, the activation of the corresponding concept rapidly enabled the system to find other instances of successorship relations (between, for instance, the sameness groups $jj$ and $kk$).  Different problems would activate other sets of concepts.  For example, `$abc\to abd: xyz\to ?$’ would probably activate the concept \emph{opposite}. And `$abc\to abd: mrrjjj\to ?$' would probably activate the concept length (Mitchell 1993). This rapid activation of concepts (and their top-down pressing urges), with the associated propagation of activation to related concepts, creates a chain reaction of impulsive cognition, and is the key to active symbols theory.  The reader is refereed to Mitchell (1993) and to Marshall (1999) to have an idea of how the answers provided by Copycat resemble human intuition.  
+
+We may safely conclude at this point that there are many similarities between copycat and the chess perception process, including: (i) an iterative ‘locking in’ process into a representation; (ii) smaller units bond and combine to form higher level, meaningfully coherent structures; (iii) the perception process is fragmented, granular, with great levels of confusion and entropy at start, but as time progresses it is able to gradually converge into a context-sensitive representation; (iv) there is a high interaction between an external memory, a limited size short term memory, and a long term memory; and (v) this interaction is done simultaneously by bottom-up and top-down processes.  
+
+\subsection{How to include Figures}
+
+
+First you have to upload the image file from your computer using the upload link the project menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
+
+
+
+
+\subsection{How to add Comments}
+
+Comments can be added to your project by clicking on the comment icon in the toolbar above. % * <john.hammersley@gmail.com> 2016-07-03T09:54:16.211Z:
+%
+% Here's an example comment!
+%
+To reply to a comment, simply click the reply button in the lower right corner of the comment, and you can close them when you're done.
+
+Comments can also be added to the margins of the compiled PDF using the todo command\todo{Here's a comment in the margin!}, as shown in the example on the right. You can also add inline comments:
+
+\todo[inline, color=green!40]{This is an inline comment.}
+
+\subsection{How to add Tables}
+
+Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. 
+
+\begin{table}
+\centering
+\begin{tabular}{l|r}
+Item & Quantity \\\hline
+Widgets & 42 \\
+Gadgets & 13
+\end{tabular}
+\caption{\label{tab:widgets}An example table.}
+\end{table}
+
+\subsection{How to write Mathematics}
+
+\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
+\[S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
+      = \frac{1}{n}\sum_{i}^{n} X_i\]
+denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
+
+
+\subsection{How to create Sections and Subsections}
+
+Use section and subsections to organize your document. Simply use the section and subsection buttons in the toolbar to create them, and we'll handle all the formatting and numbering automatically.
+
+\subsection{How to add Lists}
+
+You can make lists with automatic numbering \dots
+
+\begin{enumerate}
+\item Like this,
+\item and like this.
+\end{enumerate}
+\dots or bullet points \dots
+\begin{itemize}
+\item Like this,
+\item and like this.
+\end{itemize}
+
+\subsection{How to add Citations and a References List}
+
+You can upload a \verb|.bib| file containing your BibTeX entries, created with JabRef; or import your \href{https://www.overleaf.com/blog/184}{Mendeley}, CiteULike or Zotero library as a \verb|.bib| file. You can then cite entries from it, like this: \cite{greenwade93}. Just remember to specify a bibliography style, as well as the filename of the \verb|.bib|.
+
+You can find a \href{https://www.overleaf.com/help/97-how-to-include-a-bibliography-using-bibtex}{video tutorial here} to learn more about BibTeX.
+
+We hope you find Overleaf useful, and please let us know if you have any feedback using the help menu above --- or use the contact form at \url{https://www.overleaf.com/contact}!
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}
