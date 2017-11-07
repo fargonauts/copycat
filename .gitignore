@@ -29,3 +29,4 @@ pip-log.txt
 
 output
 copycat.log
+papers/*.log
