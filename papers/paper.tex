@@ -26,18 +26,11 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
 
 \end{abstract}
 
-\section{Introduction: towards `normal science'}
+\section{Introduction}
 
-This paper stems from Mitchell's (1993) and Hofstadter \& FARG (1995). The goals of this project are twofold:
+    This paper stems from Mitchell's (1993) and Hofstadter \& FARG (1995). The goals of this project are twofold:
 
- 	First, is to create a framework of  `normal science' in FARG architectures. 
-    By `normal science' we use the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. 
-    Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). 
-    Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc. 
-    It then becomes close to impossible to reproduce a result, or to test some new idea. 
-    This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for effective human comparison.
-
-    Secondly, we focus on effectively simulating intelligent processes through increasingly distributed decision-making.
+    Firstly, we focus on effectively simulating intelligent processes through increasingly distributed decision-making.
     The Parallel Terraced Scan is a major innovation of FARG architectures. 
     It corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
     This type of behavior seems to very fluidly change the intensity of an activity based on local, contextual cues. 
@@ -48,11 +41,84 @@ This paper stems from Mitchell's (1993) and Hofstadter \& FARG (1995). The goals
     First, we remove temperature destructively, essentially removing any lines of code that mention it, simply to see what effect it has.
     Then, we move toward a surgical removal of temperature, leaving in tact affected structures or replacing them by effective distributed mechanisms.
 
+    Secondly, we focus on the creation of a `normal science' framework in FARG architectures. 
+    By `normal science' we use the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. 
+    Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). 
+    Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc. 
+    It then becomes close to impossible to reproduce a result, or to test some new idea. 
+    This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for effective human comparison.
+
     We also discuss, in general, the nature of the brain as a distributed system.
     While the removal of a single global variable may initially seem trivial, one must realize that copycat and other cognitive architectures have many central structures.
     This paper explores the justification of these central structures in general.
     Is it possible to model intelligence with them, or are they harmful?
     ...
+
+\section{Body: Distributed Decision Making and Normal Science}
+
+\subsection{Distributed Decision Making}
+
+    The distributed nature of decision making is essential to modeling intelligent processes [..]
+
+\subsection{Normal Science}
+
+    An objective, scientifically oriented framework is essential to making progress in the domain of cognitive science.
+    [John Von Neumann: The Computer and the Brain?
+    He pointed out that there were good grounds merely in terms of electrical analysis to show that the mind, the brain itself, could not be working on a digital system. It did not have enough accuracy; or... it did not have enough memory. ...And he wrote some classical sentences saying there is a statistical language in the brain... different from any other statistical language that we use... this is what we have to discover. ...I think we shall make some progress along the lines of looking for what kind of statistical language would work.]
+    Notion that the brain obeys statistical, entropical mathematics
+
+\section{Normal Science}
+
+\section{Notes}
+\subsection{Steps/plan}
+
+Normal Science:
+\begin{enumerate}
+	\item Introduce statistical techniques
+    \item Reduce magic number usage, document reasoning and math
+    \item Propose effective human subject comparison
+\end{enumerate}
+Temperature:
+\begin{enumerate}
+	\item Propose formula improvements
+    \item Experiment with a destructive removal of temperature
+    \item Experiment with a "surgical" removal of temperature
+    \item Assess different copycat versions with/without temperature
+\end{enumerate}
+
+\subsection{Semi-structured Notes}
+
+Biological or psychological plausibility only matters if it actually affects the presence of intelligent processes. For example, neurons don't exist in copycat because we feel that they aren't required to simulate the processes being studied. Instead, copycat uses higher-level structures to simulate the same emergent processes that neurons do. However, codelets and the control of them relies on a global function representing tolerance to irrelevant structures. Other higher level structures in copycat likely rely on globals as well. Another central variable in copycat is the "rule" structure, of which there is only one. While some global variables might be viable, others may actually obstruct the ability to model intelligent processes. For example, a distributed notion of temperature will not only increase biological and psychological plausibility, but increase copycat's effectiveness at producing acceptable answer distributions.
+
+We must also realize that copycat is only a model, so even if we take goals (level of abstraction) and biological plausibility into account...
+It is only worth changing temperature if it affects the model.
+Arguably, it does affect the model. (Or, rather, we hypothesize that it does. There is only one way to find out for sure, and that's the point of this paper)
+
+So, maybe this is a paper about goals, model accuracy, and an attempt to find which cognitive details matter and which don't. It also might provide some insight into making a "Normal Science" framework.
+
+Copycat is full of random uncommented parameters and formulas. Personally, I would advocate for removing or at least documenting as many of these as possible. In an ideal model, all of the numbers present might be either from existing mathematical formulas, or present for a very good (emergent and explainable - so that no other number would make sense in the same place) reason. However, settling on so called "magic" numbers because the authors of the program believed that their parameterizations were correct is very dangerous. If we removed random magic numbers, we would gain confidence in our model, progress towards a normal science, and gain a better understanding of cognitive processes. 
+
+Similarly, a lot of the testing of copycat is based on human perception of answer distributions. However, I suggest that we move to a more statistical approach. For example, deciding on some arbitrary baseline answer distribution and then modifying copycat to obtain other answer distributions and then comparing distributions with a statistical significance test would actually be indicative of what effect each change had. This paper will include code changes and proposals that lead copycat (and FARG projects in general) to a more statistical and verifiable approach.
+While there is a good argument about copycat representing an individual with biases and therefore being incomparable to a distributed group of individuals, I believe that additional effort should be made to test copycat against human subjects.  I may include in this paper a concrete proposal on how such an experiment might be done.
+
+Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (significantly different with increased frequencies of more desirable answers and decreased frequencies of less desirable answers: desirability will be determined by some concrete metric, such as the number of relationships that are preserved or mirrored) answer distribution if temperature is turned to a set of distributed metrics. \[H_0\] Copycat's answer distribution will be unaffected by changing temperature to a set of distributed metrics.
+
+\subsection{Random Notes}
+
+This is all just free-flow unstructured notes. Don't take anything too seriously :).
+
+Below are a list of relevant primary and secondary sources I am reviewing:
+
+Biological/Psychological Plausibility:
+\begin{verbatim}
+http://www.cell.com/trends/cognitive-sciences/abstract/S1364-6613(16)30217-0
+"There is no evidence for a single site of working memory storage."
+https://ekmillerlab.mit.edu/2017/01/10/the-distributed-nature-of-working-memory/
+
+Creativity as a distributed process (SECONDARY: Review primaries)
+https://blogs.scientificamerican.com/beautiful-minds/the-real-neuroscience-of-creativity/
+cognition results from the dynamic interactions of distributed brain areas operating in large-scale networks
+http://scottbarrykaufman.com/wp-content/uploads/2013/08/Bressler_Large-Scale_Brain_10.pdf
 
 
 \bibliographystyle{alpha}
