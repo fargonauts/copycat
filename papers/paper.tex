@@ -31,13 +31,18 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     This paper stems from Mitchell's (1993) and Hofstadter \& FARG (1995). The goals of this project are twofold:
 
     Firstly, we focus on effectively simulating intelligent processes through increasingly distributed decision-making.
+    ...
+    Written by Linhares:
     The Parallel Terraced Scan is a major innovation of FARG architectures. 
     It corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
     This type of behavior seems to very fluidly change the intensity of an activity based on local, contextual cues. 
     It is found in high-level decisions such as marriage and low-level decisions such as a foraging predator choosing whether to further explore a particular area. 
     Previous FARG models have used a central temperature T to implement this behavior. 
     We explore how to maintain the same behavior while distributing decision-making throughout the system.
+    ...
     Specifically, we begin by attempting different refactors of the copycat architecture.
+    First, we experiment with different treatments of temperature, adjusting the formulas that depend on it
+    Then, we experiment with two methods for replacing temperature with a distributed metric, instead.
     First, we remove temperature destructively, essentially removing any lines of code that mention it, simply to see what effect it has.
     Then, we move toward a surgical removal of temperature, leaving in tact affected structures or replacing them by effective distributed mechanisms.
 
@@ -70,6 +75,55 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
 \section{Normal Science}
 
 \section{Notes}
+
+    According to the differences we can enumerate between brains and computers, it is clear that, since computers are universal and have vastly improved in the past five decades, that computers are capable of simulating intelligent processes. 
+    [Cite Von Neumann]. 
+    Primarily, the main obstacle now lies in our comprehension of intelligent processes. 
+    Once we truly understand the brain, writing software that emulates intelligence will be a relatively simple software engineering task. 
+    However, we must be careful to remain true to what we already know about intelligent processes so that we may come closer to learning more about them and eventually replicating them in full. 
+    The largest difference between the computer and the brain is the distributed nature of computation. 
+    Specifically, our computers as they exist today have central processing units, where literally all of computation happens. 
+    On the other hand, our brains have no central location where all processing happens. 
+    Luckily, the speed advantage and universality of computers makes it possible to simulate the distributed behavior of the brain. 
+    However, this simulation is only possible if computers are programmed with concern for the distributed nature of the brain.
+    [Actually, I go back and forth on this: global variables might be plausible, but likely aren't]
+    Also, even though the brain is distributed, some clustered processes must take place.
+    So, centralized structures should be removed from the copycat software, because they will likely improve the accuracy of simulating intelligent processes.
+    It isn't clear to what degree this refactor should take place.
+    The easiest target is the central variable, temperature, but other central structures exist.
+    This paper focuses primarily on temperature, and the unwanted global unification associated with it.
+
+    Even though copycat uses simulated parallel code, if copycat were actually parallelized, the global variable of temperature would actually prevent most copycat codelets from running at the same time.
+    If this global variable and other constricting centralized structures were removed, copycat's code would more closely replicate intelligent processes and would be able to be run much faster.
+    From a function-programming like perspective (i.e. LISP, the original language of copycat), the brain should simply be carrying out the same function in many locations (i.e. mapping neuron.process() across each of its neurons, if you will...)
+    However, in violating this model with the introduction of global variables......
+
+    Global variables seem like a construct that people use to model the real world.
+    ...
+
+    It is entirely possible that at the level of abstraction that copycat uses, global variables are perfectly acceptable.
+    For example, a quick grep-search of copycat shows that the workspace singleton also exists as a global variable.
+    Making all of copycat distributed clearly would require a full rewrite of the software....
+
+    If copycat can be run such that codelets may actually execute at the same time (without pausing to access globals), then it will much better replicate the human brain.
+
+    However, I question the assumption that the human brain has absolutely no centralized processing.
+    For example, input and output chanels (i.e. speech mechanisms) are not accessible from the entire brain.
+    Also, brain-region science leads me to believe that some (for example, research concerning wernicke's or broca's areas) brain regions truly are "specialized," and thus lend some support to the existence of centralized structures in a computer model of the brain.
+    However, these centralized structures may be emergent?
+
+    So, to re-iterate: Two possibilities exist (hypotheses)
+
+    A computer model of the brain can contain centralized structures and still be effective in its modeling.
+    A computer model cannot have any centralzied structures if it is going to be effective in its modeling.
+
+    Another important problem is defining the word "effective".
+    I suppose that "effective" would mean capable of solving problems effectively.
+    However, it isn't clear to me that removing temperature increases the ability to solve problems effectively.
+    Is this because models are aloud to have centralized structures, or because temperature isn't the only centralized structure?
+
+    Clearly, creating a model of copycat that doesn't have centralized structures will take an excessive amount of effort.
+    
 \subsection{Steps/plan}
 
 Normal Science:
