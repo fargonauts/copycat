@@ -9,13 +9,17 @@
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
+\usepackage{listings}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
-\title{Distributed Parallel Terraced Scan}
-%% \title{The Brain as a Distributed System}?
+\definecolor{lightgrey}{rgb}{0.9, 0.9, 0.9}
+\lstset{ %
+    backgroundcolor=\color{lightgrey}}
+
+\title{The Distributed Nature of Copycat..? (WIP)}
 \author{Lucas Saldyt, Alexandre Linhares}
 
 \begin{document}
@@ -72,9 +76,8 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     He pointed out that there were good grounds merely in terms of electrical analysis to show that the mind, the brain itself, could not be working on a digital system. It did not have enough accuracy; or... it did not have enough memory. ...And he wrote some classical sentences saying there is a statistical language in the brain... different from any other statistical language that we use... this is what we have to discover. ...I think we shall make some progress along the lines of looking for what kind of statistical language would work.]
     Notion that the brain obeys statistical, entropical mathematics
 
-\section{Normal Science}
 
-\section{Notes}
+\subsection{Notes}
 
     According to the differences we can enumerate between brains and computers, it is clear that, since computers are universal and have vastly improved in the past five decades, that computers are capable of simulating intelligent processes. 
     [Cite Von Neumann]. 
@@ -88,7 +91,7 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     However, this simulation is only possible if computers are programmed with concern for the distributed nature of the brain.
     [Actually, I go back and forth on this: global variables might be plausible, but likely aren't]
     Also, even though the brain is distributed, some clustered processes must take place.
-    So, centralized structures should be removed from the copycat software, because they will likely improve the accuracy of simulating intelligent processes.
+    In general, centralized structures should be removed from the copycat software, because they will likely improve the accuracy of simulating intelligent processes.
     It isn't clear to what degree this refactor should take place.
     The easiest target is the central variable, temperature, but other central structures exist.
     This paper focuses primarily on temperature, and the unwanted global unification associated with it.
@@ -108,7 +111,7 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     If copycat can be run such that codelets may actually execute at the same time (without pausing to access globals), then it will much better replicate the human brain.
 
     However, I question the assumption that the human brain has absolutely no centralized processing.
-    For example, input and output chanels (i.e. speech mechanisms) are not accessible from the entire brain.
+    For example, input and output channels (i.e. speech mechanisms) are not accessible from the entire brain.
     Also, brain-region science leads me to believe that some (for example, research concerning wernicke's or broca's areas) brain regions truly are "specialized," and thus lend some support to the existence of centralized structures in a computer model of the brain.
     However, these centralized structures may be emergent?
 
@@ -118,12 +121,37 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     A computer model cannot have any centralzied structures if it is going to be effective in its modeling.
 
     Another important problem is defining the word "effective".
-    I suppose that "effective" would mean capable of solving problems effectively.
+    I suppose that "effective" would mean capable of solving fluid analogy problems, producing similar answers to an identically biased human.
     However, it isn't clear to me that removing temperature increases the ability to solve problems effectively.
     Is this because models are aloud to have centralized structures, or because temperature isn't the only centralized structure?
 
     Clearly, creating a model of copycat that doesn't have centralized structures will take an excessive amount of effort.
-    
+
+\subsection{Initial Formula Adjustments}
+
+This research begin with adjustments to probability weighting formulas.
+
+In copycat, temperature affects the simulation in multiple ways:
+
+\begin{enumerate}
+    \item Certain codelets are probabalistically chosen to run
+    \item Certain structures are probabalistically chosen to be destroyed
+    \item ...
+\end{enumerate}
+
+In many cases, the formulas "get-adjusted-probability" and "get-adjusted-value" are used.
+Each curves a probability as a function of temperature.
+The desired behavior is as follows:
+At high temperatures, the system should explore options that would otherwise be unlikely.
+So, at temperatures above half of the maximum temperature, probabilities with a base value less than fifty percent will be curved higher, to some threshold.
+At temperatures below half of the maximum temperature, probabilities with a base value above fifty percent will be curved lower, to some threshold.
+
+The original formulas being used to do this were overly complicated.
+In summary, many formulas were tested in a spreadsheet, and an optimal one was chosen that replicated the desired behavior.
+[]
+
+\lstinputlisting[language=Python]{test.py}
+
 \subsection{Steps/plan}
 
 Normal Science:
@@ -173,6 +201,8 @@ Creativity as a distributed process (SECONDARY: Review primaries)
 https://blogs.scientificamerican.com/beautiful-minds/the-real-neuroscience-of-creativity/
 cognition results from the dynamic interactions of distributed brain areas operating in large-scale networks
 http://scottbarrykaufman.com/wp-content/uploads/2013/08/Bressler_Large-Scale_Brain_10.pdf
+
+\end{verbatim}
 
 
 \bibliographystyle{alpha}
