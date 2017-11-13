@@ -5,6 +5,7 @@ from .temperature import Temperature
 from .workspace import Workspace
 from .gui import GUI
 
+from pprint import pprint
 
 class Reporter(object):
     """Do-nothing base class for defining new reporter types"""
@@ -17,7 +18,7 @@ class Reporter(object):
     def report_slipnet(self, slipnet):
         pass
 
-    def report_temperature(self, temperature):
+    def report_temperature(self, temperature): #TODO: use entropy
         pass
 
     def report_workspace(self, workspace):
@@ -29,7 +30,7 @@ class Copycat(object):
         self.coderack = Coderack(self)
         self.random = Randomness(rng_seed)
         self.slipnet = Slipnet()
-        self.temperature = Temperature()
+        self.temperature = Temperature() # TODO: use entropy
         self.workspace = Workspace(self)
         self.reporter = reporter or Reporter()
         if gui:
@@ -72,13 +73,13 @@ class Copycat(object):
         """Run a trial of the copycat algorithm"""
         self.coderack.reset()
         self.slipnet.reset()
-        self.temperature.reset()
+        self.temperature.reset() # TODO: use entropy
         self.workspace.reset()
         while self.workspace.finalAnswer is None:
             self.mainLoop()
         answer = {
             'answer': self.workspace.finalAnswer,
-            'temp': self.temperature.last_unclamped_value,
+            'temp': self.temperature.last_unclamped_value, # TODO: use entropy
             'time': self.coderack.codeletsRun,
         }
         self.reporter.report_answer(answer)
@@ -112,21 +113,29 @@ class Copycat(object):
 
     def run(self, initial, modified, target, iterations):
         self.workspace.resetWithStrings(initial, modified, target)
-        answers = {}
-        for i in range(iterations):
-            answer = self.runTrial()
-            d = answers.setdefault(answer['answer'], {
-                'count': 0,
-                'sumtemp': 0,
-                'sumtime': 0
-            })
-            d['count'] += 1
-            d['sumtemp'] += answer['temp']
-            d['sumtime'] += answer['time']
 
-        for answer, d in answers.items():
-            d['avgtemp'] = d.pop('sumtemp') / d['count']
-            d['avgtime'] = d.pop('sumtime') / d['count']
+        answers = {}
+        for formula in ['original', 'best', 'sbest', 'pbest', 'none']:
+            self.temperature.useAdj(formula)
+            answers = {}
+            for i in range(iterations):
+                answer = self.runTrial()
+                d = answers.setdefault(answer['answer'], {
+                    'count': 0,
+                    'sumtemp': 0, # TODO: use entropy
+                    'sumtime': 0
+                })
+                d['count'] += 1
+                d['sumtemp'] += answer['temp'] # TODO: use entropy
+                d['sumtime'] += answer['time']
+
+            for answer, d in answers.items():
+                d['avgtemp'] = d.pop('sumtemp') / d['count']
+                d['avgtime'] = d.pop('sumtime') / d['count']
+            print('The formula {} provided:'.format(formula))
+            print('Average difference: {}'.format(self.temperature.getAverageDifference()))
+            pprint(answers)
+
         return answers
 
     def run_forever(self, initial, modified, target):
