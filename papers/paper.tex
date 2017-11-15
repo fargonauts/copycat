@@ -148,12 +148,57 @@ At temperatures below half of the maximum temperature, probabilities with a base
 
 The original formulas being used to do this were overly complicated.
 In summary, many formulas were tested in a spreadsheet, and an optimal one was chosen that replicated the desired behavior.
-[]
 
+The original formula for curving probabilties in copycat:
 \lstinputlisting[language=Python]{formulas/original.py}
+
+An alternative that seems to improve performance on the abd->abd xyz->? problem:
+This formula produces probabilities that are not bounded between 0 and 1. These are generally truncated.
 \lstinputlisting[language=Python]{formulas/entropy.py}
+
+Ultimately, it wasn't clear to me that the so-called "xyz" problem should even be considered.
+As discussed in [the literature], the "xyz" problem is a novel example of a cognitive obstacle. 
+Generally, the best techniques for solving the "xyz" problem are discussed in the the publications around the "Metacat" project, which gives copycat a temporary memory and levels of reflection upon its actions.
+However, it is possible that the formula changes that target improvement in other problems may produce better results for the "xyz" problem.
+Focusing on the "xyz" problem, however, will likely be harmful to the improvement of performanace on other problems.
+
+So, the original copycat formula is overly complicated, and doesn't perform optimally on several problems.
+The entropy formula is an improvement, but other formulas are possible too.
+
+Below are variations on a "weighted" formula.
+The general structure is:
+
+\[\emph{p'} = \frac{T}{100} * S + \frac{100-T}{100} * U\]
+
+Where: $S$ is the convergence value for when $T = 0$ and
+       $U$ is the convergence value for when $T = 100$.
+The below formulas simply experiment with different values for $S$ and $U$
+The values of $\alpha$ and $\beta$ can be used to provide additional weighting for the formula, but are not used in this section.
+
 \lstinputlisting[language=Python]{formulas/weighted.py}
+
+[Discuss inverse formula and why $S$ was chosen to be constant]
+
+After some experimentation and reading the original copycat documentation, it was clear that $S$ should be chosen to be $0.5$ and that $U$ should implement the probability curving desired at high temperatures. 
+The following formulas let $U = p^r$ if $p < 0.5$ and let $U = p^\frac{1}{r}$ if $p >= 0.5$.
+This controls whether/when curving happens.
+Now, the parameter $r$ simply controls the degree to which curving happens.
+Different values of $r$ were experimented with (values between $10$ and $1$ were experimented with at increasingly smaller step sizes. 
+$2$ and $1.05$ are both good choices at  opposite "extremes".
+$2$ works because it is large enough to produce novel changes in behavior at extreme temperatures without totally disregarding the original probabilities.
+Values above $2$ do not work because they make probabilities too uniform.
+Values below $2$ (and above $1.05$) are feasible, but produce less curving and therefore less unique behavior.
+$1.05$ works because it very closely replicates the original copycat formulas, providing a very smooth curving.
+Values beneath $1.05$ essentially leave probabilities unaffected, producing no significant unique behavior dependent on temperature.
+
 \lstinputlisting[language=Python]{formulas/best.py}
+
+\newline
+
+Random thought:
+It would be interesting to not hardcode the value of $r$, but to instead leave it as a variable between $0$ and $2$ that changes depending on frustration.
+However, this would be much like temperature in the first place....?
+$r$ could itself be a function of temperature. That would be.... meta.... lol.
 
 \subsection{Steps/plan}
 
