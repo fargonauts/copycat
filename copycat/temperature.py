@@ -147,5 +147,8 @@ class Temperature(object):
         print('Changing to adjustment formula {}'.format(adj))
         self.adjustmentType = adj
 
+    def getAdj(self):
+        return self.adjustmentType
+
     def adj_formulas(self):
         return self._adjustmentFormulas.keys()
