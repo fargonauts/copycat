@@ -122,10 +122,6 @@ def breaker(ctx, codelet):
     random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
-    # TODO: use entropy
-    probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
-    if random.coinFlip(probabilityOfFizzle):
-        return
     # choose a structure at random
     structures = [s for s in workspace.structures if
                   isinstance(s, (Group, Bond, Correspondence))]
