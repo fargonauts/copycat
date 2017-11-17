@@ -81,10 +81,6 @@ class Coderack(object):
             return workspace.rule.totalWeakness() / 100.0
         if 'correspondence' in codeletName:
             return workspace.interStringUnhappiness / 100.0
-        #if 'description' in codeletName:
-            #return 1.0
-            # TODO: use entropy
-            #return (temperature.value() / 100.0) ** 2
         return workspace.intraStringUnhappiness / 100.0
 
     def howManyToPost(self, codeletName):
@@ -286,7 +282,7 @@ class Coderack(object):
         random = self.ctx.random
         assert self.codelets
 
-        scale = 1 #(100.0 - temperature.value() + 10.0) / 15.0
+        scale = 1 
         chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
         return chosen

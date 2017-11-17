@@ -1,0 +1,135 @@
+object chosen = k from target string
+destination: k
+chosen bond facet: letterCategory
+Source: k, destination: k
+source descriptor: K
+destination descriptor: K
+proposing sameness bond 
+object chosen = j from target string
+destination: k
+chosen bond facet: letterCategory
+Source: j, destination: k
+source descriptor: J
+destination descriptor: K
+proposing successor bond 
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+object chosen = predecessor bond between b and c from other string
+bond strength = 48 for predecessor bond between b and c
+succeeded: posting bond-builder
+object chosen = k from target string
+destination: k
+chosen bond facet: letterCategory
+Source: k, destination: k
+source descriptor: K
+destination descriptor: K
+proposing sameness bond 
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = j from target string
+destination: k
+chosen bond facet: letterCategory
+Source: j, destination: k
+source descriptor: J
+destination descriptor: K
+proposing successor bond 
+object chosen = c from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: c, destination: b
+source descriptor: C
+destination descriptor: B
+proposing predecessor bond 
+object chosen = b from initial string
+destination: a
+chosen bond facet: letterCategory
+Source: b, destination: a
+source descriptor: B
+destination descriptor: A
+proposing predecessor bond 
+object chosen = i from target string
+object chosen = successor bond between j and k from other string
+bond strength = 48 for successor bond between j and k
+succeeded: posting bond-builder
+object chosen = predecessor bond between b and c from other string
+bond strength = 48 for predecessor bond between b and c
+succeeded: posting bond-builder
+object chosen = b from initial string
+destination: a
+chosen bond facet: letterCategory
+Source: b, destination: a
+source descriptor: B
+destination descriptor: A
+proposing predecessor bond 
+object chosen = sameness bond between k and k from other string
+bond strength = 100 for sameness bond between k and k
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = b from initial string
+object chosen = b from initial string
+destination: c
+chosen bond facet: letterCategory
+Source: b, destination: c
+source descriptor: B
+destination descriptor: C
+proposing successor bond 
+object chosen = sameness bond between k and k from other string
+bond strength = 100 for sameness bond between k and k
+object chosen = predecessor bond between a and b from other string
+bond strength = 48 for predecessor bond between a and b
+succeeded: posting bond-builder
+object chosen = successor bond between b and c from other string
+bond strength = 48 for successor bond between b and c
+object chosen = k from target string
+object chosen = a from initial string
+destination: b
+chosen bond facet: letterCategory
+Source: a, destination: b
+source descriptor: A
+destination descriptor: B
+proposing successor bond 
+object chosen = predecessor bond between b and c from other string
+number of incompatibleBonds: 0
+no incompatible bonds
+no incompatible groups
+building bond predecessor bond between b and c
+object chosen = predecessor bond between a and b from other string
+number of incompatibleBonds: 0
+no incompatible bonds
+no incompatible groups
+building bond predecessor bond between a and b
+object chosen = b from initial string
+destination: a
+chosen bond facet: letterCategory
+Source: b, destination: a
+source descriptor: B
+destination descriptor: A
+proposing predecessor bond 
+Post top down: top-down-description-scout, with urgency: 5
+posting bottom up codelets
+object chosen = j from target string
+destination: j
+chosen bond facet: letterCategory
+Source: j, destination: j
+source descriptor: J
+destination descriptor: J
+proposing sameness bond 
+object chosen = j from target string
+destination: i
+chosen bond facet: letterCategory
+Source: j, destination: i
+source descriptor: J
+destination descriptor: I
+proposing predecessor bond 
