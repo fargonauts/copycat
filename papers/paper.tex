@@ -26,7 +26,14 @@
 \maketitle
 
 \begin{abstract}
-We investigate FARG architectures in general, and Copycat in particular.  One of the foundations of those models is the \emph{Parallel Terraced Scan}--a psychologically-plausible model that enables a system to fluidly move between different modes of processing.  Previous work has modeled decision-making under Parallel Terraced Scan by using a central variable of \emph{Temperature}. 
+    We investigate the distributed nature of computation in a FARG architecture, Copycat. 
+    One of the foundations of those models is the \emph{Parallel Terraced Scan}--a psychologically-plausible model that enables a system to fluidly move between different modes of processing.  
+    Previous work has modeled decision-making under Parallel Terraced Scan by using a central variable of \emph{Temperature}. 
+    However, it is unlikely that this design decision accurately replicates the processes in the human brain.
+
+    Additionally, Copycat and other FARG architectures have incredible high rates of unscientific inquiry.
+    Specifically, Copycat uses many undocumented formulas and magic numbers, some of which have been parameterized to fix particular problems at the expense of performing worse on others.
+    This paper aims to add a framework for conducting so-called "Normal" science with Copycat, in the hopes of making our findings more concrete.
 
 \end{abstract}
 
@@ -75,7 +82,6 @@ We investigate FARG architectures in general, and Copycat in particular.  One of
     [John Von Neumann: The Computer and the Brain?
     He pointed out that there were good grounds merely in terms of electrical analysis to show that the mind, the brain itself, could not be working on a digital system. It did not have enough accuracy; or... it did not have enough memory. ...And he wrote some classical sentences saying there is a statistical language in the brain... different from any other statistical language that we use... this is what we have to discover. ...I think we shall make some progress along the lines of looking for what kind of statistical language would work.]
     Notion that the brain obeys statistical, entropical mathematics
-
 
 \subsection{Notes}
 
@@ -207,6 +213,7 @@ $r$ could itself be a function of temperature. That would be.... meta.... lol.
 And ten minutes later, it was done.
 The "meta" formula performs as well as the "best" formula on the "ijjkkk" problem, which I consider the most novel.
 Interestingly, I noticed that the paramterized formulas aren't as good on this problem. What did I parameterize them for? Was it well justified?
+(Probably not)
 
 At this point, I plan on using the git branch "feature-normal-science-framework" to implement a system that takes in a problem set and provides several answer distributions as output.
 Then, I'll do a massive cross-formula answer distribution comparison with $\chi^2$ tests. This will give me an idea about which formula and which changes are best.
