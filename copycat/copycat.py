@@ -62,8 +62,8 @@ class Copycat(object):
     def mainLoop(self):
         currentTime = self.coderack.codeletsRun
         self.temperature.tryUnclamp(currentTime)
-        # Every 15 codelets, we update the workspace.
-        if currentTime >= self.lastUpdate + 15:
+        # Every 5 codelets, we update the workspace.
+        if currentTime >= self.lastUpdate + 5:
             self.update_workspace(currentTime)
         self.step()
 

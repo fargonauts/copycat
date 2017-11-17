@@ -2,7 +2,14 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_imbedded(answers, status):
+def plot_temp(temperature, status):
+    status.subplot.clear()
+    status.subplot.plot(temperature.history)
+    status.subplot.set_ylabel('Temperature')
+    status.subplot.set_xlabel('Time')
+    status.subplot.set_title('Temperature History')
+
+def plot_answers(answers, status):
     answers = sorted(answers.items(), key=lambda kv : kv[1]['count'])
     objects = [t[0] for t in answers]
     yvalues = [t[1]['count'] for t in answers]
