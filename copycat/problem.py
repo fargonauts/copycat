@@ -34,6 +34,10 @@ class Problem:
         print('-' * 120)
 
     def solve(self):
+        print('-' * 120)
+        print('Testing copycat problem: {} : {} :: {} : _'.format(self.initial,
+                                                                  self.modified,
+                                                                  self.target))
         copycat = Copycat()
         answers  = dict()
         if self.formulas == None:
