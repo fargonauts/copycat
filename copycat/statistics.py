@@ -31,24 +31,28 @@ def chi_squared(actual, expected):
             chiSquared += (O - E) ** 2 / E
     return degreesFreedom, chiSquared
 
-def chi_squared_test(actual, expected):
+def chi_squared_test(actual, expected, show=True):
     df, chiSquared = chi_squared(actual, expected)
 
     if chiSquared >= _chiSquared_table[df]:
-        print('Significant difference between expected and actual answer distributions: \n' +
-            'Chi2 value: {} with {} degrees of freedom'.format(chiSquared, df))
+        if show:
+            print('Significant difference between expected and actual answer distributions: \n' +
+                'Chi2 value: {} with {} degrees of freedom'.format(chiSquared, df))
         return False
     return True
 
 def cross_formula_chi_squared(actualDict, expectedDict):
     for ka, actual in actualDict.items():
         for ke, expected in expectedDict.items():
-            print('Comparing {} with {}'.format(ka, ke))
-            chi_squared_test(actual, expected)
+            print('Comparing {} with {}: '.format(ka, ke), end='')
+            if not chi_squared_test(actual, expected, show=False):
+                print('Failed.')
+            else:
+                print('Succeeded.')
 
 def cross_chi_squared(problemSets):
-    for i, problemSetA in enumerate(problemSets):
-        for problemSetB in problemSets[i + 1:]:
+    for i, (a, problemSetA) in enumerate(problemSets):
+        for b, problemSetB in problemSets[i + 1:]:
             for problemA in problemSetA:
                 for problemB in problemSetB:
                     if (problemA.initial  == problemB.initial and 
@@ -56,7 +60,14 @@ def cross_chi_squared(problemSets):
                         problemA.target   == problemB.target):
                         answersA = problemA.distributions
                         answersB = problemB.distributions
+                        print('-' * 80)
+                        print('\n')
+                        print('{} x {}'.format(a, b))
+                        print('Problem:  {}:{}::{}:_'.format(problemA.initial,
+                                                             problemA.modified,
+                                                             problemA.target))
                         cross_formula_chi_squared(answersA, answersB)
+                        print('\n')
 
 def iso_chi_squared(actualDict, expectedDict):
     for key in expectedDict.keys():

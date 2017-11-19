@@ -15,7 +15,7 @@ def main(args):
         with open(filename, 'rb') as infile:
             pSet = pickle.load(infile)
             branchProblemSets[filename] = pSet
-            problemSets.append(pSet)
+            problemSets.append((filename, pSet))
     cross_chi_squared(problemSets)
     return 0
 

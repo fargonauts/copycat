@@ -1,0 +1,292 @@
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.adj-tests
+Problem:  abc:abd::efg:_
+Comparing None with None: Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.adj-tests
+Problem:  abc:abd::ijk:_
+Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of hjk, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.adj-tests
+Problem:  abc:abd::xyz:_
+Comparing None with None: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of yyz, but got 9
+Warning! Expected 0 counts of xyy, but got 5
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.adj-tests
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Warning! Expected 0 counts of ijkk, but got 18
+Warning! Expected 0 counts of ijkd, but got 1
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.adj-tests
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.nuke-temp
+Problem:  abc:abd::efg:_
+Comparing None with None: Warning! Expected 0 counts of dfg, but got 2
+Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.nuke-temp
+Problem:  abc:abd::ijk:_
+Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of hjk, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.nuke-temp
+Problem:  abc:abd::xyz:_
+Comparing None with None: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of yyz, but got 9
+Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.nuke-temp
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.nuke-temp
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.soft-remove
+Problem:  abc:abd::efg:_
+Comparing None with None: Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.soft-remove
+Problem:  abc:abd::ijk:_
+Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of hjk, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.soft-remove
+Problem:  abc:abd::xyz:_
+Comparing None with None: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.soft-remove
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.legacy x distributions/.soft-remove
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.nuke-temp
+Problem:  abc:abd::efg:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.nuke-temp
+Problem:  abc:abd::ijk:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.nuke-temp
+Problem:  abc:abd::xyz:_
+Comparing None with None: Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.nuke-temp
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Warning! Expected 0 counts of ijd, but got 1
+Warning! Expected 0 counts of ijll, but got 17
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.nuke-temp
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Warning! Expected 0 counts of mrrkkk, but got 26
+Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.soft-remove
+Problem:  abc:abd::efg:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.soft-remove
+Problem:  abc:abd::ijk:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.soft-remove
+Problem:  abc:abd::xyz:_
+Comparing None with None: Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.soft-remove
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.adj-tests x distributions/.soft-remove
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.nuke-temp x distributions/.soft-remove
+Problem:  abc:abd::efg:_
+Comparing None with None: Warning! Expected 0 counts of ffg, but got 1
+Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.nuke-temp x distributions/.soft-remove
+Problem:  abc:abd::ijk:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.nuke-temp x distributions/.soft-remove
+Problem:  abc:abd::xyz:_
+Comparing None with None: Succeeded.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.nuke-temp x distributions/.soft-remove
+Problem:  abc:abd::ijkk:_
+Comparing None with None: Failed.
+
+
+--------------------------------------------------------------------------------
+
+
+distributions/.nuke-temp x distributions/.soft-remove
+Problem:  abc:abd::mrrjjj:_
+Comparing None with None: Warning! Expected 0 counts of nrrjjj, but got 1
+Warning! Expected 0 counts of mrrjjd, but got 2
+Failed.
+
+
