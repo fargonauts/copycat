@@ -74,8 +74,10 @@ def __structureVsStructure(structure1, weight1, structure2, weight2):
     temperature = ctx.temperature
     structure1.updateStrength()
     structure2.updateStrength()
+    # TODO: use entropy
     weightedStrength1 = temperature.getAdjustedValue(
         structure1.totalStrength * weight1)
+    # TODO: use entropy
     weightedStrength2 = temperature.getAdjustedValue(
         structure2.totalStrength * weight2)
     return random.weighted_greater_than(weightedStrength1, weightedStrength2)
@@ -111,6 +113,7 @@ def __slippability(ctx, conceptMappings):
     temperature = ctx.temperature
     for mapping in conceptMappings:
         slippiness = mapping.slippability() / 100.0
+        # TODO: use entropy
         probabilityOfSlippage = temperature.getAdjustedProbability(slippiness)
         if random.coinFlip(probabilityOfSlippage):
             return True
@@ -122,6 +125,7 @@ def breaker(ctx, codelet):
     random = ctx.random
     temperature = ctx.temperature
     workspace = ctx.workspace
+    # TODO: use entropy
     probabilityOfFizzle = (100.0 - temperature.value()) / 100.0
     if random.coinFlip(probabilityOfFizzle):
         return
@@ -138,6 +142,7 @@ def breaker(ctx, codelet):
                 breakObjects += [structure.source.group]
     # Break all the objects or none of them; this matches the Java
     for structure in breakObjects:
+        # TODO: use entropy
         breakProbability = temperature.getAdjustedProbability(
             structure.totalStrength / 100.0)
         if random.coinFlip(breakProbability):
@@ -149,8 +154,7 @@ def breaker(ctx, codelet):
 def chooseRelevantDescriptionByActivation(ctx, workspaceObject):
     random = ctx.random
     descriptions = workspaceObject.relevantDescriptions()
-    weights = [description.descriptor.activation
-                   for description in descriptions]
+    weights = [description.descriptor.activation for description in descriptions]
     return random.weighted_choice(descriptions, weights)
 
 
@@ -160,6 +164,7 @@ def similarPropertyLinks(ctx, slip_node):
     result = []
     for slip_link in slip_node.propertyLinks:
         association = slip_link.degreeOfAssociation() / 100.0
+        # TODO:use entropy
         probability = temperature.getAdjustedProbability(association)
         if random.coinFlip(probability):
             result += [slip_link]
@@ -182,7 +187,7 @@ def bottom_up_description_scout(ctx, codelet):
     sliplinks = similarPropertyLinks(ctx, description.descriptor)
     assert sliplinks
     weights = [sliplink.degreeOfAssociation() * sliplink.destination.activation
-              for sliplink in sliplinks]
+               for sliplink in sliplinks]
     chosen = random.weighted_choice(sliplinks, weights)
     chosenProperty = chosen.destination
     coderack.proposeDescription(chosenObject, chosenProperty.category(),
@@ -215,6 +220,7 @@ def description_strength_tester(ctx, codelet):
     description.descriptor.buffer = 100.0
     description.updateStrength()
     strength = description.totalStrength
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     assert random.coinFlip(probability)
     coderack.newCodelet('description-builder', strength, [description])
@@ -298,7 +304,7 @@ def rule_scout(ctx, codelet):
     workspace = ctx.workspace
     assert workspace.numberOfUnreplacedObjects() == 0
     changedObjects = [o for o in workspace.initial.objects if o.changed]
-    #assert len(changedObjects) < 2
+    # assert len(changedObjects) < 2
     # if there are no changed objects, propose a rule with no changes
     if not changedObjects:
         return coderack.proposeRule(None, None, None, None)
@@ -328,8 +334,8 @@ def rule_scout(ctx, codelet):
             if targetObject.described(node):
                 if targetObject.distinguishingDescriptor(node):
                     newList += [node]
-        objectList = newList  # surely this should be +=
-                              # "union of this and distinguishing descriptors"
+        objectList = newList    # surely this should be +=
+        # "union of this and distinguishing descriptors"
     assert objectList
     # use conceptual depth to choose a description
     weights = [
@@ -360,6 +366,7 @@ def rule_strength_tester(ctx, codelet):
     temperature = ctx.temperature
     rule = codelet.arguments[0]
     rule.updateStrength()
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(rule.totalStrength / 100.0)
     if random.coinFlip(probability):
         coderack.newCodelet('rule-builder', rule.totalStrength, [rule])
@@ -392,8 +399,8 @@ def replacement_finder(ctx, codelet):
         relation = relations[diff]
     else:
         relation = None
-    letterOfInitialString.replacement = Replacement(ctx,
-        letterOfInitialString, letterOfModifiedString, relation)
+    letterOfInitialString.replacement = Replacement(ctx, letterOfInitialString,
+                                                    letterOfModifiedString, relation)
     if relation != slipnet.sameness:
         letterOfInitialString.changed = True
         workspace.changedObject = letterOfInitialString
@@ -436,8 +443,8 @@ def top_down_bond_scout__direction(ctx, codelet):
     coderack = ctx.coderack
     slipnet = ctx.slipnet
     direction = codelet.arguments[0]
-    source = __getScoutSource(ctx,
-        direction, formulas.localDirectionCategoryRelevance, 'bond')
+    source = __getScoutSource(ctx, direction, formulas.localDirectionCategoryRelevance,
+                              'bond')
     destination = chooseDirectedNeighbor(ctx, source, direction)
     assert destination
     logging.info('to object: %s', destination)
@@ -462,6 +469,7 @@ def bond_strength_tester(ctx, codelet):
     __showWhichStringObjectIsFrom(bond)
     bond.updateStrength()
     strength = bond.totalStrength
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     logging.info('bond strength = %d for %s', strength, bond)
     assert random.coinFlip(probability)
@@ -502,7 +510,7 @@ def bond_builder(ctx, codelet):
             if incompatibleCorrespondences:
                 logging.info("trying to break incompatible correspondences")
                 assert __fight(bond, 2.0, incompatibleCorrespondences, 3.0)
-            #assert __fightIncompatibles(incompatibleCorrespondences,
+            # assert __fightIncompatibles(incompatibleCorrespondences,
             #                            bond, 'correspondences', 2.0, 3.0)
     for incompatible in incompatibleBonds:
         incompatible.break_the_structure()
@@ -692,7 +700,7 @@ def top_down_group_scout__direction(ctx, codelet):
                           direction, bondFacet)
 
 
-#noinspection PyStringFormat
+# noinspection PyStringFormat
 @codelet('group-scout--whole-string')
 def group_scout__whole_string(ctx, codelet):
     coderack = ctx.coderack
@@ -744,6 +752,7 @@ def group_strength_tester(ctx, codelet):
     __showWhichStringObjectIsFrom(group)
     group.updateStrength()
     strength = group.totalStrength
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     if random.coinFlip(probability):
         # it is strong enough - post builder  & activate nodes
@@ -871,6 +880,7 @@ def rule_translator(ctx, codelet):
         bondDensity = min(bondDensity, 1.0)
     weights = __getCutoffWeights(bondDensity)
     cutoff = 10.0 * random.weighted_choice(list(range(1, 11)), weights)
+    # TODO: use entropy
     if cutoff >= temperature.actual_value:
         result = workspace.rule.buildTranslatedRule()
         if result is not None:
@@ -907,11 +917,11 @@ def bottom_up_correspondence_scout(ctx, codelet):
                  and m.initialDescriptionType != slipnet.bondFacet]
     initialDescriptionTypes = [m.initialDescriptionType for m in opposites]
     flipTargetObject = False
-    if  (objectFromInitial.spansString() and
-         objectFromTarget.spansString() and
-         slipnet.directionCategory in initialDescriptionTypes
-         and all(m.label == slipnet.opposite for m in opposites)  # unreached?
-         and slipnet.opposite.activation != 100.0):
+    if (objectFromInitial.spansString() and
+        objectFromTarget.spansString() and
+        slipnet.directionCategory in initialDescriptionTypes
+        and all(m.label == slipnet.opposite for m in opposites)  # unreached?
+            and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
         conceptMappings = formulas.getMappings(
             objectFromInitial, objectFromTarget,
@@ -927,6 +937,7 @@ def important_object_correspondence_scout(ctx, codelet):
     coderack = ctx.coderack
     random = ctx.random
     slipnet = ctx.slipnet
+    # TODO: use entropy
     temperature = ctx.temperature
     workspace = ctx.workspace
     objectFromInitial = chooseUnmodifiedObject(ctx, 'relativeImportance',
@@ -966,11 +977,11 @@ def important_object_correspondence_scout(ctx, codelet):
                  and m.initialDescriptionType != slipnet.bondFacet]
     initialDescriptionTypes = [m.initialDescriptionType for m in opposites]
     flipTargetObject = False
-    if  (objectFromInitial.spansString()
-         and objectFromTarget.spansString()
-         and slipnet.directionCategory in initialDescriptionTypes
-         and all(m.label == slipnet.opposite for m in opposites)  # unreached?
-         and slipnet.opposite.activation != 100.0):
+    if (objectFromInitial.spansString()
+        and objectFromTarget.spansString()
+        and slipnet.directionCategory in initialDescriptionTypes
+        and all(m.label == slipnet.opposite for m in opposites)  # unreached?
+            and slipnet.opposite.activation != 100.0):
         objectFromTarget = objectFromTarget.flippedVersion()
         conceptMappings = formulas.getMappings(
             objectFromInitial, objectFromTarget,
@@ -997,6 +1008,7 @@ def correspondence_strength_tester(ctx, codelet):
                  objectFromTarget.flipped_version())))
     correspondence.updateStrength()
     strength = correspondence.totalStrength
+    # TODO: use entropy
     probability = temperature.getAdjustedProbability(strength / 100.0)
     if random.coinFlip(probability):
         # activate some concepts
@@ -1050,8 +1062,8 @@ def correspondence_builder(ctx, codelet):
     # if there is an incompatible bond then fight against it
     initial = correspondence.objectFromInitial
     target = correspondence.objectFromTarget
-    if  (initial.leftmost or initial.rightmost and
-         target.leftmost or target.rightmost):
+    if (initial.leftmost or initial.rightmost and
+            target.leftmost or target.rightmost):
         # search for the incompatible bond
         incompatibleBond = correspondence.getIncompatibleBond()
         if incompatibleBond:

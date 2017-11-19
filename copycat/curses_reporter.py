@@ -239,6 +239,7 @@ class CursesReporter(Reporter):
         w.border()
         w.refresh()
 
+    #TODO: use entropy
     def report_temperature(self, temperature):
         self.do_keyboard_shortcuts()
         w = self.temperatureWindow

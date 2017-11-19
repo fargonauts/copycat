@@ -4,7 +4,7 @@ co.py.cat
 ![GUI](https://i.imgur.com/7pb20g0.png)
 
 An implementation of [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s Copycat algorithm.
-The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.
+The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.  See also [Farglexandria](https://github.com/Alex-Linhares/Farglexandria).
 
 This implementation is a copycat of Scott Boland's [Java implementation](https://archive.org/details/JavaCopycat).
 The original Java-to-Python translation work was done by J Alan Brogan (@jalanb on GitHub).
@@ -75,3 +75,10 @@ $ python
 ```
 
 The result of `run` is a dict containing the same information as was printed by `main.py` above.
+
+
+
+Questions
+---------
+
+1. Why are codelets **NOT** implemented through lambda?  
