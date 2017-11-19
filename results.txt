@@ -3,10 +3,74 @@
 
 distributions/.legacy x distributions/.adj-tests
 Problem:  abc:abd::efg:_
-Comparing None with None: Warning! Expected 0 counts of ffg, but got 1
-Warning! Expected 0 counts of dfg, but got 2
-Warning! Expected 0 counts of efg, but got 1
+Comparing None with pmeta: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
 Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with soft: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with entropy: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with meta: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with fifty_converge: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with sbest: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with average_alt: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with weighted_soft: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Failed.
+Comparing None with inverse: Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with alt_fifty: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with best: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with none: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with pbest: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of efd, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
+Succeeded.
+Comparing None with original: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
 Succeeded.
 
 
@@ -15,9 +79,56 @@ Succeeded.
 
 distributions/.legacy x distributions/.adj-tests
 Problem:  abc:abd::ijk:_
-Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Comparing None with pmeta: Warning! Expected 0 counts of hjk, but got 1
 Warning! Expected 0 counts of ijj, but got 4
-Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with soft: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Failed.
+Comparing None with entropy: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 4
+Failed.
+Comparing None with meta: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijd, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with fifty_converge: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with sbest: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijd, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Failed.
+Comparing None with average_alt: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with weighted_soft: Warning! Expected 0 counts of ijj, but got 4
+Succeeded.
+Comparing None with inverse: Warning! Expected 0 counts of ijd, but got 1
+Failed.
+Comparing None with alt_fifty: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with best: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijd, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with none: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Failed.
+Comparing None with pbest: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
+Succeeded.
+Comparing None with original: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 4
+Warning! Expected 0 counts of jjk, but got 4
 Succeeded.
 
 
@@ -26,11 +137,70 @@ Succeeded.
 
 distributions/.legacy x distributions/.adj-tests
 Problem:  abc:abd::xyz:_
-Comparing None with None: Warning! Expected 0 counts of xd, but got 1
+Comparing None with pmeta: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
 Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with soft: Warning! Expected 0 counts of xd, but got 1
+Failed.
+Comparing None with entropy: Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
 Warning! Expected 0 counts of dyz, but got 1
+Failed.
+Comparing None with meta: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with fifty_converge: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with sbest: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with average_alt: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with weighted_soft: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with inverse: Warning! Expected 0 counts of xd, but got 1
+Failed.
+Comparing None with alt_fifty: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Failed.
+Comparing None with best: Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with none: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
 Warning! Expected 0 counts of yyz, but got 9
-Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with pbest: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of yyz, but got 9
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
+Failed.
+Comparing None with original: Warning! Expected 0 counts of xyy, but got 5
+Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
 Failed.
 
 
@@ -39,8 +209,44 @@ Failed.
 
 distributions/.legacy x distributions/.adj-tests
 Problem:  abc:abd::ijkk:_
-Comparing None with None: Warning! Expected 0 counts of ijkk, but got 18
-Warning! Expected 0 counts of ijkd, but got 1
+Comparing None with pmeta: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with soft: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with entropy: Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with meta: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with fifty_converge: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with sbest: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with average_alt: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with weighted_soft: Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with inverse: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with alt_fifty: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with best: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with none: Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with pbest: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
+Failed.
+Comparing None with original: Warning! Expected 0 counts of ijkd, but got 1
+Warning! Expected 0 counts of ijkk, but got 18
 Failed.
 
 
@@ -49,7 +255,39 @@ Failed.
 
 distributions/.legacy x distributions/.adj-tests
 Problem:  abc:abd::mrrjjj:_
-Comparing None with None: Warning! Expected 0 counts of nrrjjj, but got 8
+Comparing None with pmeta: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with soft: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with entropy: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Succeeded.
+Comparing None with meta: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with fifty_converge: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with sbest: Warning! Expected 0 counts of nrrjjj, but got 8
+Failed.
+Comparing None with average_alt: Warning! Expected 0 counts of nrrjjj, but got 8
+Failed.
+Comparing None with weighted_soft: Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with inverse: Failed.
+Comparing None with alt_fifty: Warning! Expected 0 counts of nrrjjj, but got 8
+Failed.
+Comparing None with best: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with none: Warning! Expected 0 counts of nrrjjj, but got 8
+Failed.
+Comparing None with pbest: Warning! Expected 0 counts of nrrjjj, but got 8
+Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing None with original: Warning! Expected 0 counts of nrrjjj, but got 8
 Warning! Expected 0 counts of mrrjjd, but got 1
 Failed.
 
@@ -59,9 +297,9 @@ Failed.
 
 distributions/.legacy x distributions/.nuke-temp
 Problem:  abc:abd::efg:_
-Comparing None with None: Warning! Expected 0 counts of dfg, but got 2
-Warning! Expected 0 counts of efg, but got 1
+Comparing None with None: Warning! Expected 0 counts of efg, but got 1
 Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of dfg, but got 2
 Succeeded.
 
 
@@ -70,9 +308,9 @@ Succeeded.
 
 distributions/.legacy x distributions/.nuke-temp
 Problem:  abc:abd::ijk:_
-Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Comparing None with None: Warning! Expected 0 counts of hjk, but got 1
 Warning! Expected 0 counts of ijj, but got 4
-Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 4
 Succeeded.
 
 
@@ -81,12 +319,12 @@ Succeeded.
 
 distributions/.legacy x distributions/.nuke-temp
 Problem:  abc:abd::xyz:_
-Comparing None with None: Warning! Expected 0 counts of xd, but got 1
-Warning! Expected 0 counts of xyz, but got 5
-Warning! Expected 0 counts of dyz, but got 1
-Warning! Expected 0 counts of yyz, but got 9
-Warning! Expected 0 counts of xyy, but got 5
+Comparing None with None: Warning! Expected 0 counts of xyy, but got 5
 Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of yyz, but got 9
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
 Failed.
 
 
@@ -112,10 +350,10 @@ Comparing None with None: Failed.
 
 distributions/.legacy x distributions/.soft-remove
 Problem:  abc:abd::efg:_
-Comparing None with None: Warning! Expected 0 counts of ffg, but got 1
-Warning! Expected 0 counts of dfg, but got 2
-Warning! Expected 0 counts of efg, but got 1
+Comparing None with None: Warning! Expected 0 counts of efg, but got 1
 Warning! Expected 0 counts of eff, but got 6
+Warning! Expected 0 counts of ffg, but got 1
+Warning! Expected 0 counts of dfg, but got 2
 Succeeded.
 
 
@@ -124,9 +362,9 @@ Succeeded.
 
 distributions/.legacy x distributions/.soft-remove
 Problem:  abc:abd::ijk:_
-Comparing None with None: Warning! Expected 0 counts of jjk, but got 4
+Comparing None with None: Warning! Expected 0 counts of hjk, but got 1
 Warning! Expected 0 counts of ijj, but got 4
-Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 4
 Succeeded.
 
 
@@ -135,11 +373,11 @@ Succeeded.
 
 distributions/.legacy x distributions/.soft-remove
 Problem:  abc:abd::xyz:_
-Comparing None with None: Warning! Expected 0 counts of xd, but got 1
-Warning! Expected 0 counts of xyz, but got 5
-Warning! Expected 0 counts of dyz, but got 1
-Warning! Expected 0 counts of xyy, but got 5
+Comparing None with None: Warning! Expected 0 counts of xyy, but got 5
 Warning! Expected 0 counts of wyz, but got 9
+Warning! Expected 0 counts of xd, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 5
 Failed.
 
 
@@ -167,7 +405,22 @@ Failed.
 
 distributions/.adj-tests x distributions/.nuke-temp
 Problem:  abc:abd::efg:_
-Comparing None with None: Succeeded.
+Comparing pmeta with None: Succeeded.
+Comparing soft with None: Succeeded.
+Comparing entropy with None: Succeeded.
+Comparing meta with None: Succeeded.
+Comparing fifty_converge with None: Succeeded.
+Comparing sbest with None: Succeeded.
+Comparing average_alt with None: Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of eff, but got 1
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of efg, but got 1
+Succeeded.
+Comparing alt_fifty with None: Succeeded.
+Comparing best with None: Succeeded.
+Comparing none with None: Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -175,7 +428,30 @@ Comparing None with None: Succeeded.
 
 distributions/.adj-tests x distributions/.nuke-temp
 Problem:  abc:abd::ijk:_
-Comparing None with None: Succeeded.
+Comparing pmeta with None: Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing entropy with None: Warning! Expected 0 counts of ijj, but got 1
+Succeeded.
+Comparing meta with None: Succeeded.
+Comparing fifty_converge with None: Succeeded.
+Comparing sbest with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing average_alt with None: Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of djk, but got 2
+Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 1
+Warning! Expected 0 counts of jjk, but got 2
+Succeeded.
+Comparing alt_fifty with None: Succeeded.
+Comparing best with None: Succeeded.
+Comparing none with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -183,7 +459,52 @@ Comparing None with None: Succeeded.
 
 distributions/.adj-tests x distributions/.nuke-temp
 Problem:  abc:abd::xyz:_
-Comparing None with None: Warning! Expected 0 counts of wyz, but got 1
+Comparing pmeta with None: Warning! Expected 0 counts of yyz, but got 1
+Warning! Expected 0 counts of dyz, but got 1
+Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 3
+Warning! Expected 0 counts of yyz, but got 2
+Warning! Expected 0 counts of dyz, but got 2
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing entropy with None: Warning! Expected 0 counts of yyz, but got 2
+Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing meta with None: Warning! Expected 0 counts of yyz, but got 2
+Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+Comparing fifty_converge with None: Warning! Expected 0 counts of yyz, but got 1
+Succeeded.
+Comparing sbest with None: Warning! Expected 0 counts of yyz, but got 1
+Succeeded.
+Comparing average_alt with None: Warning! Expected 0 counts of yyz, but got 1
+Warning! Expected 0 counts of xyy, but got 2
+Warning! Expected 0 counts of wyz, but got 2
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of yyz, but got 4
+Warning! Expected 0 counts of xyy, but got 3
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of wyz, but got 3
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 4
+Warning! Expected 0 counts of yyz, but got 9
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing alt_fifty with None: Warning! Expected 0 counts of yyz, but got 2
+Warning! Expected 0 counts of wyz, but got 2
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing best with None: Warning! Expected 0 counts of yyz, but got 1
+Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+Comparing none with None: Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Warning! Expected 0 counts of yyz, but got 1
 Succeeded.
 
 
@@ -192,9 +513,40 @@ Succeeded.
 
 distributions/.adj-tests x distributions/.nuke-temp
 Problem:  abc:abd::ijkk:_
-Comparing None with None: Warning! Expected 0 counts of ijd, but got 1
+Comparing pmeta with None: Warning! Expected 0 counts of ijll, but got 13
+Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of ijll, but got 17
+Failed.
+Comparing entropy with None: Succeeded.
+Comparing meta with None: Warning! Expected 0 counts of ijkkk, but got 1
+Warning! Expected 0 counts of ijll, but got 11
+Succeeded.
+Comparing fifty_converge with None: Warning! Expected 0 counts of ijll, but got 15
+Failed.
+Comparing sbest with None: Warning! Expected 0 counts of ijll, but got 19
+Failed.
+Comparing average_alt with None: Warning! Expected 0 counts of ijkkk, but got 1
+Warning! Expected 0 counts of ijll, but got 11
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of djkk, but got 1
+Warning! Expected 0 counts of ijll, but got 10
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of djkk, but got 1
+Warning! Expected 0 counts of jjkk, but got 1
+Warning! Expected 0 counts of ijll, but got 11
+Succeeded.
+Comparing alt_fifty with None: Warning! Expected 0 counts of ijkkk, but got 2
+Warning! Expected 0 counts of ijll, but got 15
+Failed.
+Comparing best with None: Warning! Expected 0 counts of ijll, but got 18
+Failed.
+Comparing none with None: Warning! Expected 0 counts of ijll, but got 16
+Failed.
+Comparing pbest with None: Warning! Expected 0 counts of ijkkk, but got 2
 Warning! Expected 0 counts of ijll, but got 17
 Failed.
+Comparing original with None: Warning! Expected 0 counts of ijll, but got 13
+Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -202,7 +554,47 @@ Failed.
 
 distributions/.adj-tests x distributions/.nuke-temp
 Problem:  abc:abd::mrrjjj:_
-Comparing None with None: Warning! Expected 0 counts of mrrkkk, but got 26
+Comparing pmeta with None: Warning! Expected 0 counts of mrrkkk, but got 24
+Warning! Expected 0 counts of mrrjjjj, but got 4
+Failed.
+Comparing soft with None: Warning! Expected 0 counts of mrrkkk, but got 10
+Warning! Expected 0 counts of mrrjjjj, but got 5
+Succeeded.
+Comparing entropy with None: Succeeded.
+Comparing meta with None: Warning! Expected 0 counts of mrrjjjj, but got 7
+Warning! Expected 0 counts of mrrd, but got 1
+Warning! Expected 0 counts of mrrkkk, but got 12
+Failed.
+Comparing fifty_converge with None: Warning! Expected 0 counts of mrrkkk, but got 13
+Warning! Expected 0 counts of mrrjjjj, but got 5
+Failed.
+Comparing sbest with None: Warning! Expected 0 counts of mrrkkk, but got 7
+Warning! Expected 0 counts of mrrjjjj, but got 8
+Succeeded.
+Comparing average_alt with None: Warning! Expected 0 counts of mrrkkk, but got 11
+Warning! Expected 0 counts of mrrjjjj, but got 2
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of mrrjjjj, but got 2
+Warning! Expected 0 counts of mrrkkk, but got 14
+Warning! Expected 0 counts of mrrjkk, but got 2
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of mrrjjjj, but got 1
+Warning! Expected 0 counts of mrrkkk, but got 9
+Warning! Expected 0 counts of mrrjkk, but got 1
+Succeeded.
+Comparing alt_fifty with None: Warning! Expected 0 counts of mrrkkk, but got 13
+Warning! Expected 0 counts of mrrjjjj, but got 7
+Failed.
+Comparing best with None: Warning! Expected 0 counts of mrrkkk, but got 13
+Warning! Expected 0 counts of mrrjjjj, but got 4
+Succeeded.
+Comparing none with None: Warning! Expected 0 counts of mrrkkk, but got 25
+Failed.
+Comparing pbest with None: Warning! Expected 0 counts of mrrd, but got 1
+Warning! Expected 0 counts of mrrjjjj, but got 4
+Warning! Expected 0 counts of mrrkkk, but got 18
+Failed.
+Comparing original with None: Warning! Expected 0 counts of mrrkkk, but got 25
 Failed.
 
 
@@ -211,7 +603,27 @@ Failed.
 
 distributions/.adj-tests x distributions/.soft-remove
 Problem:  abc:abd::efg:_
-Comparing None with None: Succeeded.
+Comparing pmeta with None: Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of ffg, but got 1
+Succeeded.
+Comparing entropy with None: Succeeded.
+Comparing meta with None: Warning! Expected 0 counts of ffg, but got 1
+Succeeded.
+Comparing fifty_converge with None: Warning! Expected 0 counts of ffg, but got 1
+Succeeded.
+Comparing sbest with None: Succeeded.
+Comparing average_alt with None: Warning! Expected 0 counts of ffg, but got 1
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of eff, but got 1
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of efg, but got 1
+Warning! Expected 0 counts of ffg, but got 2
+Succeeded.
+Comparing alt_fifty with None: Succeeded.
+Comparing best with None: Succeeded.
+Comparing none with None: Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -219,7 +631,30 @@ Comparing None with None: Succeeded.
 
 distributions/.adj-tests x distributions/.soft-remove
 Problem:  abc:abd::ijk:_
-Comparing None with None: Succeeded.
+Comparing pmeta with None: Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing entropy with None: Warning! Expected 0 counts of ijj, but got 1
+Succeeded.
+Comparing meta with None: Succeeded.
+Comparing fifty_converge with None: Succeeded.
+Comparing sbest with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing average_alt with None: Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of djk, but got 2
+Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of hjk, but got 1
+Warning! Expected 0 counts of ijj, but got 1
+Warning! Expected 0 counts of jjk, but got 2
+Succeeded.
+Comparing alt_fifty with None: Succeeded.
+Comparing best with None: Succeeded.
+Comparing none with None: Warning! Expected 0 counts of jjk, but got 1
+Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -227,8 +662,41 @@ Comparing None with None: Succeeded.
 
 distributions/.adj-tests x distributions/.soft-remove
 Problem:  abc:abd::xyz:_
-Comparing None with None: Warning! Expected 0 counts of wyz, but got 1
+Comparing pmeta with None: Warning! Expected 0 counts of dyz, but got 1
 Succeeded.
+Comparing soft with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 3
+Warning! Expected 0 counts of dyz, but got 2
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing entropy with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing meta with None: Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+Comparing fifty_converge with None: Succeeded.
+Comparing sbest with None: Succeeded.
+Comparing average_alt with None: Warning! Expected 0 counts of xyy, but got 2
+Warning! Expected 0 counts of wyz, but got 2
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of xyy, but got 3
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of wyz, but got 3
+Failed.
+Comparing inverse with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 4
+Warning! Expected 0 counts of dyz, but got 1
+Warning! Expected 0 counts of xyz, but got 1
+Failed.
+Comparing alt_fifty with None: Warning! Expected 0 counts of wyz, but got 2
+Warning! Expected 0 counts of xyz, but got 1
+Succeeded.
+Comparing best with None: Warning! Expected 0 counts of xyy, but got 1
+Warning! Expected 0 counts of wyz, but got 1
+Succeeded.
+Comparing none with None: Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -236,7 +704,27 @@ Succeeded.
 
 distributions/.adj-tests x distributions/.soft-remove
 Problem:  abc:abd::ijkk:_
-Comparing None with None: Failed.
+Comparing pmeta with None: Succeeded.
+Comparing soft with None: Failed.
+Comparing entropy with None: Failed.
+Comparing meta with None: Warning! Expected 0 counts of ijkkk, but got 1
+Succeeded.
+Comparing fifty_converge with None: Succeeded.
+Comparing sbest with None: Failed.
+Comparing average_alt with None: Warning! Expected 0 counts of ijkkk, but got 1
+Succeeded.
+Comparing weighted_soft with None: Warning! Expected 0 counts of djkk, but got 1
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of djkk, but got 1
+Warning! Expected 0 counts of jjkk, but got 1
+Succeeded.
+Comparing alt_fifty with None: Warning! Expected 0 counts of ijkkk, but got 2
+Succeeded.
+Comparing best with None: Failed.
+Comparing none with None: Succeeded.
+Comparing pbest with None: Warning! Expected 0 counts of ijkkk, but got 2
+Failed.
+Comparing original with None: Succeeded.
 
 
 --------------------------------------------------------------------------------
@@ -244,7 +732,29 @@ Comparing None with None: Failed.
 
 distributions/.adj-tests x distributions/.soft-remove
 Problem:  abc:abd::mrrjjj:_
-Comparing None with None: Failed.
+Comparing pmeta with None: Failed.
+Comparing soft with None: Failed.
+Comparing entropy with None: Failed.
+Comparing meta with None: Failed.
+Comparing fifty_converge with None: Failed.
+Comparing sbest with None: Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing average_alt with None: Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing weighted_soft with None: Warning! Expected 0 counts of nrrjjj, but got 1
+Warning! Expected 0 counts of mrrjkk, but got 2
+Succeeded.
+Comparing inverse with None: Warning! Expected 0 counts of nrrjjj, but got 1
+Warning! Expected 0 counts of mrrjkk, but got 1
+Warning! Expected 0 counts of mrrjjd, but got 3
+Succeeded.
+Comparing alt_fifty with None: Warning! Expected 0 counts of mrrjjd, but got 1
+Failed.
+Comparing best with None: Succeeded.
+Comparing none with None: Warning! Expected 0 counts of mrrjjd, but got 1
+Succeeded.
+Comparing pbest with None: Succeeded.
+Comparing original with None: Failed.
 
 
 --------------------------------------------------------------------------------
