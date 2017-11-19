@@ -4,6 +4,7 @@ from pprint import pprint
 
 class Problem:
     def __init__(self, initial, modified, target, iterations, distributions=None, formulas=None):
+        self.formulas = formulas
         self.initial  = initial
         self.modified = modified
         self.target   = target
@@ -13,7 +14,6 @@ class Problem:
             self.distributions = self.solve()
         else:
             self.distributions = distributions
-        self.formulas      = formulas
         if formulas is not None:
             assert hasattr(Copycat().workspace, 'temperature')
 
@@ -34,6 +34,10 @@ class Problem:
         print('-' * 120)
 
     def solve(self):
+        print('-' * 120)
+        print('Testing copycat problem: {} : {} :: {} : _'.format(self.initial,
+                                                                  self.modified,
+                                                                  self.target))
         copycat = Copycat()
         answers  = dict()
         if self.formulas == None:
