@@ -12,7 +12,6 @@ class Temperature(object):
         self.clampTime = 30
 
     def update(self, value):
-        print('Updated temperature to {}'.format(value))
         self.last_unclamped_value = value
         if self.clamped:
             self.actual_value = 100.0

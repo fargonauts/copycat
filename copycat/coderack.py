@@ -68,7 +68,6 @@ class Coderack(object):
             self.postBottomUpCodelets()
 
     def probabilityOfPosting(self, codeletName):
-        temperature = self.ctx.temperature
         workspace = self.ctx.workspace
         if codeletName == 'breaker':
             return 1.0
@@ -84,7 +83,7 @@ class Coderack(object):
             return workspace.interStringUnhappiness / 100.0
         if 'description' in codeletName:
             # TODO: use entropy
-            return (temperature.value() / 100.0) ** 2
+            return (self.ctx.workspace.getUpdatedTemperature() / 100.0) ** 2
         return workspace.intraStringUnhappiness / 100.0
 
     def howManyToPost(self, codeletName):
@@ -156,7 +155,6 @@ class Coderack(object):
 
     def __postBottomUpCodelets(self, codeletName):
         random = self.ctx.random
-        temperature = self.ctx.temperature
         probability = self.probabilityOfPosting(codeletName)
         howMany = self.howManyToPost(codeletName)
         urgency = 3
@@ -164,7 +162,7 @@ class Coderack(object):
             urgency = 1
 
         # TODO: use entropy
-        if temperature.value() < 25.0 and 'translator' in codeletName:
+        if self.ctx.workspace.getUpdatedTemperature() < 25.0 and 'translator' in codeletName:
             urgency = 5
         for _ in range(howMany):
             if random.coinFlip(probability):
@@ -288,11 +286,11 @@ class Coderack(object):
 
     def chooseCodeletToRun(self):
         random = self.ctx.random
-        temperature = self.ctx.temperature
         assert self.codelets
 
         # TODO: use entropy
-        scale = (100.0 - temperature.value() + 10.0) / 15.0
+        
+        scale = (100.0 - self.ctx.workspace.getUpdatedTemperature() + 10.0) / 15.0
         chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
         return chosen

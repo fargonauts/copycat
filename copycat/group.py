@@ -83,7 +83,6 @@ class Group(WorkspaceObject):
 
     def singleLetterGroupProbability(self):
         slipnet = self.ctx.slipnet
-        temperature = self.ctx.temperature
         numberOfSupporters = self.numberOfLocalSupportingGroups()
         if not numberOfSupporters:
             return 0.0
@@ -124,7 +123,6 @@ class Group(WorkspaceObject):
 
     def lengthDescriptionProbability(self):
         slipnet = self.ctx.slipnet
-        temperature = self.ctx.temperature
         length = len(self.objectList)
         if length > 5:
             return 0.0

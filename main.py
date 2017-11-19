@@ -43,8 +43,8 @@ class SimpleReporter(Reporter):
 
     def report_answer(self, answer):
         """Self-explanatory code."""
-        print('Answered %s (time %d, final temperature %.1f)' % (
-            answer['answer'], answer['time'], answer['temp'],
+        print('Answered %s (time %d)' % (
+            answer['answer'], answer['time'],
         ))
 
 

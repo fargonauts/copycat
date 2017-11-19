@@ -1,7 +1,6 @@
 
 def __chooseObjectFromList(ctx, objects, attribute):
     random = ctx.random
-    temperature = ctx.temperature
     weights = [
         getattr(o, attribute)
         for o in objects
