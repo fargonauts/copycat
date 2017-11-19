@@ -860,7 +860,7 @@ def rule_translator(ctx, codelet):
         bondDensity = min(bondDensity, 1.0)
     weights = __getCutoffWeights(bondDensity)
     cutoff = 10.0 * random.weighted_choice(list(range(1, 11)), weights)
-    if cutoff >= workspace.getUpdatedTemperature():
+    if cutoff >= workspace.getMacroElegance():
         result = workspace.rule.buildTranslatedRule()
         if result is not None:
             workspace.finalAnswer = result

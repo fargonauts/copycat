@@ -83,7 +83,7 @@ class Coderack(object):
             return workspace.interStringUnhappiness / 100.0
         if 'description' in codeletName:
             # TODO: use entropy
-            return (self.ctx.workspace.getUpdatedTemperature() / 100.0) ** 2
+            return (self.ctx.workspace.getMacroElegance() / 100.0) ** 2
         return workspace.intraStringUnhappiness / 100.0
 
     def howManyToPost(self, codeletName):
@@ -162,7 +162,7 @@ class Coderack(object):
             urgency = 1
 
         # TODO: use entropy
-        if self.ctx.workspace.getUpdatedTemperature() < 25.0 and 'translator' in codeletName:
+        if self.ctx.workspace.getMacroElegance() < 25.0 and 'translator' in codeletName:
             urgency = 5
         for _ in range(howMany):
             if random.coinFlip(probability):
@@ -290,7 +290,7 @@ class Coderack(object):
 
         # TODO: use entropy
         
-        scale = (100.0 - self.ctx.workspace.getUpdatedTemperature() + 10.0) / 15.0
+        scale = (100.0 - self.ctx.workspace.getMacroElegance() + 10.0) / 15.0
         chosen = random.weighted_choice(self.codelets, [codelet.urgency ** scale for codelet in self.codelets])
         self.removeCodelet(chosen)
         return chosen

@@ -58,9 +58,6 @@ class TestCopycat(unittest.TestCase):
                 if not (actual_lo <= expected_probability <= actual_hi):
                     print('Failed (%s <= %s <= %s)' % (actual_lo, expected_probability, actual_hi))
                     self.fail('Count ("obviousness" metric) seems way off! %r != %r' % (actual, expected))
-                if abs(actual[k]['avgtemp'] - expected[k]['avgtemp']) >= 10.0 + (10.0 / actual[k]['count']):
-                    print('Failed (%s - %s >= %s)' % (actual[k]['avgtemp'], expected[k]['avgtemp'], 10.0 + (10.0 / actual[k]['count'])))
-                    self.fail('Temperature ("elegance" metric) seems way off! %r != %r' % (actual, expected))
             else:
                 actual_hi = upper_bound_on_probability(0, actual_count)
                 if not (0 <= expected_probability <= actual_hi):
