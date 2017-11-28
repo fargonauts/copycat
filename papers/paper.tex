@@ -133,6 +133,26 @@
 
     Clearly, creating a model of copycat that doesn't have centralized structures will take an excessive amount of effort.
 
+\subsubsection{Functional Programming Languages and the Brain}
+
+    The original copycat was written in LISP, a mixed-paradigm language.
+    Because of LISP's preference for functional code, global variables must be explicitly marked with surrounding asterisks.
+    Temperature, the workspace, and final answers are all marked global variables as discussed in this paper.
+    These aspects of copycat are all - by definition - impure, and therefore imperative code that relies on central state changes.
+    It is clear that, since imperative, mutation-focused languages (like Python) are turing complete in the same way that functional, purity-focused languages (like Haskell) are turing complete, each method is clearly capable of modeling the human brain.
+    However, the algorithm run by the brain is more similar to distributed, parallel functional code than it is to centralized, serial imperative code.
+    While there is some centralization in the brain, and evidently some state changes, it is clear that 100\% centralized 100\% serial code is not a good model of the brain.
+
+    Also, temperature is, ultimately, just a function of objects in the global workspace.
+    The git branch soft-temp-removal hard-removes most usages of temperature, but continues to use a functional version of the temperature calculation for certain processes, like determining if the given answer is satisfactory or not.
+    So, all mentions of temperature could theoretically be removed and replaced with a dynamic calculation of temperature instead.
+    It is clear that in this case, this change is unnecessary.
+    With the goal of creating a distributed model in mind, what actually bothers me more is the global nature of the workspace, coderack, and other singleton copycat structures.
+    Really, when temperature is removed and replaced with some distributed metric, it is clear that the true "offending" global is the workspace/coderack.
+
+    Alternatively, codelets could be equated to ants in an anthill (see anthill analogy in GEB).
+    Instead of querying a global structure, codelets could query their neighbors, the same way that ants query their neighbors (rather than, say, relying on instructions from their queen).
+
 \subsection{Initial Formula Adjustments}
 
 This research begin with adjustments to probability weighting formulas.
