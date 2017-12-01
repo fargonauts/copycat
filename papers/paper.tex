@@ -133,6 +133,49 @@
 
     Clearly, creating a model of copycat that doesn't have centralized structures will take an excessive amount of effort.
 
+    \break
+    .....
+    \break
+
+    The calculation for temperature in the first place is extremely convoluted (in the Python version of copycat).
+    It lacks any documentation, is full of magic numbers, and contains seemingly arbitrary conditionals. 
+    (If I submitted this as a homework assignment, I would probably get a C. Lol)
+
+    Edit: Actually, the lisp version of copycat does a very good job of documenting magic numbers and procedures.
+    My main complaint is that this hasn't been translated into the Python version of copycat.
+    However, the Python version is translated from the Java version..
+    Lost in translation.
+
+
+    My goal isn't to roast copycat's code, however.
+    Instead, what I see is that all this convolution is \emph{unnecessary}.
+    Ideally, a future version of copycat, or an underlying FARG architecure will remove this convolution, and make temperature calculation simpler, streamlined, documented, understandble.
+    How will this happen, though?
+
+    A global description of the system is, at times, potentially useful.
+    However, in summing together the values of each workspace object, information is lost regarding which workspace objects are offending.
+    In general, the changes that occur will eventually be object-specific.
+    So, it seems to me that going from object-specific descriptions to a global description back to an object-specific action is a waste of time.
+
+    I don't think that a global description should be \emph{obliterated} (removed 100\%).
+    I just think that a global description should be reserved for when global actions are taking place.
+    For example, when deciding that copycat has found a satisfactory answer, a global description should be used, because deciding to stop copycat is a global action.
+    However, when deciding to remove a particular structure, a global description should not be used, because removing a particular offending structure is NOT a global action.
+
+    Summary: it is silly to use global information to make local decisions that would be better made using local information (self-evident).
+
+    Benefits of using local information to make local decisions:
+    
+    Code can be truly distributed, running in true parallel, CPU-bound.
+    This means that copycat would be faster and more like a human brain.
+    Specific structures would be removed based on their own offenses.
+    This means that relvant structures would remain untouched, which would be great!
+    Likely, this change to copycat would produce better answer distributions testable through the normal science framework.
+
+    On the other hand (I've never met a one-handed researcher), global description has some benefits.
+    For example, the global formula for temperature converts the raw importance value for each object into a relative importance value for each object.
+    If a distributed metric was used, this importance value would have to be left in its raw form.
+
 \subsubsection{Functional Programming Languages and the Brain}
 
     The original copycat was written in LISP, a mixed-paradigm language.
