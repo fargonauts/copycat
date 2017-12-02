@@ -65,6 +65,7 @@
     Is it possible to model intelligence with them, or are they harmful?
 
 \section{Theory}
+    \subsection{Notes}
 
     According to the differences we can enumerate between brains and computers, it is clear that, since computers are universal and have vastly improved in the past five decades, that computers are capable of simulating intelligent processes. 
     [Cite Von Neumann]. 
@@ -193,7 +194,31 @@ Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (signifi
 
     \subsection{Normal Science}
         \subsubsection{Scientific Style}
+            The Python3 version of copycat contains many undocumented formulas and magic numbers.
+            Also, because of the random nature of copycat, sometimes answer distributions can be affected by the computer architecture that the software is being executed on.
+            To avoid this, this paper suggests documentation of formulas, removal or clear justification of magic numbers, and the use of seeding to get around random processes.
+            Additionally, I might discuss how randomness doesn't *really* exist.
+            Because of this, maybe the explicit psuedo-random nature of Copycat shouldn't exist?
+            Instead.. The distributed nature of computation might act as a psuedo-random process in and of itself.
         \subsubsection{Scientific Testing}
+            Previously, no statistical tests have been done with the copycat software.
+            Copycat can be treated like a black box, where, when given a particular problem, copycat produces a distribution of answers as output.
+            In this perspective, copycat can be tweaked, and then output distributions on the same problem can be compared with a statistical test, like a $\chi^2$ test.
+            The $\chi^2$ value indicates the degree to which a new copycat distribution differs from an old one.
+            So, a $\chi^2$ test is useful both as a unit test and as a form of scientific inquiry.
+            For example, if a new feature is added to copycat (say, the features included in the Metcat software), then the new distributions can be compared to the distributions produced by the original version of copycat.
+            Ideally, these distributions will differ, giving us a binary indication of whether the changes to the software actually had any effect.
+            Then, once we know that a distribution is statistically novel, we can decide on metrics that evaluate its effectiveness in solving the given problem.
+            For example, since Metacat claims to solve the "xyz" problem, and "wyz" is generally seen as the best answer to the "xyz" problem, a metric that evaluates the health of a distribution might simply be the percentage of "wyz" answers.
+            This can be generalized to the percentage of desirable answers given by some copycat variant in general.
+            Another metric might be the inverse percentage of undesirable answers. 
+            For example, "xyd" is an undesirable answer to the "xyz" problem.
+            So, if Metacat produced large quantities of "xyd," it would be worse than the legacy copycat.
+            However, the legacy copycat produces large quantities of "xyd" and small quantities of "wyz".
+            Given these two discussed metrics, it would be clear that, through our normal science framework, Metacat is superior at solving the "xyz" problem.
+
+            Ideally, this framework can be applied to other copycat variants and on other problems.
+            Through the lens of this framework, copycat can be evaluated scientifically.
     \subsection{Distribution}
         \subsubsection{Von Neumann Discussion}
 
@@ -203,8 +228,9 @@ Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (signifi
     Notion that the brain obeys statistical, entropical mathematics
 
         \subsubsection{Turing Completeness}
-        \subsubsection{Computers Can Simulate Brains}
+            In a nutshell, because computers are turing complete, it is clear that they can simulate the human brain, given enough power/time.
         \subsubsection{Simulation of Distributed Processes}
+            Despite the ability of computers to simulate the human brain, simulation may not always be accurate unless programmed to be accurate...
         \subsubsection{Efficiency of True Distribution}
         \subsubsection{Temperature in Copycat}
         \subsubsection{Other Centralizers in Copycat}
