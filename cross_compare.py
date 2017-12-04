@@ -2,6 +2,8 @@
 import sys
 import pickle
 
+from pprint import pprint
+
 from copycat import Problem
 from copycat.statistics import cross_chi_squared
 
@@ -16,7 +18,7 @@ def main(args):
             pSet = pickle.load(infile)
             branchProblemSets[filename] = pSet
             problemSets.append((filename, pSet))
-    cross_chi_squared(problemSets)
+    pprint(cross_chi_squared(problemSets))
     return 0
 
 if __name__ == '__main__':
