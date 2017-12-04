@@ -24,19 +24,19 @@ def _entropy(temp, prob):
     f = (c + 1) * prob
     return -f * math.log2(f)
 
-def _weighted(temp, prob, s, u, alpha=1, beta=1):
+def _weighted(temp, s, u):
     weighted = (temp / 100) * s + ((100 - temp) / 100) * u 
     return weighted
 
 def _weighted_inverse(temp, prob):
     iprob = 1 - prob
-    return _weighted(temp, prob, iprob, prob)
+    return _weighted(temp, iprob, prob)
 
 def _fifty_converge(temp, prob): # Uses .5 instead of 1-prob
-    return _weighted(temp, prob, .5, prob)
+    return _weighted(temp, .5, prob)
 
 def _soft_curve(temp, prob): # Curves to the average of the (1-p) and .5
-    return min(1, _weighted(temp, prob, (1.5-prob)/2, prob))
+    return min(1, _weighted(temp, (1.5-prob)/2, prob))
 
 def _weighted_soft_curve(temp, prob): # Curves to the weighted average of the (1-p) and .5
     weight = 100
@@ -49,25 +49,25 @@ def _weighted_soft_curve(temp, prob): # Curves to the weighted average of the (1
 def _alt_fifty(temp, prob):
     s = .5
     u = prob ** 2 if prob < .5 else math.sqrt(prob)
-    return _weighted(temp, prob, s, u)
+    return _weighted(temp, s, u)
 
 def _averaged_alt(temp, prob):
     s = (1.5 - prob)/2
     u = prob ** 2 if prob < .5 else math.sqrt(prob)
-    return _weighted(temp, prob, s, u)
+    return _weighted(temp, s, u)
 
 
 def _working_best(temp, prob):
     s = .5   # convergence
     r = 1.05 # power
     u = prob ** r if prob < .5 else prob ** (1/r)
-    return _weighted(temp, prob, s, u)
+    return _weighted(temp, s, u)
 
 def _soft_best(temp, prob):
     s = .5   # convergence
     r = 1.05 # power
     u = prob ** r if prob < .5 else prob ** (1/r)
-    return _weighted(temp, prob, s, u)
+    return _weighted(temp, s, u)
 
 def _parameterized_best(temp, prob):
     # (D$66/100)*($E$64*$B68 + $G$64*$F$64)/($E$64 + $G$64)+((100-D$66)/100)*IF($B68 > 0.5, $B68^(1/$H$64), $B68^$H$64)
@@ -78,7 +78,24 @@ def _parameterized_best(temp, prob):
     s     = (alpha * prob + beta * s) / (alpha + beta)
     r     = 1.05
     u = prob ** r if prob < .5 else prob ** (1/r)
-    return _weighted(temp, prob, s, u)
+    return _weighted(temp, s, u)
+
+def _meta(temp, prob):
+    r = _weighted(temp, 1, 2) # Make r a function of temperature
+    s = .5
+    u = prob ** r if prob < .5 else prob ** (1/r)
+    return _weighted(temp, s, u)
+
+def _meta_parameterized(temp, prob):
+    r = _weighted(temp, 1, 2) # Make r a function of temperature
+
+    alpha = 5
+    beta  = 1
+    s     = .5
+    s     = (alpha * prob + beta * s) / (alpha + beta)
+    u = prob ** r if prob < .5 else prob ** (1/r)
+
+    return _weighted(temp, s, u)
 
 def _none(temp, prob):
     return prob
@@ -99,6 +116,8 @@ class Temperature(object):
                 'best'           : _working_best,
                 'sbest'          : _soft_best,
                 'pbest'          : _parameterized_best,
+                'meta'           : _meta,
+                'pmeta'          : _meta_parameterized,
                 'none'           : _none}
         self.diffs  = 0
         self.ndiffs = 0

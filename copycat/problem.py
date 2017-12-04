@@ -5,6 +5,12 @@ from pprint import pprint
 class Problem:
     def __init__(self, initial, modified, target, iterations, distributions=None, formulas=None):
         self.formulas = formulas
+        if formulas is not None:
+            assert hasattr(Copycat(), 'temperature')
+        else:
+            if hasattr(Copycat(), 'temperature'):
+                self.formulas = set(Copycat().temperature.adj_formulas())
+        print(self.formulas)
         self.initial  = initial
         self.modified = modified
         self.target   = target
@@ -14,8 +20,7 @@ class Problem:
             self.distributions = self.solve()
         else:
             self.distributions = distributions
-        if formulas is not None:
-            assert hasattr(Copycat().workspace, 'temperature')
+        print(self.formulas)
 
     def test(self, comparison, expected=None):
         print('-' * 120)
@@ -41,8 +46,8 @@ class Problem:
         copycat = Copycat()
         answers  = dict()
         if self.formulas == None:
-            if hasattr(copycat.workspace, 'temperature'):
-                formula = copycat.workspace.temperature.getAdj()
+            if hasattr(copycat, 'temperature'):
+                formula = copycat.temperature.getAdj()
             else:
                 formula = None
             answers[formula] = copycat.run(self.initial,
@@ -50,12 +55,14 @@ class Problem:
                                 self.target,
                                 self.iterations)
         else:
+            print(self.formulas)
             for formula in self.formulas:
                 copycat.temperature.useAdj(formula)
-                answers[formulas] = copycat.run(self.initial,
+                answers[formula] = copycat.run(self.initial,
                                         self.modified,
                                         self.target,
                                         self.iterations)
+                print('Done with {}'.format(formula))
         return answers
 
     def generate(self):
