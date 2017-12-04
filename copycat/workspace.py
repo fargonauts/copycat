@@ -23,6 +23,16 @@ class Workspace(object):
         self.intraStringUnhappiness = 0.0
         self.interStringUnhappiness = 0.0
 
+        # LSaldyt: default initializations for GUI entry
+        self.targetString = ''
+        self.initialString = ''
+        self.modifiedString = ''
+        self.finalAnswer = None
+        self.changedObject = None
+        self.objects = []
+        self.structures = []
+        self.rule = None
+
     def __repr__(self):
         return '<Workspace trying %s:%s::%s:?>' % (
             self.initialString, self.modifiedString, self.targetString,

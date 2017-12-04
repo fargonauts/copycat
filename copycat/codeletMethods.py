@@ -22,7 +22,6 @@ def codelet(name):
         return f
     return wrap
 
-
 # some methods common to the codelets
 def __showWhichStringObjectIsFrom(structure):
     if not structure:
