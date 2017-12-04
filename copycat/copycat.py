@@ -7,6 +7,7 @@ from .gui import GUI
 
 from pprint import pprint
 
+
 class Reporter(object):
     """Do-nothing base class for defining new reporter types"""
     def report_answer(self, answer):
@@ -90,6 +91,7 @@ class Copycat(object):
             self.gui.update(self)
             self.gui.refresh()
         answers = {}
+        self.temperature.useAdj('pbest')
         while True:
             if self.check_reset():
                 answers = {}
@@ -110,10 +112,13 @@ class Copycat(object):
         for answer, d in answers.items():
             d['avgtemp'] = d.pop('sumtemp') / d['count']
             d['avgtime'] = d.pop('sumtime') / d['count']
+        pprint(answers)
+        return answers
 
     def run(self, initial, modified, target, iterations):
+        self.temperature.useAdj('best')
+        self.gui.app.reset_with_strings(initial, modified, target)
         self.workspace.resetWithStrings(initial, modified, target)
-
         answers = {}
         formula = 'pbest'
         self.temperature.useAdj(formula)
