@@ -116,8 +116,6 @@ class Copycat(object):
         return answers
 
     def run(self, initial, modified, target, iterations):
-        self.temperature.useAdj('best')
-        self.gui.app.reset_with_strings(initial, modified, target)
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
         formula = 'pbest'
