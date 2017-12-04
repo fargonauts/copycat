@@ -26,21 +26,25 @@
 \maketitle
 
 \begin{abstract}
+    [Insert abstract]
 \end{abstract}
+
+%% This paper stems from Melanie Mitchell's (1993) and Douglas Hofstadter's \& FARG's (1995) work on the copycat program. 
+%% This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
+%% In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
 
 \section{Introduction}
 
-%% This paper stems from Mitchell's (1993) and Hofstadter's \& FARG's (1995) work on the copycat program. 
-%% This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
-%% In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
-%% 
-%% First, copycat uses a "Parallel Terraced Scan" as a humanistic inspired search algorithm.
-%% The Parallel Terraced Scan corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
-%% In a way, it is a mix between a depth-first and breadth-first search.
-%% This type of behavior seems to very fluidly change the intensity of an activity based on local, contextual cues. 
-%% Previous FARG models use centralized structures, like the global temperature value, to control the behavior of the Parallel Terraced Scan.
-%% This paper explores how to maintain the same behavior while distributing decision-making throughout the system.
-%% 
+    Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
+The Parallel Terraced Scan corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
+The Parallel Terraced Scan is a mix between a depth-first and breadth-first search.
+To switch between modes of search, FARG models use the global variable \emph{temperature}, which is ultimately a function of the rule strength and the strength of each structure in copycat's \emph{workspace}, another centralized structure.
+However, it is not clear a global, unifying central structure like temperature is needed.
+In fact, this structure may even be harmful to FARG architectures eventually.
+This paper explores the extent to which copycat's behavior can be maintained while distributing decision making.
+
+    Specifically, []
+
 %% Specifically, this paper attempts different refactors of the copycat architecture.
 %% First, the probability adjustment formulas based on temperature are changed.
 %% Then, we experiment with two methods for replacing temperature with a distributed metric.
@@ -65,7 +69,7 @@
 %% {Efficiency of True Distribution}
 %% {Temperature in Copycat}
 %% {Other Centralizers in Copycat}
-%% {The Motivation for Removing Centralizers in Copycat}
+%% {The Motivation for Removing Centralizers in Coat}
 
 \section{Methods}
     \subsection{Formula Documentation}
@@ -78,14 +82,43 @@
         As will be discussed in the $\chi^2$ distribution testing section, any copycat formulas without a significant effect will be hard-removed.
     \subsection{Testing the Effect of Temperature}
         To begin with, the existing effect of the centralizing variable, temperature, will be analyzed.
+        As the probability adjustment formulas are used by default, very little effect is had.
+        To evaluate the effect of temperature-based probability adjustment formulas, a spreadsheet was created that showed a color gradient based on each formula.
+        [Insert spreadsheet embeds]
+        Then, to evaluate the effect of different temperature usages, separate usages of temperature were individually removed and answer distributions were compared statistically (See section: $\chi^2$ Distribution Testing).
     \subsection{Temperature Probability Adjustment}
+        Once the effect of temperature was evaluated, new temperature-based probability adjustment formulas were proposed that each had a significant effect on the answer distributions produced by copycat.
+        [Insert formula write-up]
     \subsection{Temperature Usage Adjustment}
+        Once the behavior based on temperature was well understood, experimentation was made with hard and soft removals of temperature.
+        First, a branch of the repository was created where all mentions of temperature were removed.
+        [Insert nuke write-up]
+        Then, a branch of the repository (the second revision of copycat to-be) was created, where temperature was removed surgically.
+        [Insert surgical write-up]
     \subsection{$\chi^2$ Distribution Testing}
+        To test each different branch of the repository, a scientific framework was created.
+        Each run of copycat on a particular problem produces a distribution of answers.
+        Distributions of answers can be compared against one another with a (Pearson's) $\chi^2$ distribution test.
+        [Insert $\chi^2$ formula]
+        [Insert $\chi^2$ calculation code snippets]
+    \subsection{Effectiveness Definition}
+        Quantitatively evaluating the effectiveness of a cognitive architecture is difficult.
+        However, for copycat specifically, effectiveness can be defined as a function of the frequency of desirable answers and inverse frequency of undesirable answers.
+        Since answers are desirable to the extent that they respect the original transformation of letter sequences, desirability can also be approximated by a concrete metric.
+        A simple metric for desirability is simply the existing temperature formula, or some variant of it.
+        So, a given version of copycat might be quantitatively better if it produces lower-temperature answers more frequently.
+        However, recognizing lower-quality answers is also a sign of intelligence.
+        So, the extent to which copycat provides poor answers at low frequency and low desirability could be accounted for as well, even though copycat isn't explicitly told to do this.
+       
 \section{Results}
     \subsection{Cross $\chi^2$ Table}
+        The below table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant.
+        [Insert cross $\chi^2$ table]
 \section{Discussion}
     \subsection{Distributed Computation Accuracy}
+        [Summary of introduction, elaboration based on results]
     \subsection{Prediction}
+        Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
 
 \bibliographystyle{alpha}
 \bibliography{sample}
