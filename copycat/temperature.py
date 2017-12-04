@@ -123,6 +123,7 @@ class Temperature(object):
         self.ndiffs = 0
 
     def reset(self):
+        self.history = [100.0]
         self.actual_value = 100.0
         self.last_unclamped_value = 100.0
         self.clamped = True
@@ -133,6 +134,7 @@ class Temperature(object):
         if self.clamped:
             self.actual_value = 100.0
         else:
+            self.history.append(value)
             self.actual_value = value
 
     def clampUntil(self, when):

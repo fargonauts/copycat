@@ -21,6 +21,7 @@ class WorkspaceCanvas(GridFrame):
         self.changed  = False
 
         self.canvas = tk.Canvas(self, background='black')
+        #self.canvas['width'] = 1600
         self.add(self.canvas, 0, 0)
 
         GridFrame.configure(self)
