@@ -37,3 +37,4 @@ papers/*.pdf
 papers/*.out
 papers/*.aux
 papers/words
+*.txt
