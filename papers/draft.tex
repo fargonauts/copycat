@@ -29,39 +29,139 @@
     [Insert abstract]
 \end{abstract}
 
-
 \section{Introduction}
 
-    This paper stems from Melanie Mitchell's (1993) and Douglas Hofstadter's \& FARG's (1995) work on the copycat program. 
-    This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
-    In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
-    Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
+This paper stems from Melanie Mitchell's (1993) and Douglas Hofstadter's \& FARG's (1995) work on the copycat program. 
+This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
+In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
+Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
 The Parallel Terraced Scan corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
 The Parallel Terraced Scan is a mix between a depth-first and breadth-first search.
 To switch between modes of search, FARG models use the global variable \emph{temperature}, which is ultimately a function of the rule strength and the strength of each structure in copycat's \emph{workspace}, another centralized structure.
 However, it is not clear a global, unifying central structure like temperature is needed.
 In fact, this structure may even be harmful to FARG architectures eventually.
-This paper explores the extent to which copycat's behavior can be maintained while distributing decision making.
+This paper explores the extent to which copycat's behavior can be maintained or improved while distributing decision making.
 
-    Specifically, []
+Specifically, the effects of temperature are first tested. 
+Then, once the statistically significant effects of temperature are understood, work is done to replace temperature with a distributed metric.
+Initially, temperature is removed destructively, essentially removing any lines of code that mention it, simply to see what effect it has.
+Then, a surgical removal of temperature is attempted, leaving in tact affected structures or replacing them by effective distributed mechanisms.
 
-%% Specifically, this paper attempts different refactors of the copycat architecture.
-%% First, the probability adjustment formulas based on temperature are changed.
-%% Then, we experiment with two methods for replacing temperature with a distributed metric.
-%% Initially, temperature is removed destructively, essentially removing any lines of code that mention it, simply to see what effect it has.
-%% Then, a surgical removal of temperature is attempted, leaving in tact affected structures or replacing them by effective distributed mechanisms.
-%% 
-%% To evaluate the distributed nature of copycat, this paper focuses on the creation of a `normal science' framework.
-%% By `Normal science,' this paper means the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. 
-%% Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). 
-%% Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc.
-%% It then becomes close to impossible to reproduce a result, or to test some new idea scientifically. 
-%% This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for statistical human comparison.
-%% 
-%% We also discuss, in general, the nature of the brain as a distributed system.
-%% While the removal of a single global variable may initially seem trivial, one must realize that copycat and other cognitive architectures have many central structures.
-%% This paper explores the justification of these central structures in general.
-%% Is it possible to model intelligence with them, or are they harmful?
+To evaluate the distributed nature of copycat, this paper focuses on the creation of a `normal science' framework.
+By `Normal science,' this paper means the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. 
+Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). 
+Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc.
+It then becomes close to impossible to reproduce a result, or to test some new idea scientifically. 
+This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for statistical human comparison.
+
+To evaluate two different versions of copycat, the resulting answer distributions from a problem are compared with a Pearson's $\chi^2$ test.
+Using this, the degree of difference between distributions can be calculated.
+Then, desirability of answer distributions can be found as well, and the following hypotheses can be tested:
+
+\begin{enumerate}
+    \item $H_i$ Centralized variables constrict copycat's ability.
+    \item $H_0$ Centralized variables either improve or have no effect on copycat's ability.
+\end{enumerate}
+
+\subsection{Theory}
+
+    According to the differences we can enumerate between brains and computers, it is clear that, since computers are universal and have vastly improved in the past five decades, that computers are capable of simulating intelligent processes. 
+    [Cite Von Neumann]. 
+    The primary obstacle blocking strong A.I. is comprehension of intelligent processes. 
+    Once the brain is truly understood, writing software that emulates intelligence will be a relatively simple engineering task. 
+
+    However, in making progress towards understanding the brain fully, models must remain true to what is already known about intelligent processes.
+    Outside of speed, the largest difference between the computer and the brain is the distributed nature of computation. 
+    Specifically, our computers as they exist today have central processing units, where literally all of computation happens. 
+    Brains have no central location where all processing happens. 
+    Luckily, the speed advantage and universality of computers makes it possible to simulate the distributed behavior of the brain. 
+    However, this simulation is only possible if computers are programmed with concern for the distributed nature of the brain.
+    Code that accesses a single centralized structure can only ever be run in serial.
+
+    Distribution is more of a design issue than a speed issue.
+    Specifically, modern computers are so fast that running the current version of copycat is not an issue (so, making copycat truly parallel will not improve its performance).
+
+    It is clear from basic classical psychology that the brain contains some centralized structures.
+    For example, Broca's area and Wernicke's area are specialized for linguistic input and output.
+    Another great example is the hippocampus, which, from a naive description, is responsible for the creation of memories.
+    If any of these specialized chunks of brain are surgically removed, for instance, then performing certain tasks becomes impossible.
+    To some extent, the same is true for copycat.
+    For example, removing the ability to update the workspace would be \emph{roughly} equivalent to removing both hippocampi from a human.
+    Similarly, if the centralized structure of temperature is deleted, then, to some degree, copycat becomes unable to perform certain tasks.
+    Unlike the ability to update the workspace, it is possible that the central variable of temperature is constraining.
+
+    However, other structures in copycat, like the workspace itself, or the coderack, are also centralized.
+    Arguably, these centralized structures are not constraining.
+    Still, their unifying effect should be taken into account.
+    For example, the workspace must be atomic, just like centralized structures in the brain, like the hippocampi, must also be atomic.
+
+    From a function-programming perspective (i.e. LISP, the original language of copycat), the brain should simply be carrying out the same function in many locations (i.e. mapping neuron.process() across each of its neurons, if you will...)
+    Note that this is more similar to the behavior of a GPU than a CPU.
+    However, this model doesn't work when code has to synchronize to access global variables.
+
+    If copycat can be run such that -- during the majority of the program's runtime -- codelets may actually execute at the same time (without pausing to access globals), then it will much better replicate the human brain.
+
+    % The calculation for temperature in the first place is extremely convoluted (in the Python version of copycat).
+    % It lacks any documentation, is full of magic numbers, and contains seemingly arbitrary conditionals. 
+    % (If I submitted this as a homework assignment, I would probably get a C. Lol)
+
+    % Edit: Actually, the lisp version of copycat does a very good job of documenting magic numbers and procedures.
+    % My main complaint is that this hasn't been translated into the Python version of copycat.
+    % However, the Python version is translated from the Java version..
+    % Lost in translation.
+
+
+    %% My goal isn't to roast copycat's code, however.
+    Instead, what I see is that all this convolution is \emph{unnecessary}.
+    Ideally, a future version of copycat, or an underlying FARG architecure will remove this convolution, and make temperature calculation simpler, streamlined, documented, understandble.
+
+    A global description of the system is, at times, potentially useful.
+    However, in summing together the values of each workspace object, information is lost regarding which workspace objects are offending.
+    In general, the changes that occur will eventually be object-specific.
+    So, it seems to me that going from object-specific descriptions to a global description back to an object-specific action is a waste of time.
+    I don't think that a global description should be \emph{obliterated} (removed 100\%).
+    I just think that a global description should be reserved for when global actions are taking place.
+    For example, when deciding that copycat has found a satisfactory answer, a global description should be used, because deciding to stop copycat is a global action.
+    However, when deciding to remove a particular structure, a global description should not be used, because removing a particular offending structure is NOT a global action.
+
+    On the other hand (I've never met a one-handed researcher), global description has some benefits.
+    For example, the global formula for temperature converts the raw importance value for each object into a relative importance value for each object.
+    If a distributed metric was used, this importance value would have to be left in its raw form.
+
+%%    \break
+%%
+%%    The original copycat was written in LISP, a mixed-paradigm language.
+%%    Because of LISP's preference for functional code, global variables must be explicitly marked with surrounding asterisks.
+%%    Temperature, the workspace, and final answers are all marked global variables as discussed in this paper.
+%%    These aspects of copycat are all - by definition - impure, and therefore imperative code that relies on central state changes.
+%%    It is clear that, since imperative, mutation-focused languages (like Python) are turing complete in the same way that functional, purity-focused languages (like Haskell) are turing complete, each method is clearly capable of modeling the human brain.
+%%    However, the algorithm run by the brain is more similar to distributed, parallel functional code than it is to centralized, serial imperative code.
+%%    While there is some centralization in the brain, and evidently some state changes, it is clear that 100\% centralized 100\% serial code is not a good model of the brain.
+%%
+%%    Also, temperature is, ultimately, just a function of objects in the global workspace.
+%%    The git branch soft-temp-removal hard-removes most usages of temperature, but continues to use a functional version of the temperature calculation for certain processes, like determining if the given answer is satisfactory or not.
+%%    So, all mentions of temperature could theoretically be removed and replaced with a dynamic calculation of temperature instead.
+%%    It is clear that in this case, this change is unnecessary.
+%%    With the goal of creating a distributed model in mind, what actually bothers me more is the global nature of the workspace, coderack, and other singleton copycat structures.
+%%    Really, when temperature is removed and replaced with some distributed metric, it is clear that the true "offending" global is the workspace/coderack.
+%%
+%%    Alternatively, codelets could be equated to ants in an anthill (see anthill analogy in GEB).
+%%    Instead of querying a global structure, codelets could query their neighbors, the same way that ants query their neighbors (rather than, say, relying on instructions from their queen).
+%%
+%%Biological or psychological plausibility only matters if it actually affects the presence of intelligent processes. For example, neurons don't exist in copycat because we feel that they aren't required to simulate the processes being studied. Instead, copycat uses higher-level structures to simulate the same emergent processes that neurons do. However, codelets and the control of them relies on a global function representing tolerance to irrelevant structures. Other higher level structures in copycat likely rely on globals as well. Another central variable in copycat is the "rule" structure, of which there is only one. While some global variables might be viable, others may actually obstruct the ability to model intelligent processes. For example, a distributed notion of temperature will not only increase biological and psychological plausibility, but increase copycat's effectiveness at producing acceptable answer distributions.
+%%
+%%We must also realize that copycat is only a model, so even if we take goals (level of abstraction) and biological plausibility into account...
+%%It is only worth changing temperature if it affects the model.
+%%Arguably, it does affect the model. (Or, rather, we hypothesize that it does. There is only one way to find out for sure, and that's the point of this paper)
+%%
+%%So, maybe this is a paper about goals, model accuracy, and an attempt to find which cognitive details matter and which don't. It also might provide some insight into making a "Normal Science" framework.
+%%
+%%Copycat is full of random uncommented parameters and formulas. Personally, I would advocate for removing or at least documenting as many of these as possible. In an ideal model, all of the numbers present might be either from existing mathematical formulas, or present for a very good (emergent and explainable - so that no other number would make sense in the same place) reason. However, settling on so called "magic" numbers because the authors of the program believed that their parameterizations were correct is very dangerous. If we removed random magic numbers, we would gain confidence in our model, progress towards a normal science, and gain a better understanding of cognitive processes. 
+%%
+%%Similarly, a lot of the testing of copycat is based on human perception of answer distributions. However, I suggest that we move to a more statistical approach. For example, deciding on some arbitrary baseline answer distribution and then modifying copycat to obtain other answer distributions and then comparing distributions with a statistical significance test would actually be indicative of what effect each change had. This paper will include code changes and proposals that lead copycat (and FARG projects in general) to a more statistical and verifiable approach.
+%%While there is a good argument about copycat representing an individual with biases and therefore being incomparable to a distributed group of individuals, I believe that additional effort should be made to test copycat against human subjects.  I may include in this paper a concrete proposal on how such an experiment might be done.
+%%
+%%Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (significantly different with increased frequencies of more desirable answers and decreased frequencies of less desirable answers: desirability will be determined by some concrete metric, such as the number of relationships that are preserved or mirrored) answer distribution if temperature is turned to a set of distributed metrics. \[H_0\] Copycat's answer distribution will be unaffected by changing temperature to a set of distributed metrics.
 
 %% {Von Neumann Discussion}
 %% {Turing Completeness}
@@ -88,13 +188,17 @@ This paper explores the extent to which copycat's behavior can be maintained whi
         Then, to evaluate the effect of different temperature usages, separate usages of temperature were individually removed and answer distributions were compared statistically (See section: $\chi^2$ Distribution Testing).
     \subsection{Temperature Probability Adjustment}
         Once the effect of temperature was evaluated, new temperature-based probability adjustment formulas were proposed that each had a significant effect on the answer distributions produced by copycat.
+        Instead of representing a temperature-less, decentralized version of copycat, these formulas are meant to represent the centralized branch of copycat.
         [Insert formula write-up]
     \subsection{Temperature Usage Adjustment}
-        Once the behavior based on temperature was well understood, experimentation was made with hard and soft removals of temperature.
-        First, a branch of the repository was created where all mentions of temperature were removed.
-        [Insert nuke write-up]
-        Then, a branch of the repository (the second revision of copycat to-be) was created, where temperature was removed surgically.
-        [Insert surgical write-up]
+        Once the behavior based on temperature was well understood, experimentation was made with hard and soft removals of temperature and features that depend on it.
+        For example, first probability adjustments based on temperature were removed.
+        Then, the new branch of copycat was $\chi^2$ compared against the original branch.
+        Then, breaker-fizzling, an independent temperature-related feature was removed from the original branch and another $\chi^2$ comparison was made.
+        The same process was repeated for non-probability temperature-based adjustments, and then for the copycat stopping decision.
+        Then, a temperature-less branch of the repository was created and tested.
+        Then, a branch of the repostory was created that removed probability adjustments, value adjustments, and fizzling, and made all other temperature-related operations use a dynamic temperature calculation.
+        All repository branches were then cross compared using a $\chi^2$ distribution test.
     \subsection{$\chi^2$ Distribution Testing}
         To test each different branch of the repository, a scientific framework was created.
         Each run of copycat on a particular problem produces a distribution of answers.
@@ -103,12 +207,16 @@ This paper explores the extent to which copycat's behavior can be maintained whi
         [Insert $\chi^2$ calculation code snippets]
     \subsection{Effectiveness Definition}
         Quantitatively evaluating the effectiveness of a cognitive architecture is difficult.
-        However, for copycat specifically, effectiveness can be defined as a function of the frequency of desirable answers and inverse frequency of undesirable answers.
+        However, for copycat specifically, effectiveness can be defined as a function of the frequency of desirable answers and equivalently as the inverse frequency of undesirable answers.
         Since answers are desirable to the extent that they respect the original transformation of letter sequences, desirability can also be approximated by a concrete metric.
         A simple metric for desirability is simply the existing temperature formula, or some variant of it.
-        So, a given version of copycat might be quantitatively better if it produces lower-temperature answers more frequently.
+        So, a given version of copycat is quantitatively better if it produces lower-temperature answers more frequently.
         However, recognizing lower-quality answers is also a sign of intelligence.
-        So, the extent to which copycat provides poor answers at low frequency and low desirability could be accounted for as well, even though copycat isn't explicitly told to do this.
+        So, the extent to which copycat provides poor answers at low frequency and low desirability could be accounted for as well.
+        Arguably, though, copycat isn't explicitly programmed to do this.
+        For simplicity, desirability will be measured as the frequency of lower-temperature answers.
+
+        Luckily, the definition for desirability of answer distributions is modular, such that each branch of copycat could be evaluated for answer desirability on each separate problem.
        
 \section{Results}
     \subsection{Cross $\chi^2$ Table}
@@ -119,6 +227,8 @@ This paper explores the extent to which copycat's behavior can be maintained whi
         [Summary of introduction, elaboration based on results]
     \subsection{Prediction}
         Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
+        I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
+        Arguably, the brain is more similar to a GPU than a CPU given its distributed nature.
 
 \bibliographystyle{alpha}
 \bibliography{sample}
