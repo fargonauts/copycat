@@ -26,7 +26,11 @@
 \maketitle
 
 \begin{abstract}
-    [Insert abstract]
+This project focuses on effectively simulating intelligent processes behind fluid analogy making through increasingly distributed decision-making.
+Specifically, the humanistic search algorithm, the Parallel Terraced Scan, is modified and tested.
+[Enumerate changes made to the Parallel Terraced Scan]
+The produced answer distributions of each resulting branch of the copycat software were then cross-compared with a Pearson's $\chi^2$ distribution test.
+Based on this cross-comparison, [Result Summary].
 \end{abstract}
 
 \section{Introduction}
@@ -35,12 +39,12 @@ This paper stems from Melanie Mitchell's (1993) and Douglas Hofstadter's \& FARG
 This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
 In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
 Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
-The Parallel Terraced Scan corresponds to the psychologically-plausible behavior of briefly browsing, say, a book, and delving deeper whenever something sparks one's interest. 
-The Parallel Terraced Scan is a mix between a depth-first and breadth-first search.
-To switch between modes of search, FARG models use the global variable \emph{temperature}, which is ultimately a function of the rule strength and the strength of each structure in copycat's \emph{workspace}, another centralized structure.
-However, it is not clear a global, unifying central structure like temperature is needed.
-In fact, this structure may even be harmful to FARG architectures eventually.
-This paper explores the extent to which copycat's behavior can be maintained or improved while distributing decision making.
+The Parallel Terraced Scan is, roughly, a mix between a depth-first and breadth-first search.
+To switch between modes of search, FARG models use the global variable \emph{temperature}.
+\emph{Temperature} is ultimately a function of the workspace rule strength then the importance and happiness of each workspace structure.
+Therefore, \emph{temperature} is a global metric, but is sometimes used to make local decisions.
+Since copycat means to simulate intelligence in a distributed nature, it should make use of local metrics for local decisions.
+This paper explores the extent to which copycat's behavior can be improved through distributing decision making.
 
 Specifically, the effects of temperature are first tested. 
 Then, once the statistically significant effects of temperature are understood, work is done to replace temperature with a distributed metric.
@@ -53,6 +57,7 @@ Today, "normal science" is simply not done on FARG architectures (and on most co
 Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc.
 It then becomes close to impossible to reproduce a result, or to test some new idea scientifically. 
 This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for statistical human comparison.
+Each of these methods will reduce the issues with scientific inquiry in the copycat architecture.
 
 To evaluate two different versions of copycat, the resulting answer distributions from a problem are compared with a Pearson's $\chi^2$ test.
 Using this, the degree of difference between distributions can be calculated.
@@ -63,34 +68,40 @@ Then, desirability of answer distributions can be found as well, and the followi
     \item $H_0$ Centralized variables either improve or have no effect on copycat's ability.
 \end{enumerate}
 
+\subsection{Objective}
+
+    The aim of this paper is to create and test a new version of the copycat software that makes effective use of a multiple level description.
+    Until now, copycat has made many of its decisions based on a global variable, \emph{temperature}.
+    ...
+
 \subsection{Theory}
 
-    According to the differences we can enumerate between brains and computers, it is clear that, since computers are universal and have vastly improved in the past five decades, that computers are capable of simulating intelligent processes. 
+    Since computers are universal and have vastly improved in the past five decades, it is clear that computers are capable of simulating intelligent processes. 
     [Cite Von Neumann]. 
-    The primary obstacle blocking strong A.I. is comprehension of intelligent processes. 
-    Once the brain is truly understood, writing software that emulates intelligence will be a relatively simple engineering task. 
+    The primary obstacle blocking strong A.I. is \emph{comprehension} of intelligent processes. 
+    Once the brain is truly understood, writing software that emulates intelligence will be a (relatively) simple engineering task when compared to understanding the brain. 
 
-    However, in making progress towards understanding the brain fully, models must remain true to what is already known about intelligent processes.
+    In making progress towards understanding the brain fully, models must remain true to what is already known about intelligent processes.
     Outside of speed, the largest difference between the computer and the brain is the distributed nature of computation. 
     Specifically, our computers as they exist today have central processing units, where literally all of computation happens. 
-    Brains have no central location where all processing happens. 
+    Brains have some centralized structures, but certainly no single central location where all processing happens. 
     Luckily, the speed advantage and universality of computers makes it possible to simulate the distributed behavior of the brain. 
-    However, this simulation is only possible if computers are programmed with concern for the distributed nature of the brain.
-    Code that accesses a single centralized structure can only ever be run in serial.
+    However, the software that is meant to emulate the behavior of the brain must be programmed with concern for this distributed nature.
 
-    Distribution is more of a design issue than a speed issue.
-    Specifically, modern computers are so fast that running the current version of copycat is not an issue (so, making copycat truly parallel will not improve its performance).
+    This distribution is more of a design issue than a speed issue.
+    Making copycat truly parallel would only provide marginal performance gains.
 
     It is clear from basic classical psychology that the brain contains some centralized structures.
     For example, Broca's area and Wernicke's area are specialized for linguistic input and output.
-    Another great example is the hippocampus, which, from a naive description, is responsible for the creation of memories.
+    Another great example is the hippocampi.
     If any of these specialized chunks of brain are surgically removed, for instance, then performing certain tasks becomes impossible.
     To some extent, the same is true for copycat.
-    For example, removing the ability to update the workspace would be \emph{roughly} equivalent to removing both hippocampi from a human.
-    Similarly, if the centralized structure of temperature is deleted, then, to some degree, copycat becomes unable to perform certain tasks.
-    Unlike the ability to update the workspace, it is possible that the central variable of temperature is constraining.
+    For example, removing the ability to update the workspace would be \emph{*roughly*} equivalent to removing both hippocampi from a human.
+    However, replacing the centralized structure of temperature with distributed multi-level metrics may improve copycat's ability to solve fluid analogy problems.
 
-    However, other structures in copycat, like the workspace itself, or the coderack, are also centralized.
+    %% Editing marker: stopped here 2:22 Tuesday, December 5th, 2017
+
+    Other structures in copycat, like the workspace itself, or the coderack, are also centralized.
     Arguably, these centralized structures are not constraining.
     Still, their unifying effect should be taken into account.
     For example, the workspace must be atomic, just like centralized structures in the brain, like the hippocampi, must also be atomic.
