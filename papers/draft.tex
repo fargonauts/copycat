@@ -101,18 +101,7 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     If copycat can be run such that -- during the majority of the program's runtime -- codelets may actually execute at the same time (without pausing to access globals), then it will much better replicate the human brain.
 
-    % The calculation for temperature in the first place is extremely convoluted (in the Python version of copycat).
-    % It lacks any documentation, is full of magic numbers, and contains seemingly arbitrary conditionals. 
-    % (If I submitted this as a homework assignment, I would probably get a C. Lol)
-
-    % Edit: Actually, the lisp version of copycat does a very good job of documenting magic numbers and procedures.
-    % My main complaint is that this hasn't been translated into the Python version of copycat.
-    % However, the Python version is translated from the Java version..
-    % Lost in translation.
-
-
-    %% My goal isn't to roast copycat's code, however.
-    Instead, what I see is that all this convolution is \emph{unnecessary}.
+    Convolution in the temperature calculation is \emph{unnecessary}.
     Ideally, a future version of copycat, or an underlying FARG architecure will remove this convolution, and make temperature calculation simpler, streamlined, documented, understandble.
 
     A global description of the system is, at times, potentially useful.
@@ -128,51 +117,14 @@ Then, desirability of answer distributions can be found as well, and the followi
     For example, the global formula for temperature converts the raw importance value for each object into a relative importance value for each object.
     If a distributed metric was used, this importance value would have to be left in its raw form.
 
-%%    \break
-%%
-%%    The original copycat was written in LISP, a mixed-paradigm language.
-%%    Because of LISP's preference for functional code, global variables must be explicitly marked with surrounding asterisks.
-%%    Temperature, the workspace, and final answers are all marked global variables as discussed in this paper.
-%%    These aspects of copycat are all - by definition - impure, and therefore imperative code that relies on central state changes.
-%%    It is clear that, since imperative, mutation-focused languages (like Python) are turing complete in the same way that functional, purity-focused languages (like Haskell) are turing complete, each method is clearly capable of modeling the human brain.
-%%    However, the algorithm run by the brain is more similar to distributed, parallel functional code than it is to centralized, serial imperative code.
-%%    While there is some centralization in the brain, and evidently some state changes, it is clear that 100\% centralized 100\% serial code is not a good model of the brain.
-%%
-%%    Also, temperature is, ultimately, just a function of objects in the global workspace.
-%%    The git branch soft-temp-removal hard-removes most usages of temperature, but continues to use a functional version of the temperature calculation for certain processes, like determining if the given answer is satisfactory or not.
-%%    So, all mentions of temperature could theoretically be removed and replaced with a dynamic calculation of temperature instead.
-%%    It is clear that in this case, this change is unnecessary.
-%%    With the goal of creating a distributed model in mind, what actually bothers me more is the global nature of the workspace, coderack, and other singleton copycat structures.
-%%    Really, when temperature is removed and replaced with some distributed metric, it is clear that the true "offending" global is the workspace/coderack.
-%%
 %%    Alternatively, codelets could be equated to ants in an anthill (see anthill analogy in GEB).
 %%    Instead of querying a global structure, codelets could query their neighbors, the same way that ants query their neighbors (rather than, say, relying on instructions from their queen).
 %%
-%%Biological or psychological plausibility only matters if it actually affects the presence of intelligent processes. For example, neurons don't exist in copycat because we feel that they aren't required to simulate the processes being studied. Instead, copycat uses higher-level structures to simulate the same emergent processes that neurons do. However, codelets and the control of them relies on a global function representing tolerance to irrelevant structures. Other higher level structures in copycat likely rely on globals as well. Another central variable in copycat is the "rule" structure, of which there is only one. While some global variables might be viable, others may actually obstruct the ability to model intelligent processes. For example, a distributed notion of temperature will not only increase biological and psychological plausibility, but increase copycat's effectiveness at producing acceptable answer distributions.
-%%
-%%We must also realize that copycat is only a model, so even if we take goals (level of abstraction) and biological plausibility into account...
-%%It is only worth changing temperature if it affects the model.
-%%Arguably, it does affect the model. (Or, rather, we hypothesize that it does. There is only one way to find out for sure, and that's the point of this paper)
-%%
-%%So, maybe this is a paper about goals, model accuracy, and an attempt to find which cognitive details matter and which don't. It also might provide some insight into making a "Normal Science" framework.
-%%
-%%Copycat is full of random uncommented parameters and formulas. Personally, I would advocate for removing or at least documenting as many of these as possible. In an ideal model, all of the numbers present might be either from existing mathematical formulas, or present for a very good (emergent and explainable - so that no other number would make sense in the same place) reason. However, settling on so called "magic" numbers because the authors of the program believed that their parameterizations were correct is very dangerous. If we removed random magic numbers, we would gain confidence in our model, progress towards a normal science, and gain a better understanding of cognitive processes. 
-%%
-%%Similarly, a lot of the testing of copycat is based on human perception of answer distributions. However, I suggest that we move to a more statistical approach. For example, deciding on some arbitrary baseline answer distribution and then modifying copycat to obtain other answer distributions and then comparing distributions with a statistical significance test would actually be indicative of what effect each change had. This paper will include code changes and proposals that lead copycat (and FARG projects in general) to a more statistical and verifiable approach.
-%%While there is a good argument about copycat representing an individual with biases and therefore being incomparable to a distributed group of individuals, I believe that additional effort should be made to test copycat against human subjects.  I may include in this paper a concrete proposal on how such an experiment might be done.
-%%
-%%Let's simply test the hypothesis: \[H_i\] Copycat will have an improved (significantly different with increased frequencies of more desirable answers and decreased frequencies of less desirable answers: desirability will be determined by some concrete metric, such as the number of relationships that are preserved or mirrored) answer distribution if temperature is turned to a set of distributed metrics. \[H_0\] Copycat's answer distribution will be unaffected by changing temperature to a set of distributed metrics.
-
-%% {Von Neumann Discussion}
-%% {Turing Completeness}
-%% {Simulation of Distributed Processes}
-%% {Efficiency of True Distribution}
-%% {Temperature in Copycat}
-%% {Other Centralizers in Copycat}
-%% {The Motivation for Removing Centralizers in Coat}
 
 \section{Methods}
+
     \subsection{Formula Documentation}
+
         Many of copycat's formulas use magic numbers and marginally documented formulas.
         This is less of a problem in the original LISP code, and more of a problem in the twice-translated Python3 version of copycat.
         However, even in copycat's LISP implementation, formulas have redundant parameters.
@@ -180,17 +132,23 @@ Then, desirability of answer distributions can be found as well, and the followi
         Ideally, the adjustment formulas within copycat could be reduced in the same way, so that much of copycat's behavior rested on a handful of parameters in a single location, as opposed to more than ten parameters scattered throughout the repository.
         Also, often parameters in copycat have little statistically significant effect.
         As will be discussed in the $\chi^2$ distribution testing section, any copycat formulas without a significant effect will be hard-removed.
+
     \subsection{Testing the Effect of Temperature}
+
         To begin with, the existing effect of the centralizing variable, temperature, will be analyzed.
         As the probability adjustment formulas are used by default, very little effect is had.
         To evaluate the effect of temperature-based probability adjustment formulas, a spreadsheet was created that showed a color gradient based on each formula.
         [Insert spreadsheet embeds]
         Then, to evaluate the effect of different temperature usages, separate usages of temperature were individually removed and answer distributions were compared statistically (See section: $\chi^2$ Distribution Testing).
+
     \subsection{Temperature Probability Adjustment}
+
         Once the effect of temperature was evaluated, new temperature-based probability adjustment formulas were proposed that each had a significant effect on the answer distributions produced by copycat.
         Instead of representing a temperature-less, decentralized version of copycat, these formulas are meant to represent the centralized branch of copycat.
         [Insert formula write-up]
+
     \subsection{Temperature Usage Adjustment}
+
         Once the behavior based on temperature was well understood, experimentation was made with hard and soft removals of temperature and features that depend on it.
         For example, first probability adjustments based on temperature were removed.
         Then, the new branch of copycat was $\chi^2$ compared against the original branch.
@@ -199,13 +157,17 @@ Then, desirability of answer distributions can be found as well, and the followi
         Then, a temperature-less branch of the repository was created and tested.
         Then, a branch of the repostory was created that removed probability adjustments, value adjustments, and fizzling, and made all other temperature-related operations use a dynamic temperature calculation.
         All repository branches were then cross compared using a $\chi^2$ distribution test.
+
     \subsection{$\chi^2$ Distribution Testing}
+
         To test each different branch of the repository, a scientific framework was created.
         Each run of copycat on a particular problem produces a distribution of answers.
         Distributions of answers can be compared against one another with a (Pearson's) $\chi^2$ distribution test.
         [Insert $\chi^2$ formula]
         [Insert $\chi^2$ calculation code snippets]
+
     \subsection{Effectiveness Definition}
+
         Quantitatively evaluating the effectiveness of a cognitive architecture is difficult.
         However, for copycat specifically, effectiveness can be defined as a function of the frequency of desirable answers and equivalently as the inverse frequency of undesirable answers.
         Since answers are desirable to the extent that they respect the original transformation of letter sequences, desirability can also be approximated by a concrete metric.
@@ -219,13 +181,20 @@ Then, desirability of answer distributions can be found as well, and the followi
         Luckily, the definition for desirability of answer distributions is modular, such that each branch of copycat could be evaluated for answer desirability on each separate problem.
        
 \section{Results}
+
     \subsection{Cross $\chi^2$ Table}
+
         The below table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant.
         [Insert cross $\chi^2$ table]
+
 \section{Discussion}
+
     \subsection{Distributed Computation Accuracy}
+
         [Summary of introduction, elaboration based on results]
+
     \subsection{Prediction}
+
         Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
         I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
         Arguably, the brain is more similar to a GPU than a CPU given its distributed nature.
