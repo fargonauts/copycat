@@ -64,15 +64,15 @@ Using this, the degree of difference between distributions can be calculated.
 Then, desirability of answer distributions can be found as well, and the following hypotheses can be tested:
 
 \begin{enumerate}
-    \item $H_i$ Centralized variables constrict copycat's ability.
-    \item $H_0$ Centralized variables either improve or have no effect on copycat's ability.
+    \item $H_i$ Centralized, global variables constrict copycat's ability.
+    \item $H_0$ Centralized, global variables either improve or have no effect on copycat's ability.
 \end{enumerate}
 
 \subsection{Objective}
 
     The aim of this paper is to create and test a new version of the copycat software that makes effective use of a multiple level description.
-    Until now, copycat has made many of its decisions based on a global variable, \emph{temperature}.
-    [].
+    Until now, copycat has made many of its decisions, even local ones, based on a global variable, \emph{temperature}.
+    This paper will evaluate alternatives to this global decision, and compare several different variant of the copycat software to effectively decide on which design choices to make.
 
 \subsection{Theory}
 
@@ -156,7 +156,59 @@ Then, desirability of answer distributions can be found as well, and the followi
 
         Once the effect of temperature was evaluated, new temperature-based probability adjustment formulas were proposed that each had a significant effect on the answer distributions produced by copycat.
         Instead of representing a temperature-less, decentralized version of copycat, these formulas are meant to represent the centralized branch of copycat.
-        [Insert formula write-up]
+
+        These formulas curve probabilities, making unlikely events more likely and likely events less likely as a function of the global \emph{temperature} variable.
+
+        The desired (LISP documented) behavior is as follows:
+        At high temperatures, the system should explore options that would otherwise be unlikely.
+        So, at temperatures above half of the maximum temperature, probabilities with a base value less than fifty percent will be curved higher, to some threshold.
+        At temperatures below half of the maximum temperature, probabilities with a base value above fifty percent will be curved lower, to some threshold.
+
+        The original formulas being used to do this were overly complicated.
+        In summary, many formulas were tested in a spreadsheet, and an optimal one was chosen that replicated the desired behavior.
+        The remainder of the section discusses different formulas and their advantages/disadvantages.
+        Also, as a general rule, changing these formulas causes copycat to produce statistically significantly different answer distributions.
+
+        The original formula for curving probabilties in copycat:
+        \lstinputlisting[language=Python]{formulas/original.py}
+
+        An alternative that seems to improve performance on the "abd:abd::xyz:\_" problem:
+        This formula produces probabilities that are not bounded between 0 and 1. These are generally truncated.
+        \lstinputlisting[language=Python]{formulas/entropy.py}
+
+        However, this formula worsens performance on non "xyz" problems.
+        Likely, because of how novel the "xyz" problem is, it will require more advanced architecture changes.
+        For instance, MetaCat claims to assist in solving the "xyz" problem.
+
+        The entropy formula is an improvement, but other formulas are possible too.
+
+        Below are variations on a "weighted" formula.
+        The general structure is:
+
+        \[\emph{p'} = \frac{T}{100} * S + \frac{100-T}{100} * U\]
+
+        Where: $S$ is the convergence value for when $T = 100$ and
+               $U$ is the convergence value for when $T = 0$.
+        The below formulas simply experiment with different values for $S$ and $U$
+
+        \lstinputlisting[language=Python]{formulas/weighted.py}
+
+        After some experimentation and reading the original copycat documentation, it was clear that $S$ should be chosen to be $0.5$ (All events are equally likely at high temperature) and that $U$ should implement the probability curving desired at low temperatures. 
+
+        The following formulas let $U = p^r$ if $p < 0.5$ and let $U = p^\frac{1}{r}$ if $p >= 0.5$.
+        This controls whether/when curving happens.
+        Now, the \emph{single} parameter $r$ simply controls the degree to which curving happens.
+        Different values of $r$ were experimented with (values between $10$ and $1$ were experimented with at increasingly smaller step sizes).
+        $2$ and $1.05$ are both good choices at  opposite "extremes".
+        $2$ works because it is large enough to produce novel changes in behavior at extreme temperatures without totally disregarding the original probabilities.
+        Values above $2$ do not work because they make probabilities too uniform.
+        Values below $2$ (and above $1.05$) are feasible, but produce less curving and therefore less unique behavior.
+        $1.05$ works because it very closely replicates the original copycat formulas, providing a very smooth curving.
+        Values beneath $1.05$ essentially leave probabilities unaffected, producing no significant unique behavior dependent on temperature.
+
+        \lstinputlisting[language=Python]{formulas/best.py}
+
+        All of these separate formulas will later be cross-compared to other variants of the copycat software using a Pearson's $\chi^2$ test.
 
     \subsection{Temperature Usage Adjustment}
 
