@@ -72,9 +72,11 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     The aim of this paper is to create and test a new version of the copycat software that makes effective use of a multiple level description.
     Until now, copycat has made many of its decisions based on a global variable, \emph{temperature}.
-    ...
+    [].
 
 \subsection{Theory}
+
+    \subsubsection{Centralized Structures}
 
     Since computers are universal and have vastly improved in the past five decades, it is clear that computers are capable of simulating intelligent processes. 
     [Cite Von Neumann]. 
@@ -85,52 +87,50 @@ Then, desirability of answer distributions can be found as well, and the followi
     Outside of speed, the largest difference between the computer and the brain is the distributed nature of computation. 
     Specifically, our computers as they exist today have central processing units, where literally all of computation happens. 
     Brains have some centralized structures, but certainly no single central location where all processing happens. 
-    Luckily, the speed advantage and universality of computers makes it possible to simulate the distributed behavior of the brain. 
-    However, the software that is meant to emulate the behavior of the brain must be programmed with concern for this distributed nature.
+    Luckily, the difference in speed between brains and computers allows computers to simulate brains even when they are running serial code.
+    From a design perspective, however, software should take the distributed nature of the brain into consideration, because it is most likely that distributed computation plays a large role in the brain's functionality.
 
-    This distribution is more of a design issue than a speed issue.
-    Making copycat truly parallel would only provide marginal performance gains.
+    For example, codelets should behave more like ants in an anthill.
+    Instead of querying a global structure (the queen), ants might query each other, and each carry information about what they've last seen.
+    In this way, distributed computation can be carried out through many truly parallel agents.
 
     It is clear from basic classical psychology that the brain contains some centralized structures.
     For example, Broca's area and Wernicke's area are specialized for linguistic input and output.
     Another great example is the hippocampi.
-    If any of these specialized chunks of brain are surgically removed, for instance, then performing certain tasks becomes impossible.
+    If any of these specialized chunks of brain are surgically removed, for instance, then the ability to perform certain tasks is greatly impacted.
     To some extent, the same is true for copycat.
     For example, removing the ability to update the workspace would be \emph{*roughly*} equivalent to removing both hippocampi from a human.
-    However, replacing the centralized structure of temperature with distributed multi-level metrics may improve copycat's ability to solve fluid analogy problems.
+    This paper means to first test the impact of centralized structures, like \emph{temperature}, by removing or altering them and then performing tests.
+    Then, distributed structures will be proposed and testing in place of centralized ones.
 
-    %% Editing marker: stopped here 2:22 Tuesday, December 5th, 2017
-
-    Other structures in copycat, like the workspace itself, or the coderack, are also centralized.
-    Arguably, these centralized structures are not constraining.
-    Still, their unifying effect should be taken into account.
-    For example, the workspace must be atomic, just like centralized structures in the brain, like the hippocampi, must also be atomic.
-
-    From a function-programming perspective (i.e. LISP, the original language of copycat), the brain should simply be carrying out the same function in many locations (i.e. mapping neuron.process() across each of its neurons, if you will...)
-    Note that this is more similar to the behavior of a GPU than a CPU.
-    However, this model doesn't work when code has to synchronize to access global variables.
-
+    Outside of \emph{temperature}, other structures in copycat, like the workspace itself, or the coderack, are also centralized.
+    Hopefully, these centralized structures are not constraining, but it possible they are.
+    If they are, their unifying effect should be taken into account.
+    For example, the workspace is atomic, just like centralized structures in the brain, like the hippocampi, are also atomic.
     If copycat can be run such that -- during the majority of the program's runtime -- codelets may actually execute at the same time (without pausing to access globals), then it will much better replicate the human brain.
+    A good model for this is the functional-programming \emph{map} procedure.
+    From this perspective, the brain would simply be carrying out the same function in many locations (i.e. \emph{map}ping neuron.process() across each of its neurons)
+    Note that this is more similar to the behavior of a GPU than a CPU.
+    This model doesn't work when code has to synchronize to access global variables.
 
-    Convolution in the temperature calculation is \emph{unnecessary}.
-    Ideally, a future version of copycat, or an underlying FARG architecure will remove this convolution, and make temperature calculation simpler, streamlined, documented, understandble.
+    Notably, however, functional distributed code is turing complete just like imperative centralized code is turing complete.
+    Especially given the speed of modern computers, functional code cannot do anything that imperative code can't.
+    However, working in a mental framework that models the functionality of the human brain may assist in actually modelling its processes.
 
-    A global description of the system is, at times, potentially useful.
+    \subsubsection{Local Descriptions}
+
+    A global description of the system (\emph{temperature}) is, at times, potentially useful.
     However, in summing together the values of each workspace object, information is lost regarding which workspace objects are offending.
     In general, the changes that occur will eventually be object-specific.
-    So, it seems to me that going from object-specific descriptions to a global description back to an object-specific action is a waste of time.
-    I don't think that a global description should be \emph{obliterated} (removed 100\%).
-    I just think that a global description should be reserved for when global actions are taking place.
+    So, it seems to me that going from object-specific descriptions to a global description back to an object-specific action is a waste of time, at least when the end action is an object-specific action.
+    A global description shouldn't be \emph{obliterated} (removed 100\%).
+    Maybe a global description should be reserved for \emph{only} when global actions are taking place.
     For example, when deciding that copycat has found a satisfactory answer, a global description should be used, because deciding to stop copycat is a global action.
     However, when deciding to remove a particular structure, a global description should not be used, because removing a particular offending structure is NOT a global action.
 
-    On the other hand (I've never met a one-handed researcher), global description has some benefits.
+    Of course, global description has some benefits even when it is being used to change local information.
     For example, the global formula for temperature converts the raw importance value for each object into a relative importance value for each object.
     If a distributed metric was used, this importance value would have to be left in its raw form.
-
-%%    Alternatively, codelets could be equated to ants in an anthill (see anthill analogy in GEB).
-%%    Instead of querying a global structure, codelets could query their neighbors, the same way that ants query their neighbors (rather than, say, relying on instructions from their queen).
-%%
 
 \section{Methods}
 
@@ -139,7 +139,7 @@ Then, desirability of answer distributions can be found as well, and the followi
         Many of copycat's formulas use magic numbers and marginally documented formulas.
         This is less of a problem in the original LISP code, and more of a problem in the twice-translated Python3 version of copycat.
         However, even in copycat's LISP implementation, formulas have redundant parameters.
-        For example, if given two formulas: $f(x) = 2x$ and $g(x) = x^2$, a single formula can be written $h(x) = 2x^2$ (The composed and then simplified formula).
+        For example, if given two formulas: $f(x) = x^2$ and $g(x) = 2x$, a single formula can be written $h(x) = 4x^2$ (The composed and then simplified formula).
         Ideally, the adjustment formulas within copycat could be reduced in the same way, so that much of copycat's behavior rested on a handful of parameters in a single location, as opposed to more than ten parameters scattered throughout the repository.
         Also, often parameters in copycat have little statistically significant effect.
         As will be discussed in the $\chi^2$ distribution testing section, any copycat formulas without a significant effect will be hard-removed.
@@ -208,7 +208,6 @@ Then, desirability of answer distributions can be found as well, and the followi
 
         Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
         I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
-        Arguably, the brain is more similar to a GPU than a CPU given its distributed nature.
 
 \bibliographystyle{alpha}
 \bibliography{sample}
