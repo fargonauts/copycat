@@ -11,6 +11,7 @@
 %% Useful packages
 \usepackage{listings}
 \usepackage{amsmath}
+\usepackage{pdfpages}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
@@ -170,11 +171,11 @@ Then, desirability of answer distributions can be found as well, and the followi
         Also, as a general rule, changing these formulas causes copycat to produce statistically significantly different answer distributions.
 
         The original formula for curving probabilties in copycat:
-        \lstinputlisting[language=Python]{formulas/original.py}
+        \lstinputlisting[language=Python]{resources/original.py}
 
         An alternative that seems to improve performance on the "abd:abd::xyz:\_" problem:
         This formula produces probabilities that are not bounded between 0 and 1. These are generally truncated.
-        \lstinputlisting[language=Python]{formulas/entropy.py}
+        \lstinputlisting[language=Python]{resources/entropy.py}
 
         However, this formula worsens performance on non "xyz" problems.
         Likely, because of how novel the "xyz" problem is, it will require more advanced architecture changes.
@@ -191,7 +192,7 @@ Then, desirability of answer distributions can be found as well, and the followi
                $U$ is the convergence value for when $T = 0$.
         The below formulas simply experiment with different values for $S$ and $U$
 
-        \lstinputlisting[language=Python]{formulas/weighted.py}
+        \lstinputlisting[language=Python]{resources/weighted.py}
 
         After some experimentation and reading the original copycat documentation, it was clear that $S$ should be chosen to be $0.5$ (All events are equally likely at high temperature) and that $U$ should implement the probability curving desired at low temperatures. 
 
@@ -206,7 +207,7 @@ Then, desirability of answer distributions can be found as well, and the followi
         $1.05$ works because it very closely replicates the original copycat formulas, providing a very smooth curving.
         Values beneath $1.05$ essentially leave probabilities unaffected, producing no significant unique behavior dependent on temperature.
 
-        \lstinputlisting[language=Python]{formulas/best.py}
+        \lstinputlisting[language=Python]{resources/best.py}
 
         All of these separate formulas will later be cross-compared to other variants of the copycat software using a Pearson's $\chi^2$ test.
 
@@ -226,29 +227,37 @@ Then, desirability of answer distributions can be found as well, and the followi
         To test each different branch of the repository, a scientific framework was created.
         Each run of copycat on a particular problem produces a distribution of answers.
         Distributions of answers can be compared against one another with a (Pearson's) $\chi^2$ distribution test.
-        [Insert $\chi^2$ formula]
-        [Insert $\chi^2$ calculation code snippets]
+
+        $$\chi^2 = \sum_{i=1}^{n} \frac{(O_i - E_i)^2}{E_i}$$
+        Where:
+        \newline
+        $O_i = $ The number of observations of a particular answer
+        \newline
+        $E_i = $ The number of expected observations of a particular answer
+        \newline
+        Then, $\chi^2$ is calculated, using one copycat variant as a source for expected observations, and another copycat variant as a source for novel observations.
+        If the $\chi^2$ value is above some threshold (dependent on degrees of freedom and confidence level), then the two copycat variants are significantly different.
+        A standard confidence level of $95\%$ is used, and degrees of freedom is calculated as the number of different answers given from the source-variant of copycat.
+        Because of this, comparing copycat variants like this is \emph{not} always commutative.
 
     \subsection{Effectiveness Definition}
 
         Quantitatively evaluating the effectiveness of a cognitive architecture is difficult.
         However, for copycat specifically, effectiveness can be defined as a function of the frequency of desirable answers and equivalently as the inverse frequency of undesirable answers.
         Since answers are desirable to the extent that they respect the original transformation of letter sequences, desirability can also be approximated by a concrete metric.
-        A simple metric for desirability is simply the existing temperature formula, or some variant of it.
-        So, a given version of copycat is quantitatively better if it produces lower-temperature answers more frequently.
-        However, recognizing lower-quality answers is also a sign of intelligence.
-        So, the extent to which copycat provides poor answers at low frequency and low desirability could be accounted for as well.
-        Arguably, though, copycat isn't explicitly programmed to do this.
-        For simplicity, desirability will be measured as the frequency of lower-temperature answers.
-
-        Luckily, the definition for desirability of answer distributions is modular, such that each branch of copycat could be evaluated for answer desirability on each separate problem.
+        A simple metric for desirability is simply the existing temperature formula.
+        So, one metric for effectiveness of a copycat variant is the frequency of low-temperature answers.
+        $$e = \frac{\sum_{i=i}^{n} \frac{O_i}{T_i}}{N} $$
+        For simplicity, only this metric will be used.
+        However, this metric could be extended relatively easily.
+        For example, the unique variants in copycat answers could be taken into account ($n$).
        
 \section{Results}
 
     \subsection{Cross $\chi^2$ Table}
 
         The below table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant.
-        [Insert cross $\chi^2$ table]
+        \includepdf[pages={-}]{resources/final.pdf}
 
 \section{Discussion}
 
