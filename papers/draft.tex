@@ -12,7 +12,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+%%\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\usepackage[backend=biber]{biblatex}
 \addbibresource{sources.bib}
 
 \usepackage[colorinlistoftodos]{todonotes}
@@ -57,7 +58,7 @@ Then, a surgical removal of temperature is attempted, leaving in tact affected s
 
 To evaluate the distributed nature of copycat, this paper focuses on the creation of a `normal science' framework.
 By `Normal science,' this paper means the term created by Thomas Kuhn--the collaborative enterprise of furthering understanding within a paradigm. 
-Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French 2012). 
+Today, "normal science" is simply not done on FARG architectures (and on most computational cognitive architectures too... see Addyman \& French \cite{compmodeling}). 
 Unlike mathematical theories or experiments, which can be replicated by following the materials and methods, computational models generally have dozens of particularly tuned variables, undocumented procedures, multiple assumptions about the users computational environment, etc.
 It then becomes close to impossible to reproduce a result, or to test some new idea scientifically. 
 This paper focuses on the introduction of statistical techniques, reduction of "magic numbers", improvement and documentation of formulas, and proposals for statistical human comparison.
@@ -82,8 +83,7 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     \subsubsection{Centralized Structures}
 
-    Since computers are universal and have vastly improved in the past five decades, it is clear that computers are capable of simulating intelligent processes. 
-    [Cite Von Neumann]. 
+    Since computers are universal and have vastly improved in the past five decades, it is clear that computers are capable of simulating intelligent processes \cite{computerandthebrain}.
     The primary obstacle blocking strong A.I. is \emph{comprehension} of intelligent processes. 
     Once the brain is truly understood, writing software that emulates intelligence will be a (relatively) simple engineering task when compared to understanding the brain. 
 
@@ -153,7 +153,7 @@ Then, desirability of answer distributions can be found as well, and the followi
         To begin with, the existing effect of the centralizing variable, temperature, will be analyzed.
         As the probability adjustment formulas are used by default, very little effect is had.
         To evaluate the effect of temperature-based probability adjustment formulas, a spreadsheet was created that showed a color gradient based on each formula.
-        [Insert spreadsheet embeds]
+        View the spreadsheets \href{https://docs.google.com/spreadsheets/d/1JT2yCBUAsFzMcbKsQUcH1DhcBbuWDKTgPvUwD9EqyTY/edit?usp=sharing}{here}.
         Then, to evaluate the effect of different temperature usages, separate usages of temperature were individually removed and answer distributions were compared statistically (See section: $\chi^2$ Distribution Testing).
 
     \subsection{Temperature Probability Adjustment}
@@ -259,21 +259,83 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     \subsection{Cross $\chi^2$ Table}
 
-        The below table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant.
+        The Cross$\chi^2$ table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant and with different internal formulas.
         For the table, please see \href{"https://docs.google.com/spreadsheets/d/1d4EyEbWLJpLYlE7qSPPb8e1SqCAZUvtqVCd0Ns88E-8/edit?usp=sharing"}{google sheets}.
+        This table contains a lot of information, but most importantly it shows which copycat variants produce novel changes and which do not.
+        The following variants of copycat were created:
+        \begin{enumerate}
+            \item The original copycat (legacy)
+            \item Copycat with no probability adjustment formulas (no-prob-adj)
+            \item Copycat with no fizzling (no-fizzle)
+            \item Copycat with no adjustment formulas at all (no-adj)
+            \item Copycat with several different internal adjustment formulas (adj-tests)
+                \begin{enumerate}
+                    \item alt\_fifty
+                    \item average\_alt
+                    \item best
+                    \item entropy
+                    \item fifty\_converge
+                    \item inverse
+                    \item meta
+                    \item none
+                    \item original
+                    \item pbest
+                    \item pmeta
+                    \item sbest
+                    \item soft
+                    \item weighted\_soft
+                \end{enumerate}
+            \item Copycat with temperature 100\% removed (nuke-temp)
+            \item Copycat with a surgically removed temperature (soft-remove)
+        \end{enumerate}
+
+        Each variant was cross-compared with each other variant on this set of problems (from \cite{fluidconcepts}).
+        \begin{enumerate}
+            \item abc:abd::efg:\_	
+            \item abc:abd::ijk:\_	
+            \item abc:abd::ijkk:\_	
+            \item abc:abd::mrrjjj:\_	
+            \item abc:abd::xyz:\_
+        \end{enumerate}
+
+        On a trial run with thirty iterations each, the following cross-comparisons showed \emph{no} difference in answer distributions:
+        \begin{enumerate}
+            \item .no-adj x	.adj-tests(none)
+            \item .no-adj x .adj-tests(original)
+            \item .no-adj x .no-prob-adj	
+            \item .no-prob-adj x .adj-tests(original)
+            \item .no-prob-adj x .adj-tests(pbest)
+            \item .no-prob-adj x .adj-tests(weighted\_soft)
+            \item .nuke-temp x .adj-tests(entropy)
+            \item .soft-remove x .adj-tests(best)
+            \item .soft-remove x .no-prob-adj	
+        \end{enumerate}
+
+        There are also several variant comparisons that only vary on one or two problems. 
+        As discussed below, it will be easier to evaluate them with more data.
+
+        Before the final draft of this paper, a trial will be conducted with a larger number of iterations and a variant of the Pearson's $\chi^2$ test that accounts for zero-count answer frequencies.
+        Also, because the comparison test is non commutative, "backwards" tests will be conducted.
+        Additionally, more problems will be added to the problem set, even if they are reducible. 
+        This will provide additional data points for comparison (If two copycat variants are indistinguishable on some novel problem, they should be indistinguishable on some structurally identifical variant of the novel problem).
+        It is also possible that additional versions of copycat will be tested (I plan on testing small features of copycat, like parameters and so on, and removing them bit by bit). 
 
 \section{Discussion}
 
+    \subsection{Interpretation of table}
+
+        It is clear that the original copycat probability adjustment formula had no statistically significant effects.
+        Additionally, new formulas that emulate the performance of the original formula also have no significant effects.
+        However, novel adjustment formulas, like the "best" formula, provide the same results as soft-removing temperature.
+        Soft-removing temperature is also identical to running copycat with no probability adjustments.
+        
     \subsection{Distributed Computation Accuracy}
 
         [Summary of introduction, elaboration based on results]
-        %%Let's cite! The Einstein's journal paper \cite{einstein} and the Dirac's
-        %%book \cite{dirac} are physics related items.
 
-    \subsection{Prediction}
+    \subsection{Prediction??}
 
-        Even though imperative, serial, centralized code is Turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributively and in true parallel. 
-        I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
+        Even though imperative, serial, centralized code is Turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributively and are at least capable of running in true, CPU-bound parallel. 
 
 \printbibliography
 
