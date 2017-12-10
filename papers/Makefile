@@ -1,6 +1,7 @@
 
 all:
-	draft
+	make draft
+	make clean
 
 draft:
 	pdflatex draft.tex

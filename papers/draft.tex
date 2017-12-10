@@ -39,8 +39,7 @@ Based on this cross-comparison, [Result Summary].
 
 \section{Introduction}
 
-This paper stems from Melanie Mitchell's (1993) and Douglas Hofstadter's \& FARG's (1995) work on the copycat program. 
-\cite{geb}
+This paper stems from Melanie Mitchell's \cite{analogyasperception} and Douglas Hofstadter's \& FARG's \cite{fluidconcepts} work on the copycat program. 
 This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
 In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
 Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
@@ -118,9 +117,9 @@ Then, desirability of answer distributions can be found as well, and the followi
     Note that this is more similar to the behavior of a GPU than a CPU.
     This model doesn't work when code has to synchronize to access global variables.
 
-    Notably, however, functional distributed code is turing complete just like imperative centralized code is turing complete.
+    Notably, however, functional distributed code is Turing complete just like imperative centralized code is Turing complete.
     Especially given the speed of modern computers, functional code cannot do anything that imperative code can't.
-    However, working in a mental framework that models the functionality of the human brain may assist in actually modelling its processes.
+    However, working in a mental framework that models the functionality of the human brain may assist in actually modeling its processes.
 
     \subsubsection{Local Descriptions}
 
@@ -174,7 +173,7 @@ Then, desirability of answer distributions can be found as well, and the followi
         The remainder of the section discusses different formulas and their advantages/disadvantages.
         Also, as a general rule, changing these formulas causes copycat to produce statistically significantly different answer distributions.
 
-        The original formula for curving probabilties in copycat:
+        The original formula for curving probabilities in copycat:
         \lstinputlisting[language=Python]{resources/original.py}
 
         An alternative that seems to improve performance on the "abd:abd::xyz:\_" problem:
@@ -223,7 +222,7 @@ Then, desirability of answer distributions can be found as well, and the followi
         Then, breaker-fizzling, an independent temperature-related feature was removed from the original branch and another $\chi^2$ comparison was made.
         The same process was repeated for non-probability temperature-based adjustments, and then for the copycat stopping decision.
         Then, a temperature-less branch of the repository was created and tested.
-        Then, a branch of the repostory was created that removed probability adjustments, value adjustments, and fizzling, and made all other temperature-related operations use a dynamic temperature calculation.
+        Then, a branch of the repository was created that removed probability adjustments, value adjustments, and fizzling, and made all other temperature-related operations use a dynamic temperature calculation.
         All repository branches were then cross compared using a $\chi^2$ distribution test.
 
     \subsection{$\chi^2$ Distribution Testing}
@@ -273,7 +272,7 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     \subsection{Prediction}
 
-        Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
+        Even though imperative, serial, centralized code is Turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributively and in true parallel. 
         I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
 
 \printbibliography
