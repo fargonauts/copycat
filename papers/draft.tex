@@ -1,10 +1,5 @@
 \documentclass[a4paper]{article}
 
-%% Language and font encodings
-\usepackage[english]{babel}
-\usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
-
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
@@ -13,8 +8,16 @@
 \usepackage{amsmath}
 \usepackage{pdfpages}
 \usepackage{graphicx}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\addbibresource{sources.bib}
+
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
 
 \definecolor{lightgrey}{rgb}{0.9, 0.9, 0.9}
 \lstset{ %
@@ -257,20 +260,21 @@ Then, desirability of answer distributions can be found as well, and the followi
     \subsection{Cross $\chi^2$ Table}
 
         The below table summarizes the results of comparing each copycat-variant's distribution with each other copycat-variant.
-        \includepdf[pages={-}]{resources/final.pdf}
+        For the table, please see \href{"https://docs.google.com/spreadsheets/d/1d4EyEbWLJpLYlE7qSPPb8e1SqCAZUvtqVCd0Ns88E-8/edit?usp=sharing"}{google sheets}.
 
 \section{Discussion}
 
     \subsection{Distributed Computation Accuracy}
 
         [Summary of introduction, elaboration based on results]
+        Let's cite! The Einstein's journal paper \cite{einstein} and the Dirac's
+        book \cite{dirac} are physics related items.
 
     \subsection{Prediction}
 
         Even though imperative, serial, centralized code is turing complete just like functional, parallel, distributed code, I predict that the most progressive cognitive architectures of the future will be created using functional programming languages that run distributedly and in true parallel. 
         I also predict that, eventually, distributed code will be run on hardware closer to the architecture of a GPU than of a CPU.
 
-\bibliographystyle{alpha}
-\bibliography{sample}
+\printbibliography
 
 \end{document}
