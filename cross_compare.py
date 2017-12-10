@@ -20,7 +20,6 @@ def main(args):
             problemSets.append((filename, pSet))
     pprint(problemSets)
     pprint(cross_chi_squared(problemSets))
-    '''
     crossTable = cross_chi_squared_table(problemSets)
     key_sorted_items = lambda d : sorted(d.items(), key=lambda t:t[0])
 
@@ -44,7 +43,6 @@ def main(args):
                     cells.append(str(result))
             outfile.write(','.join(cells) + '\n')
     return 0
-    '''
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
