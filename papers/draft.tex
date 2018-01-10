@@ -8,11 +8,11 @@
 \usepackage{amsmath}
 \usepackage{pdfpages}
 \usepackage{graphicx}
+\usepackage{indentfirst} %% Personal taste of LSaldyt
 
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-%%\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \usepackage[backend=biber]{biblatex}
 \addbibresource{sources.bib}
 
@@ -31,16 +31,23 @@
 \maketitle
 
 \begin{abstract}
-This project focuses on effectively simulating intelligent processes behind fluid analogy making through increasingly distributed decision-making.
-Specifically, the humanistic search algorithm, the Parallel Terraced Scan, is modified and tested.
-[Enumerate changes made to the Parallel Terraced Scan]
-The produced answer distributions of each resulting branch of the copycat software were then cross-compared with a Pearson's $\chi^2$ distribution test.
-Based on this cross-comparison, [Result Summary].
+    This project focuses on effectively simulating intelligent processes behind fluid analogy-making through increasingly distributed decision-making.
+    In the process, it discusses creating an effective scientific framework for fluid analogy architectures.
+    This draft assumes extensive knowledge with the Copycat software, which was pioneered by Melanie Mitchell \cite{analogyasperception}.
+    A humanistic search algorithm, the Parallel Terraced Scan, is altered and tested.
+    Originally, this search algorithm contains a centralizing variable, called \emph{temperature}.
+    This paper investigates the influence of this centralizing variable by modifying, testing, and eventually removing all code related to it.
+    In this process, several variants of the copycat software are created.
+    The produced answer distributions of each resulting branch of the copycat software were then cross-compared with a Pearson's $\chi^2$ distribution test.
+    This paper draft explores tests done on five novel copycat problems with thirty answers given per cross comparison.
+    [For now, it is safest to say that the results of this paper are inconclusive: See Results section]
+    %% Based on this cross-comparison, the original adjustment formulas have no significant effect (But these results are preliminary, see Results section for more detail).
 \end{abstract}
 
 \section{Introduction}
 
-This paper stems from Melanie Mitchell's \cite{analogyasperception} and Douglas Hofstadter's \& FARG's \cite{fluidconcepts} work on the copycat program. 
+This paper stems from Melanie Mitchell's \cite{analogyasperception} and Douglas Hofstadter's \& FARG's \cite{fluidconcepts} work on the copycat program.
+It is also based on work from a previous paper by Alexandre Linhares \cite{linhares}.
 This project focuses on effectively simulating intelligent processes through increasingly distributed decision-making.
 In the process of evaluating the distributed nature of copycat, this paper also proposes a "Normal Science" framework. 
 Copycat's behavior is based on the "Parallel Terraced Scan," a humanistic-inspired search algorithm.
@@ -77,7 +84,10 @@ Then, desirability of answer distributions can be found as well, and the followi
 
     The aim of this paper is to create and test a new version of the copycat software that makes effective use of a multiple level description.
     Until now, copycat has made many of its decisions, even local ones, based on a global variable, \emph{temperature}.
-    This paper will evaluate alternatives to this global decision, and compare several different variant of the copycat software to effectively decide on which design choices to make.
+    Two approaches will be taken toward improving copycat.
+    First, small portions of copycat will be removed and then tested individually.
+    If they do not significantly change the answer distributions given by copycat, they will be collectively removed from a working version of copycat.
+    Then, alternate, distributed versions of copycat will be compared to the original copycat software to effectively decide on which design choices to make.
 
 \subsection{Theory}
 
@@ -94,9 +104,9 @@ Then, desirability of answer distributions can be found as well, and the followi
     Luckily, the difference in speed between brains and computers allows computers to simulate brains even when they are running serial code.
     From a design perspective, however, software should take the distributed nature of the brain into consideration, because it is most likely that distributed computation plays a large role in the brain's functionality.
 
-    For example, codelets should behave more like ants in an anthill.
-    Instead of querying a global structure (the queen), ants might query each other, and each carry information about what they've last seen.
-    In this way, distributed computation can be carried out through many truly parallel agents.
+    For example, codelets should behave more like ants in an anthill, as described in \emph{Gödel, Escher, Bach} \cite{geb}.
+    Instead of querying a global structure (i.e. the queen), ants might query each other, and each carry information about what they've last seen.
+    In this way, distributed computation can be carried out through many truly parallel (non-blocking) agents.
 
     It is clear from basic classical psychology that the brain contains some centralized structures.
     For example, Broca's area and Wernicke's area are specialized for linguistic input and output.
@@ -105,7 +115,10 @@ Then, desirability of answer distributions can be found as well, and the followi
     To some extent, the same is true for copycat.
     For example, removing the ability to update the workspace would be \emph{*roughly*} equivalent to removing both hippocampi from a human.
     This paper means to first test the impact of centralized structures, like \emph{temperature}, by removing or altering them and then performing tests.
-    Then, distributed structures will be proposed and testing in place of centralized ones.
+    Then, distributed structures will be proposed and tested in place of centralized ones.
+
+    However: “How gullible are you? Is your gullibility located in some "gullibility center" in your brain? Could a neurosurgeon reach in and perform some delicate operation to lower your gullibility, otherwise leaving you alone? If you believe this, you are pretty gullible, and should perhaps consider such an operation.”
+― Douglas R. Hofstadter, Gödel, Escher, Bach: An Eternal Golden Braid 
 
     Outside of \emph{temperature}, other structures in copycat, like the workspace itself, or the coderack, are also centralized.
     Hopefully, these centralized structures are not constraining, but it possible they are.
@@ -233,11 +246,12 @@ Then, desirability of answer distributions can be found as well, and the followi
 
         $$\chi^2 = \sum_{i=1}^{n} \frac{(O_i - E_i)^2}{E_i}$$
         Where:
-        \newline
+        \newline\indent
         $O_i = $ The number of observations of a particular answer
-        \newline
+        \newline\indent
         $E_i = $ The number of expected observations of a particular answer
         \newline
+        \newline\indent
         Then, $\chi^2$ is calculated, using one copycat variant as a source for expected observations, and another copycat variant as a source for novel observations.
         If the $\chi^2$ value is above some threshold (dependent on degrees of freedom and confidence level), then the two copycat variants are significantly different.
         A standard confidence level of $95\%$ is used, and degrees of freedom is calculated as the number of different answers given from the source-variant of copycat.
