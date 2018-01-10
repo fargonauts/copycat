@@ -54,13 +54,13 @@ class TestCopycat(unittest.TestCase):
         self.assertProbabilitiesLookRoughlyLike(actual, expected, iterations)
 
     def test_simple_cases(self):
-        self.run_testcase('abc', 'abd', 'efg', 30, 
+        self.run_testcase('abc', 'abd', 'efg', 30,
 	    {'dfg': {'avgtemp': 72.37092377767368, 'avgtime': 475.0, 'count': 1},
 	     'efd': {'avgtemp': 49.421147725239024, 'avgtime': 410.5, 'count': 2},
 	     'efh': {'avgtemp': 19.381658717913258,
 		     'avgtime': 757.1851851851852,
 		     'count': 27}})
-        self.run_testcase('abc', 'abd', 'ijk', 30, 
+        self.run_testcase('abc', 'abd', 'ijk', 30,
             {'ijd': {'avgtemp': 14.691978036611559, 'avgtime': 453.0, 'count': 1},
              'ijl': {'avgtemp': 22.344023091153964,
                               'avgtime': 742.1428571428571,
@@ -69,7 +69,7 @@ class TestCopycat(unittest.TestCase):
 
 
     def test_abc_xyz(self):
-        self.run_testcase('abc', 'abd', 'xyz', 100, 
+        self.run_testcase('abc', 'abd', 'xyz', 100,
 	    {'dyz': {'avgtemp': 16.78130739435325, 'avgtime': 393.0, 'count': 1},
 	     'wyz': {'avgtemp': 26.100450643627426, 'avgtime': 4040.0, 'count': 2},
 	     'xyd': {'avgtemp': 21.310415433987586,
@@ -79,7 +79,7 @@ class TestCopycat(unittest.TestCase):
 	     'yyz': {'avgtemp': 27.137975077133788, 'avgtime': 4018.5, 'count': 6}})
 
     def test_ambiguous_case(self):
-        self.run_testcase('abc', 'abd', 'ijkk', 100, 
+        self.run_testcase('abc', 'abd', 'ijkk', 100,
 	    {'ijd': {'avgtemp': 55.6767488926397, 'avgtime': 948.0, 'count': 1},
 	     'ijkd': {'avgtemp': 78.09357723857647, 'avgtime': 424.5, 'count': 2},
 	     'ijkk': {'avgtemp': 68.54252699118226, 'avgtime': 905.5, 'count': 2},
@@ -95,7 +95,7 @@ class TestCopycat(unittest.TestCase):
 	     'jjkk': {'avgtemp': 75.76606718990365, 'avgtime': 925.0, 'count': 2}})
 
     def test_mrrjjj(self):
-        self.run_testcase('abc', 'abd', 'mrrjjj', 30, 
+        self.run_testcase('abc', 'abd', 'mrrjjj', 30,
 	    {'mrrjjd': {'avgtemp': 44.46354725386579, 'avgtime': 1262.0, 'count': 1},
 	     'mrrjjjj': {'avgtemp': 17.50702440140412, 'avgtime': 1038.375, 'count': 8},
 	     'mrrjjk': {'avgtemp': 55.189156978290264,
@@ -108,7 +108,7 @@ class TestCopycat(unittest.TestCase):
 
     def test_elongation(self):
         # This isn't remotely what a human would say.
-        self.run_testcase('abc', 'aabbcc', 'milk', 30, 
+        self.run_testcase('abc', 'aabbcc', 'milk', 30,
 	    {'lilk': {'avgtemp': 68.18128407669258,
 		      'avgtime': 1200.6666666666667,
 		      'count': 3},
@@ -120,7 +120,7 @@ class TestCopycat(unittest.TestCase):
 	     'milk': {'avgtemp': 66.11387816293755, 'avgtime': 1891.5, 'count': 2}})
     def test_repairing_successor_sequence(self):
         # This isn't remotely what a human would say.
-        self.run_testcase('aba', 'abc', 'xyx', 30, 
+        self.run_testcase('aba', 'abc', 'xyx', 30,
 	    {'cyx': {'avgtemp': 82.10555880340601, 'avgtime': 2637.0, 'count': 2},
 	     'xc': {'avgtemp': 73.98845045179358, 'avgtime': 5459.5, 'count': 2},
 	     'xyc': {'avgtemp': 77.1384941639991,
