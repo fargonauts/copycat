@@ -16,7 +16,7 @@ from .primary import Primary
 from .list import List
 from .style import configure_style
 
-from .plot import plot_imbedded
+from .plot import plot_answers, plot_temp
 
 plt.style.use('dark_background')
 
@@ -40,10 +40,13 @@ class MainApplication(GridFrame):
         self.add(self.codeletList, 1, 1)
 
         self.objectList = List(self, columns)
-        self.add(self.objectList, 2, 1)
+        self.add(self.objectList, 2, 1, xspan=2)
+
+        self.graph1 = Plot(self, 'Temperature history')
+        self.add(self.graph1, 2, 0)
 
         self.graph2 = Plot(self, 'Answer Distribution')
-        self.add(self.graph2, 2, 0)
+        self.add(self.graph2, 3, 0)
 
     def update(self, copycat):
         self.primary.update(copycat)
@@ -57,16 +60,11 @@ class MainApplication(GridFrame):
         self.codeletList.update(codelets, key=lambda c:c.urgency, formatter= lambda s : '{}: {}'.format(s.name, round(s.urgency, 2)))
         get_descriptors = lambda s : ', '.join('({}={})'.format(d.descriptionType.name, d.descriptor.name) for d in s.descriptions)
         self.objectList.update(objects, formatter=lambda s : '{}: {}'.format(s, get_descriptors(s)))
-        '''
-        if len(objects) > 0:
-            print('Descriptions:')
-            for obj in objects:
-                print(obj)
-                for description in obj.descriptions:
-                    print('    {}:'.format(description))
-                    print('        {}'.format(description.descriptionType.name))
-                    print('        {}'.format(description.descriptor.name))
-        '''
+        
+        def modifier(status):
+            with plt.style.context(('dark_background')):
+                plot_temp(copycat.temperature, status)
+        self.graph1.status.modifier = modifier
 
     def reset_with_strings(self, initial, modified, target):
         self.primary.reset_with_strings(initial, modified, target)
@@ -79,13 +77,12 @@ class GUI(object):
         tk.Grid.columnconfigure(self.root, 0, weight=1)
         self.app = MainApplication(self.root)
         self.app.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
-
         configure_style(ttk.Style())
 
     def add_answers(self, answers):
         def modifier(status):
             with plt.style.context(('dark_background')):
-                plot_imbedded(answers, status)
+                plot_answers(answers, status)
         self.app.graph2.status.modifier = modifier 
 
     def refresh(self):

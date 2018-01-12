@@ -63,9 +63,9 @@ class Copycat(object):
 
     def mainLoop(self):
         currentTime = self.coderack.codeletsRun
-        self.temperature.tryUnclamp(currentTime) # TODO: use entropy
-        # Every 15 codelets, we update the workspace.
-        if currentTime >= self.lastUpdate + 15:
+        self.temperature.tryUnclamp(currentTime)
+        # Every 5 codelets, we update the workspace.
+        if currentTime >= self.lastUpdate + 5:
             self.update_workspace(currentTime)
         self.step()
 
@@ -116,29 +116,26 @@ class Copycat(object):
         return answers
 
     def run(self, initial, modified, target, iterations):
-        self.temperature.useAdj('best')
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
-        for formula in ['original', 'best', 'sbest', 'pbest']:
-            self.temperature.useAdj(formula)
-            answers = {}
-            for i in range(iterations):
-                answer = self.runTrial()
-                d = answers.setdefault(answer['answer'], {
-                    'count': 0,
-                    'sumtemp': 0, # TODO: use entropy
-                    'sumtime': 0
-                })
-                d['count'] += 1
-                d['sumtemp'] += answer['temp'] # TODO: use entropy
-                d['sumtime'] += answer['time']
+        formula = 'pbest'
+        self.temperature.useAdj(formula)
+        for i in range(iterations):
+            answer = self.runTrial()
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtemp': 0, # TODO: use entropy
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtemp'] += answer['temp'] # TODO: use entropy
+            d['sumtime'] += answer['time']
 
-            for answer, d in answers.items():
-                d['avgtemp'] = d.pop('sumtemp') / d['count']
-                d['avgtime'] = d.pop('sumtime') / d['count']
-            print('The formula {} provided:'.format(formula))
-            pprint(answers)
-
+        for answer, d in answers.items():
+            d['avgtemp'] = d.pop('sumtemp') / d['count']
+            d['avgtime'] = d.pop('sumtime') / d['count']
+        print('The formula {} provided:'.format(formula))
+        print('Average difference: {}'.format(self.temperature.getAverageDifference()))
         return answers
 
     def run_forever(self, initial, modified, target):
