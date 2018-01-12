@@ -3,6 +3,7 @@ import sys
 import pickle
 
 from pprint import pprint
+from collections import defaultdict
 
 from copycat import Problem
 from copycat.statistics import cross_table
@@ -26,22 +27,23 @@ def main(args):
 
     headKey, headSubDict = tableItems[0]
     # Create table and add headers
-    table = [['problems x variants']]
-    for subkey, subsubdict in key_sorted_items(headSubDict):
-        for subsubkey, result in key_sorted_items(subsubdict):
-            table[-1].append('{} x {} for {} x {}'.format(*subkey, *subsubkey))
-
-    # Add test results to table
-    for key, subdict in tableItems:
-        table.append([])
+    table = [['source', 'compare', 'source formula', 'compare formula']]
+    for key, _ in tableItems:
         problem = '{}:{}::{}:_'.format(*key)
         table[-1].append(problem)
+
+    # Arranged results in terms of copycat variants and formulas
+    arranged = defaultdict(list)
+    for key, subdict in tableItems:
         for subkey, subsubdict in key_sorted_items(subdict):
             for subsubkey, result in key_sorted_items(subsubdict):
-                table[-1].append(str(result))
+                arranged[subkey + subsubkey].append((key, result))
 
-    # A simple transpose
-    table = list(map(list, zip(*table)))
+    # Add test results to table
+    for key, results in arranged.items():
+        table.append(list(map(str, [*key])))
+        for _, result in results:
+            table[-1].append(str(result))
 
     with open('output/cross_compare.csv', 'w') as outfile:
         outfile.write('\n'.join(','.join(row) for row in table) + '\n')
