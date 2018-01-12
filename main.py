@@ -71,6 +71,5 @@ def main():
         plot_answers(answers, show=not options.noshow)
     save_answers(answers, 'output/answers.csv')
 
-
 if __name__ == '__main__':
     main()

@@ -54,3 +54,6 @@ class Control(GridFrame):
 
     def get_vars(self):
         return self.entry.a.get(), self.entry.b.get(), self.entry.c.get()
+
+    def reset(self):
+        self.go = False

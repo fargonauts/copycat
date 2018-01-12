@@ -20,6 +20,7 @@ pip-log.txt
 .coverage
 .tox
 .log
+copycat.log
 
 # Other filesystems
 .svn
@@ -30,3 +31,13 @@ pip-log.txt
 
 # Output
 output/*
+<<<<<<< HEAD
+copycat.log
+papers/*.log
+papers/*.pdf
+papers/*.out
+papers/*.aux
+papers/words
+*.txt
+=======
+>>>>>>> develop

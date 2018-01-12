@@ -27,3 +27,4 @@ class Primary(GridFrame):
 
     def reset_with_strings(self, initial, modified, target):
         self.canvas.reset_with_strings(initial, modified, target)
+        self.control.reset()
