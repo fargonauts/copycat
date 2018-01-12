@@ -5,7 +5,7 @@ import pickle
 from pprint import pprint
 
 from copycat import Problem
-from copycat.statistics import cross_chi_squared, cross_chi_squared_table
+from copycat.statistics import cross_table
 
 def compare_sets():
     pass
@@ -18,9 +18,7 @@ def main(args):
             pSet = pickle.load(infile)
             branchProblemSets[filename] = pSet
             problemSets.append((filename, pSet))
-    pprint(problemSets)
-    pprint(cross_chi_squared(problemSets))
-    crossTable = cross_chi_squared_table(problemSets)
+    crossTable = cross_table(problemSets)
     key_sorted_items = lambda d : sorted(d.items(), key=lambda t:t[0])
 
     tableItems = key_sorted_items(crossTable)
