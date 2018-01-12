@@ -19,7 +19,7 @@ def main(args):
             pSet = pickle.load(infile)
             branchProblemSets[filename] = pSet
             problemSets.append((filename, pSet))
-    crossTable = cross_table(problemSets)
+    crossTable = cross_table(problemSets, probs=True)
     key_sorted_items = lambda d : sorted(d.items(), key=lambda t:t[0])
 
     tableItems = key_sorted_items(crossTable)
