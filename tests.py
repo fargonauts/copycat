@@ -12,13 +12,14 @@ from copycat.statistics import iso_chi_squared
 
 def generate():
     print('Generating distributions for new file')
-    iterations = 1000
+    iterations = 100
+    formulas   = ['original', 'entropy', 'inverse', 'best', 'sbest', 'pbest']
     problems = [
-            Problem('abc', 'abd', 'efg',    iterations),
-            Problem('abc', 'abd', 'ijk',    iterations),
-            Problem('abc', 'abd', 'xyz',    iterations),
-            Problem('abc', 'abd', 'ijkk',   iterations),
-            Problem('abc', 'abd', 'mrrjjj', iterations)]
+            Problem('abc', 'abd', 'efg',    iterations, formulas=formulas),
+            Problem('abc', 'abd', 'ijk',    iterations, formulas=formulas),
+            Problem('abc', 'abd', 'xyz',    iterations, formulas=formulas),
+            Problem('abc', 'abd', 'ijkk',   iterations, formulas=formulas),
+            Problem('abc', 'abd', 'mrrjjj', iterations, formulas=formulas)]
 
     with open(TestCopycat.Filename, 'wb') as outfile:
         pickle.dump(problems, outfile)

@@ -25,7 +25,7 @@ def _entropy(temp, prob):
     return -f * math.log2(f)
 
 def _weighted(temp, prob, s, u, alpha=1, beta=1):
-    weighted = (temp / 100) * s + ((100 - temp) / 100) * u 
+    weighted = (temp / 100) * s + ((100 - temp) / 100) * u
     return weighted
 
 def _weighted_inverse(temp, prob):
@@ -84,7 +84,7 @@ def _parameterized_best(temp, prob):
 class Temperature(object):
     def __init__(self):
         self.reset()
-        self.adjustmentType = 'inverse'
+        self.adjustmentType = 'pbest'
         self._adjustmentFormulas = {
                 'original'       : _original,
                 'entropy'        : _entropy,

@@ -15,7 +15,7 @@ class Problem:
         else:
             self.distributions = distributions
         if formulas is not None:
-            assert hasattr(Copycat().workspace, 'temperature')
+            assert hasattr(Copycat(), 'temperature')
 
     def test(self, comparison, expected=None):
         print('-' * 120)
@@ -41,8 +41,8 @@ class Problem:
         copycat = Copycat()
         answers  = dict()
         if self.formulas == None:
-            if hasattr(copycat.workspace, 'temperature'):
-                formula = copycat.workspace.temperature.getAdj()
+            if hasattr(copycat, 'temperature'):
+                formula = copycat.temperature.getAdj()
             else:
                 formula = None
             answers[formula] = copycat.run(self.initial,
@@ -52,7 +52,7 @@ class Problem:
         else:
             for formula in self.formulas:
                 copycat.temperature.useAdj(formula)
-                answers[formulas] = copycat.run(self.initial,
+                answers[formula] = copycat.run(self.initial,
                                         self.modified,
                                         self.target,
                                         self.iterations)

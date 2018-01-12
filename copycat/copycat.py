@@ -116,29 +116,22 @@ class Copycat(object):
         return answers
 
     def run(self, initial, modified, target, iterations):
-        self.temperature.useAdj('best')
-        #self.gui.app.reset_with_strings(initial, modified, target)
         self.workspace.resetWithStrings(initial, modified, target)
         answers = {}
-        for formula in ['original', 'best', 'sbest', 'pbest']:
-            self.temperature.useAdj(formula)
-            answers = {}
-            for i in range(iterations):
-                answer = self.runTrial()
-                d = answers.setdefault(answer['answer'], {
-                    'count': 0,
-                    'sumtemp': 0, # TODO: use entropy
-                    'sumtime': 0
-                })
-                d['count'] += 1
-                d['sumtemp'] += answer['temp'] # TODO: use entropy
-                d['sumtime'] += answer['time']
+        for i in range(iterations):
+            answer = self.runTrial()
+            d = answers.setdefault(answer['answer'], {
+                'count': 0,
+                'sumtemp': 0, # TODO: use entropy
+                'sumtime': 0
+            })
+            d['count'] += 1
+            d['sumtemp'] += answer['temp'] # TODO: use entropy
+            d['sumtime'] += answer['time']
 
-            for answer, d in answers.items():
-                d['avgtemp'] = d.pop('sumtemp') / d['count']
-                d['avgtime'] = d.pop('sumtime') / d['count']
-            print('The formula {} provided:'.format(formula))
-            pprint(answers)
+        for answer, d in answers.items():
+            d['avgtemp'] = d.pop('sumtemp') / d['count']
+            d['avgtime'] = d.pop('sumtime') / d['count']
 
         return answers
 
