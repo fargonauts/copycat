@@ -24,22 +24,27 @@ def main(args):
     tableItems = key_sorted_items(crossTable)
     assert len(tableItems) > 0, 'Empty table'
 
-    with open('output/cross_compare.csv', 'w') as outfile:
-        headKey, headSubDict = tableItems[0]
-        cells = ['problems x variants']
-        for subkey, subsubdict in key_sorted_items(headSubDict):
-            for subsubkey, result in key_sorted_items(subsubdict):
-                cells.append('{} x {} for {} x {}'.format(*subkey, *subsubkey))
-        outfile.write(','.join(cells) + '\n')
+    headKey, headSubDict = tableItems[0]
+    # Create table and add headers
+    table = [['problems x variants']]
+    for subkey, subsubdict in key_sorted_items(headSubDict):
+        for subsubkey, result in key_sorted_items(subsubdict):
+            table[-1].append('{} x {} for {} x {}'.format(*subkey, *subsubkey))
 
-        for key, subdict in tableItems:
-            cells = []
-            problem = '{}:{}::{}:_'.format(*key)
-            cells.append(problem)
-            for subkey, subsubdict in key_sorted_items(subdict):
-                for subsubkey, result in key_sorted_items(subsubdict):
-                    cells.append(str(result))
-            outfile.write(','.join(cells) + '\n')
+    # Add test results to table
+    for key, subdict in tableItems:
+        table.append([])
+        problem = '{}:{}::{}:_'.format(*key)
+        table[-1].append(problem)
+        for subkey, subsubdict in key_sorted_items(subdict):
+            for subsubkey, result in key_sorted_items(subsubdict):
+                table[-1].append(str(result))
+
+    # A simple transpose
+    table = list(map(list, zip(*table)))
+
+    with open('output/cross_compare.csv', 'w') as outfile:
+        outfile.write('\n'.join(','.join(row) for row in table) + '\n')
     return 0
 
 if __name__ == '__main__':
