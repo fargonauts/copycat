@@ -12,7 +12,7 @@ from copycat.statistics import iso_chi_squared
 
 def generate():
     print('Generating distributions for new file')
-    iterations = 30
+    iterations = 10
     problems = [
             Problem('abc', 'abd', 'efg',    iterations),
             Problem('abc', 'abd', 'ijk',    iterations),
