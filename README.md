@@ -1,7 +1,7 @@
 co.py.cat
 =========
 
-![GUI](https://i.imgur.com/7pb20g0.png)
+![GUI](https://i.imgur.com/AhhpzVQ.png)
 
 An implementation of [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s Copycat algorithm.
 The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.  See also [Farglexandria](https://github.com/Alex-Linhares/Farglexandria).
