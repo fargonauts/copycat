@@ -22,9 +22,9 @@ Running the command-line program
 To clone the repo locally, run these commands:
 
 ```
-$ git clone https://github.com/Quuxplusone/co.py.cat.git
-$ cd co.py.cat/copycat
-$ python main.py abc abd ppqqrr 10
+$ git clone https://github.com/fargonauts/copycat.git
+$ cd copycat/copycat
+$ python main.py abc abd ppqqrr --iterations 10
 ```
 
 The script takes three or four arguments.
@@ -43,31 +43,13 @@ The first number indicates how many times Copycat chose that string as its answe
 The last number indicates the average final temperature of the workspace; lower means "more elegant".
 
 
-Running the `curses` interface
-------------------------------
-
-Follow the instructions to clone the repo as above, but then run `curses_main` instead of `main`:
-
-```
-$ git clone https://github.com/Quuxplusone/co.py.cat.git
-$ cd co.py.cat/copycat
-$ python curses_main.py abc abd ppqqrr
-```
-
-This script takes only three arguments.
-The first two are a pair of strings with some change, for example "abc" and "abd".
-The third is a string which the script should try to change analogously.
-The number of iterations is always implicitly "infinite".
-To kill the program, hit Ctrl+C.
-
-
 Installing the module
 ---------------------
 
 To install the Python module and get started with it, run these commands:
 
 ```
-$ pip install -e git+git://github.com/Quuxplusone/co.py.cat.git#egg=copycat
+$ pip install -e git+git://github.com/fargonauts/copycat.git#egg=copycat
 $ python
 >>> from copycat import Copycat
 >>> Copycat().run('abc', 'abd', 'ppqqrr', 10)
@@ -75,10 +57,3 @@ $ python
 ```
 
 The result of `run` is a dict containing the same information as was printed by `main.py` above.
-
-
-
-Questions
----------
-
-1. Why are codelets **NOT** implemented through lambda?  
