@@ -10,7 +10,7 @@ This implementation is a copycat of Scott Boland's [Java implementation](https:/
 The original Java-to-Python translation work was done by J Alan Brogan (@jalanb on GitHub).
 The Java version has a GUI similar to the original Lisp; this Python version has no GUI code built in but can be incorporated into a larger GUI program.
 
-J Alan Brogan writes:
+J. Alan Brogan writes:
 > In cases where I could not grok the Java implementation easily, I took ideas from the
 > [LISP implementation](http://web.cecs.pdx.edu/~mm/how-to-get-copycat.html), or directly
 > from [Melanie Mitchell](https://en.wikipedia.org/wiki/Melanie_Mitchell)'s book
