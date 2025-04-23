@@ -16,9 +16,19 @@ from .correspondence import Correspondence
 def codelet(name):
     """Decorator for otherwise-unused functions that are in fact used as codelet behaviors"""
     def wrap(f):
+        # Verify that the decorated function has exactly two parameters:
+        # 1. ctx - the context object containing workspace, slipnet, etc.
+        # 2. codelet - the codelet instance itself
+        # The None values in the tuple represent: no default args, no *args, no **kwargs
         assert tuple(inspect.getargspec(f)) == (['ctx', 'codelet'], None, None, None)
+        
+        # Mark this function as a valid codelet method
         f.is_codelet_method = True
+    
+        # Store the codelet name
         f.codelet_name = name
+        
+        # Return the decorated function
         return f
     return wrap
 
