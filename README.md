@@ -43,6 +43,45 @@ The first number indicates how many times Copycat chose that string as its answe
 The last number indicates the average final temperature of the workspace; lower means "more elegant".
 
 
+---------------------
+Code structure
+
+The Copycat system consists of 4,981 lines of Python code across 40 files. Here's a breakdown of the largest Core Components:
+- codeletMethods.py: 1,124 lines (largest file)
+- curses_reporter.py: 436 lines
+- coderack.py: 310 lines
+- slipnet.py: 248 lines
+- Workspace Components:
+- group.py: 237 lines
+- bond.py: 211 lines
+- correspondence.py: 204 lines
+- workspace.py: 195 lines
+- workspaceObject.py: 194 lines
+Control Components:
+- temperature.py: 175 lines
+- conceptMapping.py: 153 lines
+- rule.py: 149 lines
+- copycat.py: 144 lines
+GUI Components:
+- gui/gui.py: 96 lines
+- gui/workspacecanvas.py: 70 lines
+- gui/status.py: 66 lines
+- gui/control.py: 59 lines
+
+
+The system is well-organized with clear separation of concerns:
+- Core logic (codelets, coderack, slipnet)
+- Workspace management (groups, bonds, correspondences)
+- Control systems (temperature, rules)
+- User interface (GUI components)
+
+The largest file, codeletMethods.py, contains all the codelet behavior implementations, which makes sense as it's the heart of the system's analogical reasoning capabilities.
+---------------------
+codeREADME.md Files
+
+We've got an LLM to document every code file, so people can look at a particular readme before delving into the work.
+
+
 Installing the module
 ---------------------
 
