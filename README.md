@@ -76,6 +76,7 @@ The system is well-organized with clear separation of concerns:
 - User interface (GUI components)
 
 The largest file, codeletMethods.py, contains all the codelet behavior implementations, which makes sense as it's the heart of the system's analogical reasoning capabilities.
+
 ---------------------
 codeREADME.md Files
 
