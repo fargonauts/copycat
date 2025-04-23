@@ -4,7 +4,7 @@ co.py.cat
 ![GUI](https://i.imgur.com/AhhpzVQ.png)
 
 An implementation of [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s Copycat algorithm.
-The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.  See also [Farglexandria](https://github.com/Alex-Linhares/Fargonautica).
+The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.  See also [FARGonautica](https://github.com/Alex-Linhares/Fargonautica), where a collection of Fluid Concepts projects are available.
 
 This implementation is a copycat of Scott Boland's [Java implementation](https://archive.org/details/JavaCopycat).
 The original Java-to-Python translation work was done by J Alan Brogan (@jalanb on GitHub).
