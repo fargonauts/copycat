@@ -1,4 +1,4 @@
-co.py.cat
+Copycat
 =========
 
 ![GUI](https://i.imgur.com/AhhpzVQ.png)
