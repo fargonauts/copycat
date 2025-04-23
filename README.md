@@ -45,7 +45,9 @@ The last number indicates the average final temperature of the workspace; lower 
 Code structure
 ---------------------
 
-This Copycat system consists of 4,981 lines of Python code across 40 files. Here's a breakdown of the largest Core Components:
+This Copycat system consists of 4,981 lines of Python code across 40 files. Here's a breakdown.
+
+Core Components:
 - codeletMethods.py: 1,124 lines (largest file)
 - curses_reporter.py: 436 lines
 - coderack.py: 310 lines
@@ -56,11 +58,13 @@ This Copycat system consists of 4,981 lines of Python code across 40 files. Here
 - correspondence.py: 204 lines
 - workspace.py: 195 lines
 - workspaceObject.py: 194 lines
+
 Control Components:
 - temperature.py: 175 lines
 - conceptMapping.py: 153 lines
 - rule.py: 149 lines
 - copycat.py: 144 lines
+
 GUI Components:
 - gui/gui.py: 96 lines
 - gui/workspacecanvas.py: 70 lines
