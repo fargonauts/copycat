@@ -3,8 +3,8 @@ Copycat
 
 ![GUI](https://i.imgur.com/AhhpzVQ.png)
 
-An implementation of [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/)'s Copycat algorithm.
-The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), and that page has many links for deeper reading.  See also [FARGonautica](https://github.com/Alex-Linhares/Fargonautica), where a collection of Fluid Concepts projects are available.
+An implementation of [Douglas Hofstadter](http://prelectur.stanford.edu/lecturers/hofstadter/) and [Melanie Mitchell](https://melaniemitchell.me/)'s Copycat algorithm.
+The Copycat algorithm is explained [on Wikipedia](https://en.wikipedia.org/wiki/Copycat_%28software%29), in Melanie Mitchell's Book [Analogy-making as perception](https://www.amazon.com/Analogy-Making-Perception-Computer-Modeling-Connectionism/dp/026251544X/ref=sr_1_5?crid=1FC76DCS33513&dib=eyJ2IjoiMSJ9.TQVbRbFf696j7ZYj_sb4tIM3ZbFbuCIdtdYCy-Mq3EmJI6xbG5hhVXuyOPjeb7E4b8jhKiJlfr6NnD_O09rEEkNMwD_1zFxkLT9OkF81RSFL4kMCLOT7K-7KnPwBFbrc9tZuhLKFOWbxMGNL75koMcetQl2Lf6V7xsNYLYLCHBlXMCrusJ88Kv3Y8jiPKwrEr1hUwhWB8vtwEG9vSYXU7Gw-b4fZRNNbUtBBWNwiK3k.IJZZ8kA_QirWQK1ax5i42zD2nV7XvKoPYRgN94en4Dc&dib_tag=se&keywords=melanie+mitchell&qid=1745436638&sprefix=melanie+mitchell%2Caps%2C206&sr=8-5#), and in [this paper](https://github.com/Alex-Linhares/FARGonautica/blob/master/Literature/Foundations-Chalmers.French.and.Hofstadter-1992-Journal%20of%20Experimental%20and%20Theoretical%20Artificial%20Intelligence.pdf). The wikipedia page has additional links for deeper reading.  See also [FARGonautica](https://github.com/Alex-Linhares/Fargonautica), where a collection of Fluid Concepts projects are available.
 
 This implementation is a copycat of Scott Boland's [Java implementation](https://archive.org/details/JavaCopycat).
 The original Java-to-Python translation work was done by J Alan Brogan (@jalanb on GitHub).
