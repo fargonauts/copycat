@@ -42,11 +42,10 @@ ppqqrs: 4 (avg time 439.0, avg temp 37.3)
 The first number indicates how many times Copycat chose that string as its answer; higher means "more obvious".
 The last number indicates the average final temperature of the workspace; lower means "more elegant".
 
-
----------------------
 Code structure
+---------------------
 
-The Copycat system consists of 4,981 lines of Python code across 40 files. Here's a breakdown of the largest Core Components:
+This Copycat system consists of 4,981 lines of Python code across 40 files. Here's a breakdown of the largest Core Components:
 - codeletMethods.py: 1,124 lines (largest file)
 - curses_reporter.py: 436 lines
 - coderack.py: 310 lines
