@@ -85,7 +85,7 @@ The largest file, codeletMethods.py, contains all the codelet behavior implement
 {code.py}README.md Files
 ---------------------
 
-We've got an LLM to document every code file, so people can look at a particular readme before delving into the work (Here's one [Example](main_README.md).
+We've got an LLM to document every code file, so people can look at a particular readme before delving into the work (Here's one [Example](main_README.md)).
 
 
 Installing the module
